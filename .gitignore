@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+*.egg-info/
+dist/
+build/
+
+# Database files (运行时生成)
+*.db
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+
+# Chroma vector DB (运行时生成)
+chroma_db/
+
+# Configuration with sensitive data
+config.json
+
+# Logs
+*.log
+decisions.jsonl
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db

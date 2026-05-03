@@ -1,0 +1,30 @@
+{
+  "status": "ok",
+  "date": "2026-05-02",
+  "generated_at": "2026-05-02T15:22:54",
+  "counts": {
+    "total_decisions": 16,
+    "active": 1,
+    "candidate": 15,
+    "active_superseded": 0,
+    "with_deadline": 6,
+    "forgotten": 0,
+    "projects": 7,
+    "access_log": 14
+  },
+  "metrics": {
+    "candidate_ratio": 0.9375,
+    "active_superseded_ratio": 0.0,
+    "deadline_rate": 0.375,
+    "forgotten_rate": 0.0,
+    "coverage_rate": 1.0,
+    "avg_access_interval_hours": 9.89
+  },
+  "scores": {
+    "accuracy": 0.4125,
+    "completeness": 0.375,
+    "freshness": 1.0,
+    "coverage": 1.0,
+    "overall": 0.6381
+  }
+}

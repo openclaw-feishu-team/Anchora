@@ -34,18 +34,30 @@ def _ensure_dirs():
 
 
 def _get_today_records():
-    """获取今天创建或更新的决策记录"""
+    """获取今天创建或更新的决策记录（排除 rejected/forgotten）"""
     today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
     conn = db_conn()
     c = conn.cursor()
 
-    c.execute("""
-        SELECT project, decision, reasoning, conclusion, objections, decision_maker, created_at, deadline
-        FROM decisions
-        WHERE (created_at LIKE ? OR updated_at LIKE ?)
-          AND (superseded_by IS NULL OR superseded_by = '')
-        ORDER BY created_at DESC
-    """, (f"{today}%", f"{today}%"))
+    try:
+        c.execute("""
+            SELECT project, decision, reasoning, conclusion, objections, decision_maker, created_at, deadline
+            FROM decisions
+            WHERE (created_at LIKE ? OR updated_at LIKE ?)
+              AND (superseded_by IS NULL OR superseded_by = '')
+              AND status != 'rejected'
+              AND status != 'FORGOTTEN'
+            ORDER BY created_at DESC
+        """, (f"{today}%", f"{today}%"))
+    except sqlite3.OperationalError:
+        # 兼容旧表没有 status 列
+        c.execute("""
+            SELECT project, decision, reasoning, conclusion, objections, decision_maker, created_at, deadline
+            FROM decisions
+            WHERE (created_at LIKE ? OR updated_at LIKE ?)
+              AND (superseded_by IS NULL OR superseded_by = '')
+            ORDER BY created_at DESC
+        """, (f"{today}%", f"{today}%"))
 
     cols = [d[0] for d in c.description]
     rows = c.fetchall()
@@ -69,17 +81,31 @@ def _get_today_records():
 
 
 def _count_total_stats():
-    """统计总数"""
+    """统计总数（排除 rejected 和 forgotten）"""
     conn = db_conn()
     c = conn.cursor()
-    c.execute("SELECT COUNT(*) FROM decisions WHERE superseded_by IS NULL OR superseded_by = ''")
+    # 兼容旧表没有 status 列的情况
+    try:
+        c.execute("SELECT COUNT(*) FROM decisions WHERE (superseded_by IS NULL OR superseded_by = '') AND status != 'rejected' AND status != 'FORGOTTEN'")
+    except sqlite3.OperationalError:
+        c.execute("SELECT COUNT(*) FROM decisions WHERE superseded_by IS NULL OR superseded_by = ''")
     total_decisions = c.fetchone()[0]
-    c.execute("SELECT COUNT(DISTINCT project) FROM decisions WHERE superseded_by IS NULL OR superseded_by = ''")
+    try:
+        c.execute("SELECT COUNT(*) FROM decisions WHERE status='active' AND (superseded_by IS NULL OR superseded_by = '')")
+    except sqlite3.OperationalError:
+        c.execute("SELECT COUNT(*) FROM decisions WHERE superseded_by IS NULL OR superseded_by = ''")
+    active_count = c.fetchone()[0]
+    try:
+        c.execute("SELECT COUNT(*) FROM decisions WHERE status='candidate' AND (superseded_by IS NULL OR superseded_by = '')")
+    except sqlite3.OperationalError:
+        c.execute("SELECT COUNT(*) FROM decisions WHERE 1=0")
+    candidate_count = c.fetchone()[0]
+    c.execute("SELECT COUNT(DISTINCT project) FROM decisions WHERE (superseded_by IS NULL OR superseded_by = '')")
     total_projects = c.fetchone()[0]
     c.execute("SELECT COUNT(*) FROM push_log")
     total_pushes = c.fetchone()[0]
     conn.close()
-    return total_decisions, total_projects, total_pushes
+    return total_decisions, active_count, candidate_count, total_projects, total_pushes
 
 
 def write_daily_log():
@@ -89,7 +115,7 @@ def write_daily_log():
     log_file = LOG_DIR / f"{today}.md"
 
     records, pushes = _get_today_records()
-    total_decisions, total_projects, total_pushes = _count_total_stats()
+    total_decisions, active_count, candidate_count, total_projects, total_pushes = _count_total_stats()
 
     lines = [
         f"# feishu-memory 每日日志 — {today}",
@@ -99,7 +125,7 @@ def write_daily_log():
         "## 今日统计",
         f"- 今日新增决策：{len(records)} 条",
         f"- 今日推送：{len(pushes)} 次",
-        f"- 累计决策：{total_decisions} 条",
+        f"- 累计决策：{total_decisions} 条（active {active_count} / candidate {candidate_count}）",
         f"- 累计项目：{total_projects} 个",
         f"- 累计推送：{total_pushes} 次",
         "",
@@ -136,6 +162,28 @@ def write_daily_log():
         lines.append("")
         lines.append("*今日无推送*")
         lines.append("")
+
+    # ─── Benchmark 质量评估 ───
+    lines.append("## 记忆质量评估")
+    lines.append("")
+    try:
+        from benchmark import run_benchmark
+        report = run_benchmark()
+        if report.get("status") == "ok":
+            scores = report.get("scores", {})
+            metrics = report.get("metrics", {})
+            lines.append(f"- **综合评分**：{scores.get('overall', 0):.2f} / 1.00")
+            lines.append(f"- 准确性：{scores.get('accuracy', 0):.2f} | 完整性：{scores.get('completeness', 0):.2f} | 时效性：{scores.get('freshness', 0):.2f} | 覆盖率：{scores.get('coverage', 0):.2f}")
+            lines.append(f"- candidate 比例：{metrics.get('candidate_ratio', 0):.1%} | deadline 提取率：{metrics.get('deadline_rate', 0):.1%} | 遗忘率：{metrics.get('forgotten_rate', 0):.1%}")
+            avg_interval = metrics.get("avg_access_interval_hours")
+            if avg_interval is not None:
+                lines.append(f"- 平均访问间隔：{avg_interval:.1f} 小时")
+        else:
+            lines.append("- 质量评估生成失败")
+    except Exception as e:
+        lines.append(f"- 质量评估生成失败: {e}")
+        print(f"写入 benchmark 摘要失败: {e}", file=sys.stderr)
+    lines.append("")
 
     # 即将到达的关键节点
     conn = db_conn()

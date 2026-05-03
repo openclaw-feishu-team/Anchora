@@ -1,0 +1,93 @@
+{
+  "status": "ok",
+  "generated_at": "2026-05-03T12:14:20",
+  "summary": {
+    "total_cases": 6,
+    "total_points": 100,
+    "earned_points": 65.0,
+    "score_percent": 65.0
+  },
+  "results": [
+    {
+      "case_id": "P1-001",
+      "case_type": "decision_capture",
+      "pain_point": "决策沉没",
+      "status": "failed",
+      "points": 20,
+      "earned": 0.0,
+      "passed": 0,
+      "failed": 1,
+      "details": [
+        "FAIL: query 'API 网关选型' 未返回期望决策 '采用 APISIX'"
+      ]
+    },
+    {
+      "case_id": "P1-001b",
+      "case_type": "decision_capture",
+      "pain_point": "决策沉没",
+      "status": "failed",
+      "points": 15,
+      "earned": 0.0,
+      "passed": 0,
+      "failed": 1,
+      "details": [
+        "FAIL: 结论不匹配，期望 '采用 APISIX'，实际 'API 网关就按 APISIX 走吧，Kong 插件体系我们短期维护不了。'",
+        "FAIL: 主题不匹配",
+        "FAIL: 理由关键词 'Kong 插件体系' 未命中"
+      ]
+    },
+    {
+      "case_id": "P1-006",
+      "case_type": "decision_capture",
+      "pain_point": "决策沉没",
+      "status": "passed",
+      "points": 10,
+      "earned": 10.0,
+      "passed": 1,
+      "failed": 0,
+      "details": [
+        "PASS: 正确忽略非决策内容"
+      ]
+    },
+    {
+      "case_id": "P2-001",
+      "case_type": "decision_aggregation",
+      "pain_point": "决策碎片",
+      "status": "passed",
+      "points": 25,
+      "earned": 25.0,
+      "passed": 2,
+      "failed": 0,
+      "details": [
+        "PASS: 聚合决策 'OAuth2 + PKCE' 正确",
+        "PASS: 证据来源命中 6 >= 3"
+      ]
+    },
+    {
+      "case_id": "P3-001",
+      "case_type": "decision_invalidated",
+      "pain_point": "决策上下文失效",
+      "status": "passed",
+      "points": 15,
+      "earned": 15.0,
+      "passed": 1,
+      "failed": 0,
+      "details": [
+        "PASS: 检测到决策变更/冲突 (2 条记录)"
+      ]
+    },
+    {
+      "case_id": "P5-001",
+      "case_type": "decision_repeat_push",
+      "pain_point": "决策重复",
+      "status": "passed",
+      "points": 15,
+      "earned": 15.0,
+      "passed": 1,
+      "failed": 0,
+      "details": [
+        "PASS: trigger 消息正确召回已有决策"
+      ]
+    }
+  ]
+}

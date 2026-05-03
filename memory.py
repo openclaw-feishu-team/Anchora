@@ -215,12 +215,46 @@ def init_db():
             accessed_at TEXT NOT NULL
         )
     ''')
+    # 审计日志（治理层：记录每次操作）
+    c.execute('''
+        CREATE TABLE IF NOT EXISTS audit_log (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            memory_id TEXT NOT NULL,
+            action TEXT NOT NULL,
+            actor TEXT NOT NULL,
+            details TEXT,
+            created_at TEXT NOT NULL
+        )
+    ''')
     conn.commit()
     conn.close()
 
 
 def db_conn():
     return sqlite3.connect(DB_FILE)
+
+
+def _ensure_governance_columns():
+    """确保 governance 相关列存在（兼容旧数据库）
+    旧数据默认回填为 active，避免查询丢失历史记录。"""
+    conn = db_conn()
+    c = conn.cursor()
+    cols_to_add = [
+        ("status", "TEXT DEFAULT 'candidate'"),
+        ("evidence", "TEXT"),
+        ("confidence", "REAL DEFAULT 0.8"),
+    ]
+    for col_name, col_def in cols_to_add:
+        try:
+            c.execute(f"SELECT {col_name} FROM decisions LIMIT 1")
+        except sqlite3.OperationalError:
+            c.execute(f"ALTER TABLE decisions ADD COLUMN {col_name} {col_def}")
+            if col_name == "status":
+                c.execute("UPDATE decisions SET status='active' WHERE status IS NULL")
+            if col_name == "confidence":
+                c.execute("UPDATE decisions SET confidence=0.8 WHERE confidence IS NULL")
+    conn.commit()
+    conn.close()
 
 
 def generate_id(*parts):
@@ -395,16 +429,74 @@ def _get_provider_api_key(cfg, provider_name):
 
 # ─── 核心存储 ───
 
+def _sensitive_keywords():
+    """敏感关键词列表"""
+    return ["密码", "secret", "token", "api_key", "薪资", "工资", "salary", "身份证号", "手机号"]
+
+
+def review_policy(record: dict, has_conflict: bool = False) -> str:
+    """
+    审查策略：决定新记忆是 candidate 还是 active
+    - 低置信度 (<0.5) → candidate
+    - 含敏感词 → candidate
+    - 与现有 active 决策冲突 → candidate
+    - 否则 → active（自动确认）
+    """
+    confidence = record.get("confidence", 0.8)
+    text = f"{record.get('decision', '')} {record.get('reasoning', '')}"
+    if confidence < 0.5:
+        return "candidate"
+    if any(kw in text for kw in _sensitive_keywords()):
+        return "candidate"
+    if has_conflict:
+        return "candidate"
+    return "active"
+
+
+def write_audit_log(memory_id: str, action: str, actor: str = "system", details: str = ""):
+    """写入审计日志"""
+    init_db()
+    conn = db_conn()
+    c = conn.cursor()
+    c.execute('''
+        INSERT INTO audit_log (memory_id, action, actor, details, created_at)
+        VALUES (?, ?, ?, ?, ?)
+    ''', (memory_id, action, actor, details, now_iso()))
+    conn.commit()
+    conn.close()
+
+
+def confirm_candidate(mem_id: str, actor: str = "system") -> dict:
+    """将 candidate 状态的记忆确认为 active"""
+    init_db()
+    _ensure_governance_columns()
+    conn = db_conn()
+    c = conn.cursor()
+    c.execute("UPDATE decisions SET status='active', updated_at=? WHERE id=? AND status='candidate'",
+              (now_iso(), mem_id))
+    changed = c.rowcount
+    conn.commit()
+    conn.close()
+    if changed:
+        write_audit_log(mem_id, "confirm", actor, "Candidate → Active")
+        return {"status": "ok", "id": mem_id, "action": "confirmed"}
+    return {"status": "noop", "id": mem_id, "message": "记录不存在或已经是 active"}
+
+
 def store_decision(project, decision, reasoning="", conclusion="", objections="",
-                   decision_maker="", chat_id="", ttl=2592000, deadline="") -> dict:
+                   decision_maker="", chat_id="", ttl=2592000, deadline="",
+                   evidence="", confidence=0.8) -> dict:
     """
     存储一条决策记录到 SQLite + Chroma
     ttl: 默认 30 天（秒）
     deadline: YYYY-MM-DD 格式，用于心跳推送
+    evidence: 证据链（原始消息内容或来源）
+    confidence: 置信度 0-1
     """
     init_db()
+    _ensure_governance_columns()
 
-    # 确保 deadline 字段存在
+    # 确保 deadline 字段存在（兼容旧数据库）
     conn = db_conn()
     c = conn.cursor()
     try:
@@ -420,25 +512,36 @@ def store_decision(project, decision, reasoning="", conclusion="", objections=""
     # 检查同一项目是否有相似决策（简单文本匹配）
     conn = db_conn()
     c = conn.cursor()
-    # 只查未被覆盖的决策
-    c.execute("SELECT id, decision FROM decisions WHERE project=? AND (superseded_by IS NULL OR superseded_by = '')", (project,))
+    # 只查未被覆盖的 active 决策
+    c.execute("SELECT id, decision FROM decisions WHERE project=? AND status='active' AND (superseded_by IS NULL OR superseded_by = '')", (project,))
     existing = c.fetchall()
 
     # 如果内容高度相似，标记为版本更新
     superseded = None
+    has_conflict = False
     for eid, edecision in existing:
-        if _similarity(decision, edecision) > 0.5:  # 降低阈值，更容易触发覆盖
+        sim = _similarity(decision, edecision)
+        if sim > 0.5:
             superseded = eid
+            has_conflict = True
             break
+
+    # 审查策略：决定状态
+    review_input = {
+        "decision": decision,
+        "reasoning": reasoning,
+        "confidence": confidence,
+    }
+    status = review_policy(review_input, has_conflict=has_conflict)
 
     # 插入新记录
     c.execute('''
         INSERT INTO decisions
         (id, project, decision, reasoning, conclusion, objections, decision_maker,
-         chat_id, created_at, updated_at, ttl, last_accessed, version, superseded_by, embedding_id, deadline)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+         chat_id, created_at, updated_at, ttl, last_accessed, version, superseded_by, embedding_id, deadline, status, evidence, confidence)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ''', (mem_id, project, decision, reasoning, conclusion, objections, decision_maker,
-          chat_id, created, created, ttl, created, 1, None, mem_id, deadline or None))
+          chat_id, created, created, ttl, created, 1, None, mem_id, deadline or None, status, evidence, confidence))
 
     # 如果有旧版本，建立 Supersedes 关系
     if superseded:
@@ -450,6 +553,9 @@ def store_decision(project, decision, reasoning="", conclusion="", objections=""
 
     conn.commit()
     conn.close()
+
+    # 写入审计日志
+    write_audit_log(mem_id, "create", "system", f"status={status}, conflict={has_conflict}, evidence={evidence[:50] if evidence else 'none'}")
 
     # 写入 Chroma 向量库（预计算 embedding）
     try:
@@ -465,12 +571,13 @@ def store_decision(project, decision, reasoning="", conclusion="", objections=""
                 "decision_maker": decision_maker,
                 "created_at": created,
                 "chat_id": chat_id,
+                "status": status,
             }]
         )
     except Exception as e:
         print(f"向量存储警告: {e}", file=sys.stderr)
 
-    return {
+    result = {
         "id": mem_id,
         "project": project,
         "decision": decision,
@@ -478,9 +585,23 @@ def store_decision(project, decision, reasoning="", conclusion="", objections=""
         "conclusion": conclusion,
         "objections": objections,
         "decision_maker": decision_maker,
+        "chat_id": chat_id,
+        "deadline": deadline,
         "created_at": created,
         "superseded": superseded,
+        "status": status,
+        "evidence": evidence,
+        "confidence": confidence,
     }
+
+    # 写入简化知识图谱（不阻塞）
+    try:
+        from knowledge_graph import index_decision
+        index_decision(result)
+    except Exception as e:
+        print(f"知识图谱索引警告: {e}", file=sys.stderr)
+
+    return result
 
 
 def _similarity(a: str, b: str) -> float:
@@ -494,31 +615,37 @@ def _similarity(a: str, b: str) -> float:
 
 # ─── 查询与检索 ───
 
-def query_decisions(project=None, query_text=None, include_superseded=False, top_k=10):
+def query_decisions(project=None, query_text=None, include_superseded=False, top_k=10, status_filter="active"):
     """
     查询决策记录。
-    支持：按项目过滤 + 语义检索 + 关键词 BM25
+    支持：按项目过滤 + 语义检索 + 关键词 BM25 + 状态过滤
+    status_filter: 'active' | 'candidate' | 'all'
     """
     init_db()
+    _ensure_governance_columns()
     conn = db_conn()
     c = conn.cursor()
 
     results = []
 
     # 1. SQLite 关键词查询（BM25 简化版：LIKE）
-    superseded_filter = "1=1" if include_superseded else "(superseded_by IS NULL OR superseded_by = '')"
+    conditions = []
+    params = []
+    if not include_superseded:
+        conditions.append("(superseded_by IS NULL OR superseded_by = '')")
+    if status_filter != "all":
+        conditions.append("status = ?")
+        params.append(status_filter)
     if project:
-        c.execute(f"""
-            SELECT * FROM decisions
-            WHERE project=? AND {superseded_filter}
-            ORDER BY created_at DESC
-        """, (project,))
-    else:
-        c.execute(f"""
-            SELECT * FROM decisions
-            WHERE {superseded_filter}
-            ORDER BY created_at DESC
-        """)
+        conditions.append("project = ?")
+        params.append(project)
+
+    where_clause = " AND ".join(conditions) if conditions else "1=1"
+    c.execute(f"""
+        SELECT * FROM decisions
+        WHERE {where_clause}
+        ORDER BY created_at DESC
+    """, tuple(params))
 
     cols = [d[0] for d in c.description]
     rows = c.fetchall()
@@ -530,10 +657,15 @@ def query_decisions(project=None, query_text=None, include_superseded=False, top
         try:
             collection = get_collection()
             query_embedding = get_embedding_for_texts([query_text])
+            chroma_where = {"project": project} if project else None
+            if status_filter != "all" and chroma_where is not None:
+                chroma_where["status"] = status_filter
+            elif status_filter != "all":
+                chroma_where = {"status": status_filter}
             chroma_results = collection.query(
                 query_embeddings=query_embedding,
                 n_results=min(top_k, 20),
-                where={"project": project} if project else None
+                where=chroma_where
             )
             # 将语义结果合并到前面
             semantic_ids = set(chroma_results["ids"][0]) if chroma_results["ids"] else set()
@@ -551,9 +683,10 @@ def query_decisions(project=None, query_text=None, include_superseded=False, top
 def recall_relevant_decisions(message: str, project=None, top_k=3):
     """
     根据新消息检索相关的历史决策（主动推送用）
+    只返回 active 状态的决策
     返回最相关的决策卡片列表
     """
-    results = query_decisions(project=project, query_text=message, top_k=top_k)
+    results = query_decisions(project=project, query_text=message, top_k=top_k, status_filter="active")
 
     # 过滤已遗忘的
     active_results = []
@@ -677,9 +810,10 @@ def _get_bitable_fields(token, base_id, table_id):
 
 def sync_to_bitable(token, base_id, table_id):
     init_db()
+    _ensure_governance_columns()
     conn = db_conn()
     c = conn.cursor()
-    c.execute("SELECT * FROM decisions WHERE superseded_by IS NULL OR superseded_by='FORGOTTEN'")
+    c.execute("SELECT * FROM decisions WHERE (superseded_by IS NULL OR superseded_by='FORGOTTEN') AND status='active'")
     cols = [d[0] for d in c.description]
     rows = c.fetchall()
     conn.close()
@@ -783,6 +917,8 @@ def cmd_add(args):
     conclusion = extracted.get("conclusion", "")
     objections = extracted.get("objections", "")
     maker = args.decision_maker or extracted.get("decision_maker", "")
+    evidence = getattr(args, 'evidence', '') or ''
+    confidence = getattr(args, 'confidence', 0.8) or 0.8
 
     record = store_decision(
         project=project,
@@ -793,6 +929,8 @@ def cmd_add(args):
         decision_maker=maker,
         chat_id=args.chat_id or "",
         ttl=args.ttl,
+        evidence=evidence,
+        confidence=confidence,
     )
     print(json.dumps({"status": "ok", "record": record}, ensure_ascii=False))
 
@@ -803,6 +941,7 @@ def cmd_query(args):
         query_text=args.q,
         include_superseded=args.include_superseded,
         top_k=args.top_k,
+        status_filter=getattr(args, 'status', 'active'),
     )
     # 更新访问时间
     _touch_memories([r["id"] for r in results])
@@ -884,6 +1023,24 @@ def cmd_forget(_args):
     print(json.dumps({"status": "ok", "forgotten_count": count}, ensure_ascii=False))
 
 
+def cmd_review(args):
+    """列出待审核的 candidate 记忆"""
+    results = query_decisions(
+        project=args.project,
+        query_text=args.q,
+        include_superseded=False,
+        top_k=args.top_k,
+        status_filter="candidate",
+    )
+    print(json.dumps({"status": "ok", "count": len(results), "results": results}, ensure_ascii=False))
+
+
+def cmd_confirm(args):
+    """确认一条 candidate 记忆为 active"""
+    result = confirm_candidate(args.id, actor=getattr(args, 'actor', 'admin'))
+    print(json.dumps(result, ensure_ascii=False))
+
+
 # ─── 主入口 ───
 
 def main():
@@ -899,6 +1056,8 @@ def main():
     p_add.add_argument("--chat-id", default="", help="飞书会话ID")
     p_add.add_argument("--ttl", type=int, default=2592000, help="记忆存活时间（秒，默认30天）")
     p_add.add_argument("--use-llm", action="store_true", help="启用 LLM 结构化抽取（可能较慢）")
+    p_add.add_argument("--evidence", default="", help="证据链（原始消息来源）")
+    p_add.add_argument("--confidence", type=float, default=0.8, help="置信度 0-1（默认0.8）")
     p_add.set_defaults(func=cmd_add)
 
     # query
@@ -907,6 +1066,7 @@ def main():
     p_query.add_argument("--q", help="语义查询文本")
     p_query.add_argument("--include-superseded", action="store_true", help="包含已被覆盖的决策")
     p_query.add_argument("--top-k", type=int, default=10, help="返回数量")
+    p_query.add_argument("--status", default="active", help="状态过滤：active | candidate | all（默认active）")
     p_query.set_defaults(func=cmd_query)
 
     # list
@@ -930,6 +1090,19 @@ def main():
     # forget
     p_forget = sub.add_parser("forget", help="清理过期记忆")
     p_forget.set_defaults(func=cmd_forget)
+
+    # review
+    p_review = sub.add_parser("review", help="列出待审核的 candidate 记忆")
+    p_review.add_argument("--project", help="项目名称")
+    p_review.add_argument("--q", help="语义查询文本")
+    p_review.add_argument("--top-k", type=int, default=10, help="返回数量")
+    p_review.set_defaults(func=cmd_review)
+
+    # confirm
+    p_confirm = sub.add_parser("confirm", help="确认 candidate 记忆为 active")
+    p_confirm.add_argument("id", help="记忆ID")
+    p_confirm.add_argument("--actor", default="admin", help="审核人")
+    p_confirm.set_defaults(func=cmd_confirm)
 
     args = parser.parse_args()
     args.func(args)

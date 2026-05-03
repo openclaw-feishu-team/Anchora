@@ -1,0 +1,144 @@
+[
+  {
+    "case_id": "P1-001",
+    "case_type": "decision_capture",
+    "pain_point": "决策沉没",
+    "description": "从群聊对话中自动捕获决策，支持 /recall 查询",
+    "events": [
+      "张三：API 网关就按 APISIX 走吧，Kong 插件体系我们短期维护不了。",
+      "李四：同意，APISIX 和现有 etcd 集群也更贴。"
+    ],
+    "query": "/recall API 网关选型",
+    "expected_output": {
+      "expected_active_value": "采用 APISIX",
+      "expected_subject": "API 网关选型",
+      "evidence_keyword": "Kong 插件体系我们短期维护不了",
+      "forbidden_value": ""
+    },
+    "points": 20
+  },
+  {
+    "case_id": "P1-001b",
+    "case_type": "decision_capture",
+    "pain_point": "决策沉没",
+    "description": "单条消息决策捕获，应进入 candidate 状态",
+    "text": "API 网关就按 APISIX 走吧，Kong 插件体系我们短期维护不了。",
+    "expected_candidate": true,
+    "expected_output": {
+      "topic": "API 网关选型",
+      "conclusion": "采用 APISIX",
+      "reason_keyword": "Kong 插件体系",
+      "evidence_keyword": "APISIX"
+    },
+    "points": 15
+  },
+  {
+    "case_id": "P1-006",
+    "case_type": "decision_capture",
+    "pain_point": "决策沉没",
+    "description": "非决策内容不应被记录（negative case）",
+    "text": "今天午饭有人点轻食吗？我下午要开会。",
+    "expected_candidate": false,
+    "expected_output": {
+      "candidate_created": false
+    },
+    "points": 10
+  },
+  {
+    "case_id": "P2-001",
+    "case_type": "decision_aggregation",
+    "pain_point": "决策碎片",
+    "description": "从群聊、文档、评论多源聚合决策",
+    "events": [
+      "群聊：认证方案先按 OAuth2 走，JWT 只作为内部服务令牌。",
+      "文档：选择 OAuth2 的原因是后续要接入第三方客户系统。",
+      "评论：安全评审补充要求：移动端授权必须加 PKCE。",
+      "/decide 认证方案：OAuth2 + PKCE"
+    ],
+    "query": "/recall 认证方案",
+    "expected_output": {
+      "expected_active_value": "OAuth2 + PKCE",
+      "expected_subject": "认证方案",
+      "evidence_keywords": ["OAuth2", "第三方客户系统", "PKCE"],
+      "source_count_min": 3
+    },
+    "points": 25
+  },
+  {
+    "case_id": "P3-001",
+    "case_type": "decision_invalidated",
+    "pain_point": "决策上下文失效",
+    "description": "前置条件变化导致决策需要重新审查",
+    "events": [
+      {
+        "content": "数据库选型决定采用 PostgreSQL。理由：支持 JSONB，团队有 PG 专家，和现有关联系统兼容。前置条件：团队至少有 1 名 PG 专家。"
+      },
+      {
+        "content": "组织变更：唯一的 PG 专家已转岗，当前团队没有 PostgreSQL 专职维护人。"
+      }
+    ],
+    "expected_output": {
+      "expected_trigger": "precondition_invalidated",
+      "expected_subject": "数据库选型",
+      "expected_status": "needs_review",
+      "evidence_keyword": "PG 专家已转岗"
+    },
+    "points": 15
+  },
+  {
+  "case_id": "P4-001",
+  "case_type": "decision_conflict",
+  "pain_point": "决策漂移",
+  "existing_memories": [
+    {
+      "content": "数据库选型当前采用 PostgreSQL。理由：支持 JSONB，团队有 PG 专家。",
+      "source_id": "old-db-decision"
+    }
+  ],
+  "text": "数据库选型改成 MySQL。原因是 PG 专家已转岗，运维团队更熟悉 MySQL。",
+  "query": "/recall 数据库选型",
+  "expected_action": "confirm",
+  "expected_output": {
+    "expected_active_value": "MySQL",
+    "forbidden_value": "PostgreSQL",
+    "version_statuses": ["active", "superseded"],
+    "expected_stable_key": "数据库选型"
+  },
+  "points": 15
+  },
+  {
+    "case_id": "P5-001",
+    "case_type": "decision_repeat_push",
+    "pain_point": "决策重复",
+    "description": "当冲突话题出现时，自动推送已有决策",
+    "events": [
+      {
+        "content": "API 网关选型决定采用 APISIX。理由：团队已有 etcd 集群，APISIX 原生支持；Kong 插件维护成本较高。"
+      }
+    ],
+    "trigger_message": "Kong dashboard 看起来更好，要不要换成 Kong？",
+    "query": "Kong dashboard 要不要换",
+    "expected_output": {
+      "expected_active_value": "采用 APISIX",
+      "expected_reminder": true,
+      "evidence_keyword": "Kong 插件维护成本较高",
+      "cooldown_required": true
+    },
+    "points": 15
+  },
+  {
+  "case_id": "P5-006",
+  "case_type": "decision_repeat_push",
+  "pain_point": "决策重复",
+  "events": [
+    {
+      "content": "缓存方案采用 Redis Cluster。"
+    }
+  ],
+  "trigger_message": "今天 Redis 咖啡店排队好长。",
+  "expected_output": {
+    "expected_reminder": false
+  },
+  "points": 15
+}
+]

@@ -1,79 +1,57 @@
-# 🧠 Feishu Memory - 飞书智能决策记忆系统
+# 🧠 feishu-memory — 飞书项目决策长期记忆引擎
 
-> **让 AI 记住每一个重要决策，再也不遗忘**
+> **让群聊中的每一个决策都被记录、被检索、被推送、被审计。**
 
 <div align="center">
 
-![Version](https://img.shields.io/badge/version-2.0.0-blue.svg)
+![Version](https://img.shields.io/badge/version-3.0.0-blue.svg)
+![Python](https://img.shields.io/badge/python-3.10+-orange.svg)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
-![Python](https://img.shields.io/badge/python-3.8+-orange.svg)
 ![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20macOS-lightgrey.svg)
+![Feishu](https://img.shields.io/badge/Feishu-OpenClaw%20Skill-00B96B.svg)
 
-[🎬 演示](#-功能演示) | [✨ 特性](#-核心特性) | [🚀 快速开始](#-快速开始) | [🏗️ 技术架构](#️-技术架构) | [📖 使用指南](#-使用指南)
+**OpenClaw Skill** · **飞书 AI Challenge Ready** · **Production Grade**
+
+[🎬 演示](#-功能演示) · [✨ 特性](#-核心特性) · [🚀 快速开始](#-快速开始) · [🏗️ 技术架构](#️-系统架构) · [📊 Benchmark](#-benchmark)
 
 </div>
 
 ---
 
+## 🎯 一句话介绍
+
+`feishu-memory` 是面向飞书群聊的 **AI 决策长期记忆引擎**。它监听群聊中的项目讨论，自动提取决策、DDL 和关键节点，构建可检索、可审计、可推送的智能记忆体系 —— 让项目决策不再沉没在聊天记录中。
+
+---
+
 ## 🎬 功能演示
 
-### Demo 1: 群聊自动记录决策
+### Demo 1: 群聊自动记录 + 交互式审核
 
 <table>
 <tr>
 <td width="50%">
 
-**📹 视频演示**
+**📹 GIF 演示占位**
 
-![自动记录 GIF](image/demo1.gif)
+![](image/demo1.gif)
 
-> 💡 群聊中说"项目A决定用Vue3，5月10日上线"，系统自动提取结构化信息并记录
-
-</td>
-<td width="50%">
-
-**📸 效果截图**
-
-![自动记录截图](image/demo1.png)
-
-**自动提取结果：**
-```json
-{
-  "project": "项目A",
-  "decision": "使用Vue3",
-  "reasoning": "React学习成本高",
-  "deadline": "2026-05-10"
-}
-```
-</td>
-</tr>
-</table>
-
----
-
-### Demo 2: 语义检索相关决策
-
-<table>
-<tr>
-<td width="50%">
-
-**📹 视频演示**
-
-![语义检索 GIF](image/demo2.gif)
-
-> 💡 输入"前端框架选什么好"，系统理解语义并返回相关的 Vue3 决策
+> 💡 群聊中出现"决定/上线/截止/DDL"等关键词，系统自动记录为 candidate，并推送交互卡片到群聊供人工确认。
 
 </td>
 <td width="50%">
 
-**📸 效果截图**
+**📸 截图占位**
 
-![语义检索截图](image/demo3.png)
 
-**检索特点：**
-- ✅ 理解"前端框架" = "Vue3/React"
-- ✅ 按相关性排序
-- ✅ 显示决策理由和反对意见
+![](image/demo1(2).png)
+
+
+**审核结果：**
+- 🟡 `candidate` — 新记忆自动进入待审核状态
+- ✅ 点击「确认入库」→ `active`
+- ❌ 点击「驳回」→ `rejected`
+- 📋 审计日志自动记录每一步操作
 
 </td>
 </tr>
@@ -81,62 +59,95 @@
 
 ---
 
-### Demo 3: DDL 心跳推送卡片
+### Demo 2: L0→L3 分层语义检索
 
 <table>
 <tr>
 <td width="50%">
 
-**📹 视频演示**
+**📹 GIF 演示占位**
 
-![DDL 提醒 GIF](image/demo3.gif)
+![](image/demo2.gif)
 
-> 💡 DDL 前7天开始，每3天推送一次提醒，避免遗漏
+> 💡 查询"前端框架选什么好"，系统从热缓存→精确匹配→向量语义→LLM深度推理，逐级检索最相关决策。
 
 </td>
 <td width="50%">
 
-**📸 推送卡片**
+**📸 截图占位**
 
-![DDL 提醒截图](image/demo5.png)
+![](image/demo3.png)
 
-**推送规则：**
-```markdown
-| 距离DDL | 频率 | 紧急度 |
-|---------|------|--------|
-| 7 天    | 第1次 | 🟡 提醒 |
-| 4 天    | 第2次 | 🟠 预警 |
-| 1 天    | 第3次 | 🔴 紧急 |
-```
+**检索层级：**
+| 层级 | 范围 | 延迟 |
+|------|------|------|
+| L0 热缓存 | 最近24h高频访问 | < 1ms |
+| L1 精确匹配 | SQLite LIKE | < 10ms |
+| L2 向量语义 | Chroma 相似度 | < 50ms |
+| L3 深度推理 | LLM 综合归纳 | < 2s |
+
 </td>
 </tr>
 </table>
 
 ---
 
-### Demo 4: 多维表格自动同步
+### Demo 3: DDL 心跳主动推送
 
 <table>
 <tr>
 <td width="50%">
 
-**📹 视频演示**
+**📹 GIF 演示占位**
 
-![同步演示 GIF](image/demo4.gif)
+![](image/demo3.gif)
 
-> 💡 所有决策一键同步到飞书 Bitable，团队实时可见
+> 💡 DDL 前7天开始，每3天自动推送 urgency 卡片到群聊，🔴紧急 / 🟠预警 / 🟡提醒。
 
 </td>
 <td width="50%">
 
-**📸 同步效果**
+**📸 截图占位**
 
-![多维表格截图](image/demo4.png)
+![](image/demo5.png)
 
-**同步特点：**
-- ✅ 智能字段映射
-- ✅ 自动去重
-- ✅ 支持自定义表格结构
+**推送时间线：**
+| 距离DDL | 频率 |  urgency |
+|---------|------|---------|
+| 7 天 | 第1次 | 🟡 提醒 |
+| 4 天 | 第2次 | 🟠 预警 |
+| 1 天 | 第3次 | 🔴 紧急 |
+
+</td>
+</tr>
+</table>
+
+---
+
+### Demo 4: Dashboard 管理后台
+
+<table>
+<tr>
+<td width="50%">
+
+**📹 GIF 演示占位**
+
+![](image/demo5.gif)
+
+> 💡 本地启动 Web 后台，概览决策数量、审核队列、审计日志、知识图谱关系。
+
+</td>
+<td width="50%">
+
+**📸 截图占位**
+
+![](image/demo6.png)
+
+**后台功能：**
+- 📊 概览面板：总决策 / active / candidate 比例
+- 📋 决策列表：按 project/status/keyword 过滤
+- 🔍 决策详情：审计历史 + 证据链 + 关系图谱
+- ✅ 审核队列：一键确认/驳回 candidate
 
 </td>
 </tr>
@@ -146,583 +157,400 @@
 
 ## ✨ 核心特性
 
-### 🎯 零感知记录
-- **群聊自动监听** - 无需手动 @，自动识别决策关键词
-- **智能结构化抽取** - 从自然语言中提取项目/决策/理由/DDL
-- **毫秒级响应** - 规则引擎优先（< 10ms），LLM 后备
+### 🏛️ Governance Layer — 决策治理层
 
-### 🔍 语义级检索
-- **ChromaDB 向量搜索** - 理解语义相似度，不只是关键词匹配
-- **Ebbinghaus 遗忘曲线** - 动态调整记忆强度，自动归档过期决策
-- **混合排序策略** - 结合时间、相关性、访问频率
+```
+store_decision() → 默认 status='candidate'
+        │
+        ▼
+   review_policy() ──→ 低风险/无冲突 ──→ status='active'（自动确认）
+        │
+        └──→ 高冲突 / 敏感词 / 低置信度 ──→ status='candidate'（需人工审核）
+                        │
+                        ▼
+              交互式卡片推送 ──→ 用户点击「确认/驳回」
+                        │
+                        ▼
+              confirm_candidate() ──→ status='active' + audit_log
+```
 
-### ⏰ 主动提醒
-- **DDL 心跳推送** - 提前7天开始提醒，每3天一次
-- **智能去重** - push_log 表记录，避免重复骚扰
-- **紧急度分级** - 🟡提醒 → 🟠预警 → 🔴紧急
+- **Candidate/Active 状态机**：新记忆自动审查，高风险进入人工审核队列
+- **审查策略**：confidence<0.5 / 敏感词 / 冲突检测 → candidate
+- **审计日志**：`audit_log` 表记录每次 create/confirm/reject/update 操作
+- **证据链**：`evidence` 字段追溯原始聊天记录
+- **交互式卡片**：飞书群聊内一键确认/驳回，无需命令行
 
-### 🔄 版本管理
-- **矛盾检测** - 自动发现冲突决策
-- **Supersedes 机制** - 建立决策覆盖关系链
-- **完整历史追溯** - 保留所有版本，随时回查
+### 🔍 L0→L3 分层检索引擎
 
-### 📊 团队协作
-- **飞书多维表格同步** - 一键同步，团队共享
-- **每日日志生成** - 自动生成决策日报
-- **上下文工程师** - 解决 AI 对话遗忘问题
+| 层级 | 名称 | 技术 | 延迟 | 触发条件 |
+|------|------|------|------|----------|
+| L0 | 热缓存 | Python dict + access_log 统计 | < 1ms | 每次 query 必先查 |
+| L1 | 精确匹配 | SQLite LIKE + BM25 简化 | < 10ms | L0 未命中 |
+| L2 | 向量语义 | Chroma + qwen text-embedding-v3 | < 50ms | L1 未命中 |
+| L3 | 深度推理 | LLM 综合归纳（qwen-turbo） | < 2s | 结果不足或需总结 |
+
+### 🧬 知识图谱（Knowledge Graph）
+
+```
+[Decision: "采用 APISIX"] ──BELONGS_TO──→ [Project: "API网关选型"]
+        │
+        ├── DECIDED_BY ──→ [Person: "张三"]
+        ├── USES ──→ [Technology: "APISIX"]
+        ├── USES ──→ [Technology: "etcd"]
+        ├── HAS_DEADLINE ──→ [Deadline: "2026-05-10"]
+        └── SUPERSEDES ──→ [Decision: "旧决策"]
+```
+
+- 自动抽取 Project / Decision / Person / Technology / Deadline 实体
+- 支持自然语言查询：`"项目A用了哪些技术"`、`"项目A的决策人是谁"`
+
+### ⏰ DDL 心跳推送（Heartbeat）
+
+- **定时扫描**：每12小时检查 `decisions.deadline`
+- **推送规则**：DDL 前7天开始，每3天推送一次
+- **去重机制**：`push_log` 表记录已推送节点，避免骚扰
+- **urgency 分级**：🔴 <3天 / 🟠 <7天 / 🟡 提醒
+
+### 📊 Benchmark 质量评估框架
+
+| 维度 | 指标 | 权重 |
+|------|------|------|
+| 准确性 | candidate 比例 / active 被覆盖率 | 35% |
+| 完整性 | deadline 提取率 | 25% |
+| 时效性 | 遗忘率 | 25% |
+| 覆盖率 | 项目覆盖率 | 15% |
+
+- 自动化测试用例：`benchmark_cases/cases.json`
+- 覆盖 6 大场景：决策捕获 / 聚合 / 失效 / 重复推送 / 负例 / 查询
+
+---
+
+## 🏗️ 系统架构
+
+### 全景架构图
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                           Feishu Group Chat                                 │
+│                       "项目A决定用Vue3，5月10日上线"                          │
+└───────────────────────────────────┬─────────────────────────────────────────┘
+                                    │
+                                    ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                         Chat Auto Listener                                  │
+│                  • 关键词触发：决定/上线/截止/DDL/里程碑                       │
+│                    • 无需 @，自动提取决策 + deadline                          │
+│               • 调用 extract_decision_structured() (< 10ms)                  │
+└───────────────────────────────────┬─────────────────────────────────────────┘
+                                    │
+              ┌─────────────────────┼──────────────────┐
+              ▼                     ▼                  ▼
+    ┌──────────────────┐ ┌─────────────────┐ ┌─────────────────┐
+    │  review_policy() │ │  Conflict Check │ │   Knowledge     │
+    │  status=active   │ │  superseded_by  │ │   Graph Index   │
+    │  or candidate    │ │  相似度 > 0.5    │ │   triples 表    │
+    └────────┬─────────┘ └────────┬────────┘ └────────┬────────┘
+             │                    │                   │
+             └─────────┬──────────┴─────────┬─────────┘
+                       ▼                    ▼
+            ┌───────────────────┐   ┌─────────────────┐
+            │  SQLite decisions │   │  Chroma Vector  │
+            │  + audit_log      │   │  Collection     │
+            │  + memory_edges   │   │  embedding 缓存 │
+            └────────┬──────────┘   └────────┬────────┘
+                     │                       │
+                     └──────────┬────────────┘
+                                ▼
+            ┌─────────────────────────────────────┐
+            │      Interactive Cards Agent        │
+            │  status=candidate → 推送审核卡片     │
+            │  用户点击 confirm/reject → 状态变更  │
+            └─────────────────────────────────────┘
+                                │
+              ┌─────────────────┼─────────────────┐
+              ▼                 ▼                 ▼
+    ┌──────────────────┐ ┌─────────────────┐ ┌─────────────────┐
+    │  Heartbeat Agent │ │ Daily Log Agent │ │  Bitable Sync   │
+    │  DDL 主动推送     │ │ logs/YYYY-MM.md │ │  自动同步到      │
+    │  每12h扫描        │ │  + benchmark    │ │  飞书多维表格    │
+    └──────────────────┘ └─────────────────┘ └─────────────────┘
+                                │
+                                ▼
+            ┌─────────────────────────────────────┐
+            │      Retrieval Engine (L0→L3)       │
+            │  热缓存 → SQLite → Chroma → LLM      │
+            │  query / recall / kg_query          │
+            └─────────────────────────────────────┘
+                                │
+                                ▼
+            ┌─────────────────────────────────────┐
+            │        Dashboard (Admin UI)         │
+            │  http://127.0.0.1:8080              │
+            │  概览 / 决策列表 / 审核 / 审计        │
+            └─────────────────────────────────────┘
+```
+
+### Multi-Agent 协作流程
+
+```
+┌─────────────────────────────────────┐
+│  Feishu Message (群聊/私聊)          │
+│  "项目A决定用Vue3，5月10日上线"       │
+└───────────────────┬─────────────────┘
+                    │
+                    ▼
+┌─────────────────────────────────────┐
+│  Chat Auto Listener                 │
+│  • 关键词触发：决定/上线/截止/DDL     │
+│  • 无需 @，自动提取决策+deadline      │
+│  • 自动 record + sync 到多维表格      │
+└───────────────────┬─────────────────┘
+                    │
+                    ▼
+┌──────────────────────────────────────┐
+│  Context Engineer                    │
+│  • 加载 memory.md 长期记忆            │
+│  • 加载最近7天决策                    │
+│  • 加载指定项目的全部决策              │
+└───────────────────┬──────────────────┘
+                    │
+                    ▼
+┌──────────────────────────────────────┐
+│  Memory Agent                        │
+│  • 规则抽取 (< 10ms) + deadline 提取   │
+│  • SQLite 结构化存储 + Governance 审查 │
+│  • Chroma 向量存储                    │
+└───────────────────┬──────────────────┘
+                    │
+                    ▼
+┌──────────────────────────────────────┐
+│  Heartbeat Agent                     │
+│  • 每12h扫描DDL节点                   │
+│  • DDL前一周每三天推送提醒卡片         │
+│  • 自动发送飞书群消息                  │
+└───────────────────┬──────────────────┘
+                    │
+                    ▼
+┌──────────────────────────────────────┐
+│  Daily Log Agent                     │
+│  • 每天生成 logs/YYYY-MM-DD.md        │
+│  • 超30天自动归档                     │
+│  • 集成 Benchmark 质量评分            │
+└──────────────────────────────────────┘
+```
+
+---
+
+## 🛠️ 技术栈
+
+### 核心存储
+
+| 组件 | 用途 | 版本 |
+|------|------|------|
+| **SQLite** | 结构化决策存储 + 审计日志 + 访问日志 | 标准库 |
+| **Chroma** | 向量检索（决策语义相似度）| ^0.4.0 |
+| **qwen text-embedding-v3** | 文本向量化（1024维）| API |
+
+### AI / NLP
+
+| 组件 | 用途 |
+|------|------|
+| **qwen-turbo** | LLM 结构化抽取 + L3 深度推理 |
+| **规则引擎** | 快速决策提取（< 10ms，默认路径）|
+| **Jaccard 相似度** | 冲突检测（决策覆盖判定）|
+
+### 飞书生态
+
+| 组件 | 用途 |
+|------|------|
+| **lark-oapi** | 官方 WebSocket 长连接客户端 |
+| **飞书 IM API** | 发送消息 / 交互式卡片 |
+| **飞书 Bitable API** | 多维表格自动同步 |
+
+### Web & 监控
+
+| 组件 | 用途 |
+|------|------|
+| **http.server** | Dashboard 管理后台（零依赖）|
+| **requests** | HTTP API 调用 |
 
 ---
 
 ## 🚀 快速开始
 
-### 前置要求
-
-- Python 3.8+
-- OpenClaw Gateway 运行中
-- 飞书应用凭证（appId + appSecret）
-
-### 安装步骤
-
-#### 1️⃣ 克隆仓库
+### 1. 安装依赖
 
 ```bash
-cd ~/.openclaw/skills
-git clone https://github.com/openclaw-feishu-team/Anchora.git feishu-memory
+cd skills/feishu-memory
+pip install -r requirements.txt  # chromadb, requests, lark-oapi
 ```
-#### 2️⃣ 安装依赖
 
-```bash
-pip install chromadb requests numpy
-```
-#### 3️⃣ 配置飞书凭证
+### 2. 配置飞书应用
 
-创建 `config.json`：
+在 `openclaw.json` 中配置飞书账号：
+
 ```json
-{ 
-  "bitable": {
-      "base_id": "<your_base_id>",
-      "table_id": "<your_table_id>"
-  } 
+"channels": {
+  "feishu": {
+    "accounts": {
+      "group": {
+        "appId": "cli_xxx",
+        "appSecret": "xxx",
+        "encryptKey": "xxx",
+        "verificationToken": "xxx"
+      }
+    }
+  }
 }
 ```
-**获取 base_id / table_id：**
-1. 打开飞书多维表格
-2. URL 中 `base/` 后面是 `base_id`
-3. `table=` 后面是 `table_id`
 
-**权限配置：**
-1. 飞书开放平台 → 应用 → 权限管理
-2. 添加权限：`bitable:app`、`bitable:record`
-3. 多维表格 → 分享 → 添加应用为协作者
-4. 重新发布应用版本
+飞书后台配置：
+- 事件与回调 → 回调配置 → **使用长连接接收回调**
+- 订阅事件：`卡片回传交互`（`card.action.trigger`）
+- 权限管理：开启 `im:message:send_as_bot`
 
-### 基础用法
-
-#### 📝 记录决策
-```markdown
-python scripts/feishu_memory_cli.py record
-"项目A决定用Vue3，5月10日上线"
---project "项目A" --chat "oc_xxx"
-```
-#### 🔍 查询决策
-```markdown
-python scripts/feishu_memory_cli.py query
---project "项目A" --q "为什么选Vue3" --limit 5
-```
-#### 📋 列出所有项目
-```markdown
-python scripts/feishu_memory_cli.py projects
-```
-#### 🔄 同步到多维表格
-```markdown
-python scripts/feishu_memory_cli.py sync --account group
-```
-#### ⏰ 检查 DDL 提醒
-```markdown
-python heartbeat.py check --dry-run
-```
----
-
-## 📖 使用指南
-
-### 场景 1：群聊自动记录
-
-当群聊中出现以下关键词时，**自动触发记录**：
-
-```markdown
-✅ 决策词：决定、确定、结论、拍板、选定、方案、架构 
-✅ DDL词：上线、截止、ddl、deadline、里程碑、交付 
-✅ 项目词：项目、产品、模块、功能、系统
-示例：
-"我们项目D明天要提测了" → 自动记录 deadline
-"前端框架确定用Vue3" → 自动记录决策
-```
-### 场景 2：构建对话上下文
-
-每次对话前，Agent 自动加载历史决策：
+### 3. 启动长连接客户端
 
 ```bash
-python context_engineer.py build
---chat-id "oc_xxx" --project "项目A"
-```
-返回包含最近 7 天决策的 system prompt，确保 AI 不会遗忘之前的讨论。
-
-### 场景 3：DDL 主动推送
-
-每 12 小时自动扫描数据库，推送即将到期的节点：
-
-#### 添加到系统计划任务
-```markdown
-python heartbeat.py check
-``` 
-**推送卡片示例：**
-```markdown
-🔴 紧急 项目节点提醒
-📋 项目：项目A 
-📝 内容：使用Vue3重构前端... 
-📅 DDL：2026-05-10 
-⏰ 剩余：2 天 👤 负责人：张三
-—— 来自 feishu-memory 心跳推送
+python interactive_cards.py ws --account group
 ```
 
-### 场景 4：每日日志生成
-
-每天自动生成决策日报：
+### 4. 测试记录决策
 
 ```bash
-python daily_log.py write
+python scripts/feishu_memory_cli.py record "项目A决定用Vue3，5月10日上线" \
+  --project "项目A" \
+  --chat "oc_xxx" \
+  --confidence 0.3
 ```
-输出文件：`logs/2026-05-01.md`
+
+### 5. 启动 Dashboard
+
+```bash
+python dashboard.py --port 8080
+# 浏览器打开 http://127.0.0.1:8080
+```
 
 ---
 
-## 🏗️ 技术架构
+## 📊 Benchmark
 
-### 系统架构图
+### 运行测试
 
-```mermaid 
-flowchart LR
-    %% ========== 输入层 ==========
-    subgraph L1["📥 输入层"]
-        A["飞书消息<br/>群聊 / 私聊"]
-    end
-
-    %% ========== 监听与预处理 ==========
-    subgraph L2["🔍 监听与预处理"]
-        B["Chat Auto Listener<br/>群聊监听器"]
-
-        subgraph KW["关键词分类"]
-            B1["决策词<br/>决定 / 确定 / 结论"]
-            B2["DDL词<br/>上线 / 截止 / deadline"]
-            B3["项目词<br/>项目 / 产品 / 模块"]
-        end
-
-        C{"关键词检测"}
-        E["普通消息<br/>直接回复"]
-
-        B --> KW
-        KW --> C
-    end
-
-    %% ========== 核心处理层 ==========
-    subgraph L3["🧠 核心处理层 · Multi-Agent"]
-
-        subgraph D_Block["Context Engineer"]
-            D["上下文工程师"]
-            D1["加载最近7天决策"]
-            D2["构建 System Prompt"]
-            D --> D1 --> D2
-        end
-
-        subgraph F_Block["Memory Agent"]
-            F["决策存储引擎"]
-            F1["规则抽取 (<10ms)"]
-            F2["LLM结构化抽取（后备）"]
-            F3["矛盾检测 + 版本管理"]
-            F --> F1 --> F2 --> F3
-        end
-
-        subgraph R_Block["Recall Agent"]
-            R["主动推送代理"]
-            R1["语义向量检索"]
-            R2["遗忘曲线过滤"]
-            R --> R1 --> R2
-        end
-
-        D --> F --> R
-    end
-
-    %% ========== 存储层 ==========
-    subgraph L4["💾 数据存储层"]
-
-        subgraph SQL["SQLite"]
-            G1["decisions"]
-            G2["push_log"]
-            G3["access_log"]
-            G4["embed_cache"]
-        end
-
-        subgraph VEC["ChromaDB"]
-            H1["decisions collection"]
-            H2["预计算 embedding"]
-        end
-    end
-
-    %% ========== 输出层 ==========
-    subgraph L5["📤 输出与同步"]
-
-        subgraph SYNC["数据同步"]
-            I["Auto Sync"]
-            J["飞书 Bitable"]
-            I --> J
-        end
-
-        subgraph HEART["Heartbeat Agent"]
-            K["心跳推送"]
-            K1["每12h扫描DDL"]
-            K2["智能去重"]
-            M["发送飞书卡片"]
-            K --> K1 --> K2 --> M
-        end
-
-        subgraph LOG["Daily Log"]
-            O["日志Agent"]
-            P["生成 Markdown<br/>logs/YYYY-MM-DD.md"]
-            O --> P
-        end
-    end
-
-    %% ========== 主流程 ==========
-    A --> B
-    C -->|匹配| D
-    C -->|不匹配| E
-
-    %% ========== 数据流 ==========
-    F --> SQL
-    F --> VEC
-    R --> VEC
-
-    F --> I
-    K1 --> SQL
-    O --> SQL
+```bash
+python benchmark.py cases
 ```
-#### 简化版本
-```mermaid
-flowchart LR
-    A["📥 Feishu Input"] --> B["🔍 Listener"]
 
-    B --> C{"Intent Detection"}
+### 测试覆盖
 
-    C -->|Decision / DDL| D["🧠 Multi-Agent Core"]
-    C -->|Normal Chat| E["💬 Direct Reply"]
+| 场景 | case_type | 用例数 | 分值 |
+|------|-----------|--------|------|
+| 决策捕获 | `decision_capture` | 3 | 45 |
+| 决策聚合 | `decision_aggregation` | 1 | 25 |
+| 决策失效 | `decision_invalidated` | 1 | 15 |
+| 重复推送 | `decision_repeat_push` | 1 | 15 |
+| **合计** | | **6** | **100** |
 
-    subgraph CORE["Multi-Agent System"]
-        D1["Context Engineer"]
-        D2["Memory Agent"]
-        D3["Recall Agent"]
-        D1 --> D2 --> D3
-    end
+### 质量评估报告
 
-    D --> CORE
-
-    CORE --> F["💾 Storage Layer"]
-
-    subgraph STORAGE
-        S1["SQLite<br/>结构化"]
-        S2["Vector DB<br/>语义检索"]
-    end
-
-    F --> STORAGE
-
-    STORAGE --> G["📤 Output System"]
-
-    subgraph OUTPUT
-        O1["Bitable Sync"]
-        O2["Heartbeat Push"]
-        O3["Daily Log"]
-    end
+```bash
+python benchmark.py run
 ```
-### 技术栈全景图
 
-<div align="center">
-
-```mermaid 
-flowchart LR
-
-    %% ================= 应用层 =================
-    subgraph L1["🚀 应用层 Application"]
-        direction LR
-        A1["OpenClaw<br/>Gateway"]
-        A2["Skill<br/>规范"]
-        A3["Multi-Agent<br/>架构"]
-    end
-
-    %% ================= 业务层 =================
-    subgraph L2["⚙️ 业务逻辑层 Business Logic"]
-        direction LR
-        B6["Chat Auto<br/>Listener"]
-        B1["Context<br/>Engineer"]
-        B2["Memory<br/>Agent"]
-        B4["Recall<br/>Agent"]
-        B3["Heartbeat<br/>Agent"]
-        B5["Daily Log<br/>Agent"]
-    end
-
-    %% ================= 数据层 =================
-    subgraph L3["💾 数据访问层 Data Access"]
-        direction LR
-        C1["SQLite<br/>ORM"]
-        C2["ChromaDB<br/>Client"]
-        C3["Feishu API<br/>SDK"]
-        C4["Qwen<br/>DashScope API"]
-        C5["规则引擎"]
-        C6["缓存管理器"]
-    end
-
-    %% ================= 基础设施 =================
-    subgraph L4["🏗️ 基础设施层 Infrastructure"]
-        direction LR
-        D1["Python<br/>3.8+"]
-        D2["requests / argparse<br/>hashlib / re"]
-        D3["pathlib / datetime<br/>json / io"]
-    end
-
-    %% ================= 分层关系 =================
-    L1 --> L2
-    L2 --> L3
-    L3 --> L4
-
-    %% ================= 样式 =================
-    style L1 fill:#e3f2fd,stroke:#333,stroke-width:2px
-    style L2 fill:#fff3e0,stroke:#333,stroke-width:2px
-    style L3 fill:#eeeeee,stroke:#333,stroke-width:2px
-    style L4 fill:#e8f5e9,stroke:#333,stroke-width:2px
-
-    classDef nodeStyle fill:#ffffff,stroke:#666,stroke-width:1px,rx:10
-    class A1,A2,A3,B1,B2,B3,B4,B5,B6,C1,C2,C3,C4,C5,C6,D1,D2,D3 nodeStyle
-```
-</div>
----
-
-## 🛠️ 技术栈
-
-### 核心框架
-
-<table>
-<tr>
-<td width="50%">
-
-**Python 3.8+**
-- 跨平台支持
-- 丰富的标准库
-
-</td>
-<td width="50%">
-
-**OpenClaw SDK**
-- AI Agent 运行时
-- Skill 规范集成
-
-</td>
-</tr>
-</table>
-
-### 数据存储
-
-#### SQLite3（5张核心表）
-
-| 表名 | 用途 |
-|------|------|
-| `decisions` | 主决策表（13字段） |
-| `push_log` | DDL推送日志 |
-| `access_log` | 记忆访问记录 |
-| `embed_cache` | Embedding缓存 |
-| `decision_contexts` | 上下文摘要 |
-
-#### ChromaDB
-
-- 向量相似度搜索
-- 预计算 embedding
-- 元数据过滤查询
-
-### AI & NLP
-
-#### 阿里云 DashScope API
-
-**端点：** `https://dashscope.aliyuncs.com/compatible-mode/v1`
-
-| 模型 | 用途 |
-|------|------|
-| `text-embedding-v3` | 文本向量化（1024维） |
-| `qwen-turbo-1101` | 结构化抽取（可选） |
-
-#### 规则引擎
-
-- **日期提取**：支持 `2026年10月31日`、`2026-10-31`、`10月31日`
-- **项目识别**：`项目X`、`XX项目组`
-- **触发词**：30+决策词、20+DDL词、7+项目词
-
-### 飞书集成
-
-**Feishu Open API v2**
-
-| API | 用途 |
-|-----|------|
-| `auth/v3/tenant_access_token` | 获取租户令牌 |
-| `im/v1/messages` | 发送消息卡片 |
-| `bitable/v1/apps/.../records` | 多维表格CRUD |
-
-### 关键算法
-
-#### Ebbinghaus 遗忘曲线
-```python
-strength = exp(-age / ttl) 
-if strength < 0.1: archive()
-```
-#### Jaccard 相似度
-```python
-similarity = |A∩B| / |A∪B|
-if > 0.5: mark_superseded()
-```
-#### SHA256 缓存
-```python
-hash = SHA256(text)[:16] 
-cache_hit_rate > 90%
-```
-### 设计模式
-
-- **Multi-Agent**：6个专用Agent协作
-- **策略模式**：规则优先 → LLM后备 → Fallback
-- **观察者模式**：关键词监听触发
-- **缓存模式**：三层缓存策略
-
-### 性能指标
-
-| 指标 | 数值 |
-|------|------|
-| 决策抽取 | < 10ms |
-| 语义检索 | < 50ms |
-| 缓存命中 | ~10ms |
-| 同步成功率 | 95%+ |
+生成 `benchmarks/YYYY-MM-DD.json`，包含：
+- 准确性 / 完整性 / 时效性 / 覆盖率 四维评分
+- 每日日志自动嵌入质量摘要
 
 ---
 
-## 🎯 优化亮点
+## 📁 项目结构
 
-### 解决的核心问题
-
-| 问题 | 解决方案 | 效果 |
-|------|---------|------|
-| **上下文遗忘** | Context Engineer 加载最近7天决策 | ✅ AI 记住历史讨论 |
-| **决策丢失** | 群聊自动监听，无需手动@ | ✅ 零感知记录 |
-| **DDL 遗漏** | Heartbeat 每12h扫描推送 | ✅ 提前7天提醒 |
-| **检索不准** | Chroma 向量语义搜索 | ✅ 理解"前端框架"="Vue3" |
-| **数据孤岛** | 自动同步飞书多维表格 | ✅ 团队共享可见 |
-| **API 超时** | 规则引擎优先（<10ms），LLM 后备 | ✅ 响应速度提升100倍 |
-| **重复推送** | push_log 去重，每3天一次 | ✅ 避免骚扰用户 |
-| **记忆膨胀** | Ebbinghaus 遗忘曲线自动归档 | ✅ 保持数据库精简 |
-
-### 性能对比
-
-| 指标 | 优化前 | 优化后 | 提升 |
-|------|--------|--------|------|
-| 决策抽取耗时 | ~3s (LLM) | <10ms (规则) | **300x** |
-| 语义检索耗时 | ~500ms (首次) | ~10ms (缓存) | **50x** |
-| 向量检索耗时 | - | <50ms (Chroma) | **新增** |
-| 同步成功率 | 60% | 95%+ | **58%** |
-| 推送准确率 | - | 100% (去重) | **新增** |
-
----
-
-## 📂 项目结构
-
-```markdown
-feishu-memory/
-├── SKILL.md # OpenClaw Skill 定义
-├── README.md # 本文档
-├── memory.py # 核心存储引擎 (940行)
-├── context_engineer.py # 上下文工程师 (182行)
-├── heartbeat.py # 心跳推送引擎 (399行)
-├── chat_auto_record.py # 群聊自动监听 (8KB)
-├── daily_log.py # 每日日志生成器 (7.7KB)
+```
+skills/feishu-memory/
+├── README.md                          # 本文档
+├── SKILL.md                           # OpenClaw Agent 调用规范
+├── memory.md                          # Agent 长期记忆层
+├── CLAUDE_PROMPT.md                   # Claude 高级功能补齐 Prompt
+│
+├── memory.py                          # 核心：SQLite + Chroma + Governance
+├── context_engineer.py                # 上下文构建（解决遗忘）
+├── heartbeat.py                       # DDL 主动推送引擎
+├── chat_auto_record.py                # 群聊自动监听
+├── daily_log.py                       # 每日日志 + Benchmark 集成
+├── interactive_cards.py               # 飞书交互式卡片 + WebSocket 长连接
+├── retrieval_engine.py                # L0→L3 分层检索
+├── knowledge_graph.py                 # 简化知识图谱
+├── benchmark.py                       # 质量评估框架
+├── dashboard.py                       # 本地管理后台
+│
 ├── scripts/
-│ └── feishu_memory_cli.py # 统一 CLI 入口
-├── config.json # 多维表格配置 
-├── memory.db # SQLite 数据库
-├── chroma_db/ # Chroma 向量库 
-├── logs/ # 每日日志
-│ ├── 2026-05-01.md
-│ └── archive/ # 30天以上自动归档
-├── image/ # 演示截图/GIF
-│ ├── demo1.png
-│ ├── demo1.gif
-│ ├── demo2.png
-│ ├── demo2.gif
-│ ├── demo3.png
-│ ├── demo3.gif
-│ ├── demo4.png
-│ └── demo4.gif
-└── LICENSE
+│   └── feishu_memory_cli.py           # Agent 统一 CLI 入口
+├── benchmark_cases/
+│   └── cases.json                     # 自动化测试用例
+├── benchmarks/                        # 评估报告输出
+├── logs/                              # 每日日志
+│   └── archive/                       # 归档日志
+├── config.json                        # Bitable 配置
+├── memory.db                          # SQLite 数据库
+└── chroma_db/                         # Chroma 向量库
 ```
----
-
-## 🐛 故障排查
-
-| 问题 | 可能原因 | 解决方案 |
-|------|---------|---------|
-| Agent 说"将启动"但不执行 | Skill 未正确加载 | 检查 `SKILL.md` 权限配置 |
-| 获取 token 失败 | appId/appSecret 错误 | 检查 openclaw.json 配置 |
-| 同步失败 | Bitable 权限不足 | 确认应用有表格读写权限 |
-| 向量检索无结果 | Chroma DB 未初始化 | 删除 `chroma_db/` 重启 |
-| heartbeat 无推送 | decisions 表无 deadline | 检查记录时是否提取日期 |
-| 自动记录未触发 | 消息不含关键词 | 添加新关键词到白名单 |
 
 ---
 
-## 📈 路线图
+## 📖 核心命令速查
 
-- [ ] 支持更多飞书消息类型（图片、文件）
-- [ ] 增加决策影响力评分
-- [ ] 支持多人协作标注
-- [ ] 导出为 Notion/Obsidian
-- [ ] Web UI 管理界面
-- [ ] 支持 Slack/Discord 等其他平台
+```bash
+# 记录决策（自动抽取 + 自动同步 + 自动发卡片）
+python scripts/feishu_memory_cli.py record "决策描述" --project "项目名" --chat "oc_xxx"
+
+# 分层检索
+python scripts/feishu_memory_cli.py query --project "项目A" --q "为什么选Vue3" --layer L3
+
+# 知识图谱查询
+python scripts/feishu_memory_cli.py kg "项目A用了哪些技术"
+
+# 列出 candidate 待审核
+python scripts/feishu_memory_cli.py review
+
+# 确认 candidate
+python scripts/feishu_memory_cli.py confirm <memory_id>
+
+# DDL 心跳推送
+python heartbeat.py check
+
+# 每日日志
+python daily_log.py write
+
+# Benchmark
+python benchmark.py cases
+python benchmark.py run
+
+# Dashboard
+python dashboard.py --port 8080
+
+# 长连接客户端
+python interactive_cards.py ws --account group
+```
 
 ---
 
-## 🤝 贡献指南
+## 🔐 Security
 
-欢迎提交 Issue 和 Pull Request！
-
-1. Fork 本仓库
-2. 创建特性分支 (`git checkout -b feature/AmazingFeature`)
-3. 提交更改 (`git commit -m 'Add some AmazingFeature'`)
-4. 推送到分支 (`git push origin feature/AmazingFeature`)
-5. 开启 Pull Request
+- 所有数据存储在本地 SQLite + Chroma，不上传第三方
+- 向量模型通过 qwen API 调用，embedding 结果本地缓存
+- 交互式卡片使用 WebSocket 长连接，无需暴露公网端口
+- 敏感关键词（密码/token/薪资/身份证号）自动进入 candidate 审核
 
 ---
 
-## 📄 许可证
+## 📝 License
 
-本项目采用 MIT 许可证 - 详见 [LICENSE](LICENSE) 文件
-
----
-
-## 🙏 致谢
-
-- [OpenClaw](https://github.com/openclaw/openclaw) - 强大的 AI Agent 框架
-- [ChromaDB](https://www.trychroma.com/) - 轻量级向量数据库
-- [飞书开放平台](https://open.feishu.cn/) - 完善的 API 支持
-- [Qwen](https://tongyi.aliyun.com/qianwen/) - 优秀的中文大模型
+MIT License — 自由使用、修改、分发。
 
 ---
 
 <div align="center">
 
-**Made with ❤️ by Feishu Memory Team**
-
-⭐ 如果这个项目对你有帮助，请给我们一个 Star！
-
-[🔝 回到顶部](#-feishu-memory---飞书智能决策记忆系统)
+**Built for Feishu AI Challenge** · **Powered by OpenClaw** · **Made with ❤️**
 
 </div>

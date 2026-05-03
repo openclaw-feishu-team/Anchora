@@ -171,6 +171,108 @@ python skills/feishu-memory/daily_log.py write
 python skills/feishu-memory/daily_log.py list
 ```
 
+### 9. review — 查看待审核记忆
+
+```bash
+python skills/feishu-memory/scripts/feishu_memory_cli.py review
+```
+
+### 10. confirm — 确认记忆为 active
+
+```bash
+python skills/feishu-memory/scripts/feishu_memory_cli.py confirm <memory_id> --actor admin
+```
+
+### 11. reject — 驳回 candidate 记忆
+
+```bash
+python skills/feishu-memory/scripts/feishu_memory_cli.py reject <memory_id>
+```
+
+### 12. interactive-cards — 发送 candidate 审核卡片到飞书群聊
+
+**依赖**: `pip install lark-oapi`
+
+**飞书后台配置（必须）**：
+1. 打开 [飞书开发者平台](https://open.feishu.cn/app) → 你的应用 → **事件与回调**
+2. **回调配置** → 选择 **「使用长连接接收回调」**
+3. 如果没有 Encrypt Key，点击「重置」生成一对新的 **Encrypt Key** 和 **Verification Token**
+4. 将这两个值填入 `openclaw.json` → `channels.feishu.accounts.group.encryptKey` 和 `verificationToken`
+5. **事件配置** → 添加订阅事件：**卡片回传交互**（`card.action.trigger`）
+6. **权限管理** → 搜索并开启：
+   - `im:message:send_as_bot`（以机器人身份发送消息）
+   - `im:chat:readonly`（读取群聊信息）
+
+**启动长连接客户端**：
+```bash
+python skills/feishu-memory/interactive_cards.py ws --account group
+```
+
+**发送 candidate 卡片到群聊**：
+```bash
+python skills/feishu-memory/scripts/feishu_memory_cli.py record "测试决策" --project "测试" --chat "oc_xxx" --confidence 0.3
+```
+
+当记录为 `candidate` 状态时，会自动发送审核卡片到群聊。用户点击「确认入库」或「驳回」后，长连接客户端自动处理状态变更。
+
+### 11. reject — 驳回 candidate 记忆
+
+```bash
+python skills/feishu-memory/scripts/feishu_memory_cli.py reject <memory_id> --actor admin
+```
+
+### 12. layered query — L0/L1/L2/L3 分层检索
+
+```bash
+python skills/feishu-memory/scripts/feishu_memory_cli.py query --project "项目A" --q "为什么选Vue3" --limit 5 --layer L3
+```
+
+层级说明：
+- `L0`：最近 24h + 高频访问热缓存
+- `L1`：SQLite LIKE 精确匹配
+- `L2`：Chroma 向量语义检索
+- `L3`：LLM/规则综合归纳
+
+### 13. kg — 知识图谱查询
+
+```bash
+python skills/feishu-memory/scripts/feishu_memory_cli.py kg "项目A用了哪些技术"
+python skills/feishu-memory/scripts/feishu_memory_cli.py kg --rebuild
+```
+
+### 14. interactive-cards — 飞书交互式审核卡片
+
+```bash
+python skills/feishu-memory/interactive_cards.py server --port 8787
+python skills/feishu-memory/interactive_cards.py reject <memory_id> --actor admin
+```
+
+当 `record` 产生 `candidate` 状态且传入 `--chat` 时，会自动尝试向该飞书群聊发送「确认入库 / 驳回」交互式卡片。
+
+### 15. benchmark — 记忆质量评估
+
+```bash
+python skills/feishu-memory/benchmark.py run
+python skills/feishu-memory/benchmark.py report --days 7
+```
+
+报告写入：`skills/feishu-memory/benchmarks/YYYY-MM-DD.json`。`daily_log.py write` 会自动附加质量评分摘要。
+
+### 16. dashboard — 本地管理后台
+
+```bash
+python skills/feishu-memory/dashboard.py --port 8080
+```
+
+访问：`http://127.0.0.1:8080`
+
+页面：
+- `/` 概览
+- `/decisions` 决策列表
+- `/decisions/<id>` 决策详情
+- `/review` candidate 审核队列
+- `/audit` 审计日志
+
 ## Workflow for OpenClaw Agent (解决上下文遗忘)
 
 ### 标准对话流程
@@ -300,6 +402,48 @@ python skills/feishu-memory/heartbeat.py check
 3. 推送即关怀 — DDL前一周每三天推送提醒
 4. 同步即归档 — 每次记录自动同步到多维表格
 
+## Governance Layer（治理层）
+
+新增 **Candidate → Active 审查机制**，灵感来自竞品的审计与版本治理：
+
+### 状态机
+
+```
+store_decision() → 默认 status='candidate'
+        │
+        ▼
+   review_policy() ──→ 低风险/无冲突 ──→ status='active'（自动确认）
+        │
+        └──→ 高冲突 / 敏感词 / 低置信度 ──→ status='candidate'（需人工审核）
+                        │
+                        ▼
+              confirm_candidate(id) ──→ status='active'
+```
+
+### 审查策略（review_policy）
+
+| 条件 | 结果 |
+|------|------|
+| confidence < 0.5 | candidate |
+| 含敏感词（密码/token/薪资/身份证号等） | candidate |
+| 与现有 active 决策冲突（相似度>0.5） | candidate |
+| 其他 | active（自动确认） |
+
+### 审计日志（audit_log）
+
+每次 `create / confirm / reject / update` 都会写入 `audit_log`：
+
+```bash
+# 查看某条记忆的审计历史
+python skills/feishu-memory/memory.py query --status all | grep <id>
+```
+
+### 证据链（evidence）
+
+- `evidence` 字段存储原始消息内容或来源链接
+- 群聊自动记录时，自动填充原始消息作为证据
+- 支持溯源：任何决策可追溯到原始聊天记录
+
 ## Data Schema
 
 ### SQLite: decisions 表
@@ -319,6 +463,20 @@ python skills/feishu-memory/heartbeat.py check
 | ttl | 存活时间（秒） |
 | superseded_by | 被哪个新决策覆盖 |
 | deadline | **DDL日期（YYYY-MM-DD）** |
+| status | **状态：active / candidate / forgotten** |
+| evidence | **证据链（原始消息来源）** |
+| confidence | **置信度 0-1** |
+
+### SQLite: audit_log 表
+
+| 字段 | 说明 |
+|------|------|
+| id | 自增ID |
+| memory_id | 关联决策ID |
+| action | 操作类型：create / confirm / reject / update |
+| actor | 执行人（system / admin / user） |
+| details | 详情 |
+| created_at | 时间 |
 
 ### SQLite: push_log 表
 

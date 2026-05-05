@@ -1,0 +1,322 @@
+[
+  {
+    "case_id": "P3-CTX-001",
+    "case_type": "context_invalidated",
+    "pain_point": "决策上下文失效",
+    "points": 15,
+    "initial_event": "决定：数据库采用PostgreSQL。理由是团队有PG专家并且支持JSONB。",
+    "invalidating_event": "组织变更：唯一PG专家已转岗，当前团队没有PostgreSQL专职维护人。",
+    "updated_event": "决定：数据库改为MySQL。理由是运维团队更熟悉MySQL。",
+    "query": "/recall 数据库选型",
+    "expected_output": {
+      "expected_active_value": "数据库改为MySQL",
+      "forbidden_values": [
+        "数据库采用PostgreSQL"
+      ]
+    }
+  },
+  {
+    "case_id": "P3-CTX-002",
+    "case_type": "context_invalidated",
+    "pain_point": "决策上下文失效",
+    "points": 15,
+    "initial_event": "决定：消息队列采用Kafka。理由是吞吐高并且团队有运维经验。",
+    "invalidating_event": "约束变化：预算下调且仅允许托管服务。",
+    "updated_event": "决定：消息队列改为云托管RocketMQ。理由是托管服务运维成本更低。",
+    "query": "/query 消息队列方案",
+    "expected_output": {
+      "expected_active_value": "消息队列改为云托管RocketMQ",
+      "forbidden_values": [
+        "消息队列采用Kafka"
+      ]
+    }
+  },
+  {
+    "case_id": "P3-CTX-003",
+    "case_type": "context_invalidated",
+    "pain_point": "决策上下文失效",
+    "points": 15,
+    "initial_event": "决定：CI/CD使用自建Jenkins。理由是已有插件体系。",
+    "invalidating_event": "条件变化：安全审计要求流水线不得使用本地凭据文件。",
+    "updated_event": "决定：CI/CD迁移到GitHub Actions。理由是密钥托管和审计更规范。",
+    "query": "/recall CI/CD方案",
+    "expected_output": {
+      "expected_active_value": "CI/CD迁移到GitHub Actions",
+      "forbidden_values": [
+        "CI/CD使用自建Jenkins"
+      ]
+    }
+  },
+  {
+    "case_id": "P3-CTX-004",
+    "case_type": "context_invalidated",
+    "pain_point": "决策上下文失效",
+    "points": 15,
+    "initial_event": "决定：搜索服务采用Elasticsearch。理由是全文检索能力成熟。",
+    "invalidating_event": "资源变化：当前环境内存受限且ES运维压力过高。",
+    "updated_event": "决定：搜索服务改为OpenSearch托管版。理由是运维成本更可控。",
+    "query": "/query 搜索服务方案",
+    "expected_output": {
+      "expected_active_value": "搜索服务改为OpenSearch托管版",
+      "forbidden_values": [
+        "搜索服务采用Elasticsearch"
+      ]
+    }
+  },
+  {
+    "case_id": "P3-CTX-005",
+    "case_type": "context_invalidated",
+    "pain_point": "决策上下文失效",
+    "points": 15,
+    "initial_event": "决定：告警通知仅发值班群。理由是减少打扰范围。",
+    "invalidating_event": "事故复盘：多起P1未及时升级到技术负责人。",
+    "updated_event": "决定：P1告警通知值班群和技术负责人。理由是缩短处置决策路径。",
+    "query": "/recall 告警通知策略",
+    "expected_output": {
+      "expected_active_value": "通知值班群和技术负责人",
+      "forbidden_values": [
+        "仅发值班群"
+      ]
+    }
+  },
+  {
+    "case_id": "P3-CTX-006",
+    "case_type": "context_invalidated",
+    "pain_point": "决策上下文失效",
+    "points": 15,
+    "initial_event": "决定：日志保留30天。理由是存储成本考虑。",
+    "invalidating_event": "合规变化：审计要求关键日志至少保留180天。",
+    "updated_event": "决定：关键日志保留180天。理由是满足审计合规要求。",
+    "query": "/query 日志保留策略",
+    "expected_output": {
+      "expected_active_value": "关键日志保留180天",
+      "forbidden_values": [
+        "日志保留30天"
+      ]
+    }
+  },
+  {
+    "case_id": "P3-CTX-007",
+    "case_type": "context_invalidated",
+    "pain_point": "决策上下文失效",
+    "points": 15,
+    "initial_event": "决定：发布窗口固定在周五22点。理由是业务低峰。",
+    "invalidating_event": "业务变化：周五晚促销活动新增，流量峰值显著提升。",
+    "updated_event": "决定：发布窗口改为周三22点。理由是避开促销峰值。",
+    "query": "/recall 发布窗口安排",
+    "expected_output": {
+      "expected_active_value": "发布窗口改为周三22点",
+      "forbidden_values": [
+        "固定在周五22点"
+      ]
+    }
+  },
+  {
+    "case_id": "P3-CTX-008",
+    "case_type": "context_invalidated",
+    "pain_point": "决策上下文失效",
+    "points": 15,
+    "initial_event": "决定：对象存储按周归档。理由是减少操作频率。",
+    "invalidating_event": "成本变化：热数据成本过高，需要更细粒度生命周期。",
+    "updated_event": "决定：对象存储按天归档。理由是更快降本。",
+    "query": "/query 对象存储归档策略",
+    "expected_output": {
+      "expected_active_value": "按天归档",
+      "forbidden_values": [
+        "按周归档"
+      ]
+    }
+  },
+  {
+    "case_id": "P3-CTX-009",
+    "case_type": "context_invalidated",
+    "pain_point": "决策上下文失效",
+    "points": 15,
+    "initial_event": "决定：权限模型只用RBAC。理由是实现简单。",
+    "invalidating_event": "安全事件：出现跨组织越权读取。",
+    "updated_event": "决定：权限模型改为RBAC+ABAC。理由是补充上下文约束。",
+    "query": "/recall 权限模型结论",
+    "expected_output": {
+      "expected_active_value": "RBAC+ABAC",
+      "forbidden_values": [
+        "只用RBAC"
+      ]
+    }
+  },
+  {
+    "case_id": "P3-CTX-010",
+    "case_type": "context_invalidated",
+    "pain_point": "决策上下文失效",
+    "points": 15,
+    "initial_event": "决定：短信验证码有效期5分钟。理由是用户输入容错更高。",
+    "invalidating_event": "风控变化：撞库攻击上升，需要缩短凭证暴露窗口。",
+    "updated_event": "决定：短信验证码有效期改为2分钟。理由是降低攻击利用时间。",
+    "query": "/query 验证码有效期",
+    "expected_output": {
+      "expected_active_value": "有效期改为2分钟",
+      "forbidden_values": [
+        "有效期5分钟"
+      ]
+    }
+  },
+  {
+    "case_id": "P3-CTX-011",
+    "case_type": "context_invalidated",
+    "pain_point": "决策上下文失效",
+    "points": 15,
+    "initial_event": "决定：缓存TTL统一1小时。理由是减少回源压力。",
+    "invalidating_event": "产品变化：价格数据要求分钟级一致性。",
+    "updated_event": "决定：价格相关缓存TTL改为5分钟。理由是保证价格实时性。",
+    "query": "/recall 价格缓存策略",
+    "expected_output": {
+      "expected_active_value": "TTL改为5分钟",
+      "forbidden_values": [
+        "TTL统一1小时"
+      ]
+    }
+  },
+  {
+    "case_id": "P3-CTX-012",
+    "case_type": "context_invalidated",
+    "pain_point": "决策上下文失效",
+    "points": 15,
+    "initial_event": "决定：内部API统一HTTP。理由是开发门槛低。",
+    "invalidating_event": "规模变化：服务数量扩大，接口性能与IDL治理需求提升。",
+    "updated_event": "决定：内部API改为gRPC。理由是强类型IDL与高性能传输。",
+    "query": "/query 内部API协议",
+    "expected_output": {
+      "expected_active_value": "改为gRPC",
+      "forbidden_values": [
+        "统一HTTP"
+      ]
+    }
+  },
+  {
+    "case_id": "P3-CTX-013",
+    "case_type": "context_invalidated",
+    "pain_point": "决策上下文失效",
+    "points": 15,
+    "initial_event": "决定：备份保留7天。理由是历史上故障恢复窗口较短。",
+    "invalidating_event": "审计变化：财务系统要求至少保留90天。",
+    "updated_event": "决定：备份保留90天。理由是满足财务审计要求。",
+    "query": "/recall 备份保留时长",
+    "expected_output": {
+      "expected_active_value": "备份保留90天",
+      "forbidden_values": [
+        "备份保留7天"
+      ]
+    }
+  },
+  {
+    "case_id": "P3-CTX-014",
+    "case_type": "context_invalidated",
+    "pain_point": "决策上下文失效",
+    "points": 15,
+    "initial_event": "决定：单区部署即可。理由是当前流量规模不大。",
+    "invalidating_event": "可用性目标变化：SLA提升到99.95%。",
+    "updated_event": "决定：改为双可用区部署。理由是满足高可用SLA。",
+    "query": "/query 部署架构策略",
+    "expected_output": {
+      "expected_active_value": "双可用区部署",
+      "forbidden_values": [
+        "单区部署即可"
+      ]
+    }
+  },
+  {
+    "case_id": "P3-CTX-015",
+    "case_type": "context_invalidated",
+    "pain_point": "决策上下文失效",
+    "points": 15,
+    "initial_event": "决定：前端静态资源缓存7天。理由是提升加载速度。",
+    "invalidating_event": "运营变化：活动页需当天多次更新，旧资源缓存命中导致展示延迟。",
+    "updated_event": "决定：活动页静态资源缓存改为10分钟。理由是保证内容及时生效。",
+    "query": "/recall 活动页缓存时间",
+    "expected_output": {
+      "expected_active_value": "缓存改为10分钟",
+      "forbidden_values": [
+        "缓存7天"
+      ]
+    }
+  },
+  {
+    "case_id": "P3-CTX-016",
+    "case_type": "context_invalidated",
+    "pain_point": "决策上下文失效",
+    "points": 15,
+    "initial_event": "决定：异步任务失败重试3次。理由是兼顾成功率和时延。",
+    "invalidating_event": "下游限制变化：第三方接口明确限制短时重试频率。",
+    "updated_event": "决定：异步任务失败仅重试1次并进入补偿队列。理由是遵守第三方限流策略。",
+    "query": "/query 异步任务失败策略",
+    "expected_output": {
+      "expected_active_value": "仅重试1次并进入补偿队列",
+      "forbidden_values": [
+        "失败重试3次"
+      ]
+    }
+  },
+  {
+    "case_id": "P3-CTX-017",
+    "case_type": "context_invalidated",
+    "pain_point": "决策上下文失效",
+    "points": 15,
+    "initial_event": "决定：数据导出默认明文CSV。理由是业务同学便于直接查看。",
+    "invalidating_event": "安全要求变化：对外导出必须加密并设置下载时效。",
+    "updated_event": "决定：导出改为加密压缩包并24小时失效。理由是满足数据安全要求。",
+    "query": "/recall 数据导出规则",
+    "expected_output": {
+      "expected_active_value": "加密压缩包并24小时失效",
+      "forbidden_values": [
+        "默认明文CSV"
+      ]
+    }
+  },
+  {
+    "case_id": "P3-CTX-018",
+    "case_type": "context_invalidated",
+    "pain_point": "决策上下文失效",
+    "points": 15,
+    "initial_event": "决定：批处理任务在白天执行。理由是夜间有其他系统窗口。",
+    "invalidating_event": "资源窗口变化：白天资源争抢导致业务高峰抖动。",
+    "updated_event": "决定：批处理改到夜间执行。理由是避开业务高峰。",
+    "query": "/query 批处理执行时间",
+    "expected_output": {
+      "expected_active_value": "改到夜间执行",
+      "forbidden_values": [
+        "在白天执行"
+      ]
+    }
+  },
+  {
+    "case_id": "P3-CTX-019",
+    "case_type": "context_invalidated",
+    "pain_point": "决策上下文失效",
+    "points": 15,
+    "initial_event": "决定：周会每周一上午10点。理由是与迭代开始对齐。",
+    "invalidating_event": "排期变化：周一上午固定外部客户同步，核心成员冲突严重。",
+    "updated_event": "决定：周会改为每周二上午10点。理由是避免外部会议冲突。",
+    "query": "/recall 周会时间",
+    "expected_output": {
+      "expected_active_value": "每周二上午10点",
+      "forbidden_values": [
+        "每周一上午10点"
+      ]
+    }
+  },
+  {
+    "case_id": "P3-CTX-020",
+    "case_type": "context_invalidated",
+    "pain_point": "决策上下文失效",
+    "points": 15,
+    "initial_event": "决定：工单SLA为24小时响应。理由是当前人力可覆盖。",
+    "invalidating_event": "客户合同变化：关键客户新增4小时响应条款。",
+    "updated_event": "决定：关键客户工单SLA改为4小时响应。理由是满足合同约束。",
+    "query": "/query 关键客户工单SLA",
+    "expected_output": {
+      "expected_active_value": "SLA改为4小时响应",
+      "forbidden_values": [
+        "24小时响应"
+      ]
+    }
+  }
+]

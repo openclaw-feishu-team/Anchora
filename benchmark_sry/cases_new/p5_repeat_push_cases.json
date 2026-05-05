@@ -1,0 +1,65 @@
+[
+  {
+    "case_id": "P5-PUSH-001",
+    "case_type": "decision_repeat_push",
+    "pain_point": "决策重复",
+    "points": 15,
+    "events": [
+      {
+        "content": "API网关用 APISIX，etcd 现成的能复用。"
+      }
+    ],
+    "trigger_message": "刚才看了下 Kong 的 dashboard，好像挺好用的？",
+    "expected_output": {
+      "expected_active_value": "API网关采用APISIX",
+      "expected_reminder": true
+    }
+  },
+  {
+    "case_id": "P5-PUSH-002",
+    "case_type": "decision_repeat_push",
+    "pain_point": "决策重复",
+    "points": 15,
+    "events": [
+      {
+        "content": "移动端鉴权用 OAuth2 + PKCE，安全要求。"
+      }
+    ],
+    "trigger_message": "移动端要不试下 Implicit Flow？简单点。",
+    "expected_output": {
+      "expected_active_value": "移动端鉴权采用OAuth2 + PKCE",
+      "expected_reminder": true
+    }
+  },
+  {
+    "case_id": "P5-PUSH-003",
+    "case_type": "decision_repeat_push",
+    "pain_point": "决策重复",
+    "points": 15,
+    "events": [
+      {
+        "content": "缓存用 Redis Cluster，高可用。"
+      }
+    ],
+    "trigger_message": "缓存方案要不要重新聊聊？感觉单机也够。",
+    "expected_output": {
+      "expected_active_value": "缓存方案采用Redis Cluster",
+      "expected_reminder": true
+    }
+  },
+  {
+    "case_id": "P5-PUSH-NEG-001",
+    "case_type": "decision_repeat_push",
+    "pain_point": "决策重复",
+    "points": 10,
+    "events": [
+      {
+        "content": "缓存方案采用Redis Cluster。"
+      }
+    ],
+    "trigger_message": "今天路过小巷咖啡，排队好长啊。",
+    "expected_output": {
+      "expected_reminder": false
+    }
+  }
+]

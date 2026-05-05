@@ -1,0 +1,258 @@
+[
+  {
+    "case_id": "P1-CAP-001",
+    "case_type": "decision_capture",
+    "pain_point": "决策沉没",
+    "points": 10,
+    "text": "APISIX 好像挺合适的，etcd 我们也有了，不然还得新搭。",
+    "expected_candidate": true,
+    "expected_output": {
+      "reason_keyword": "etcd"
+    }
+  },
+  {
+    "case_id": "P1-CAP-002",
+    "case_type": "decision_capture",
+    "pain_point": "决策沉没",
+    "points": 10,
+    "text": "Vector 比 Fluentd 轻多了，资源也省，就它吧。",
+    "expected_candidate": true,
+    "expected_output": {
+      "reason_keyword": "资源"
+    }
+  },
+  {
+    "case_id": "P1-CAP-003",
+    "case_type": "decision_capture",
+    "pain_point": "决策沉没",
+    "points": 10,
+    "text": "Nacos 吧，服务注册本来就在上面，迁过来成本最低。",
+    "expected_candidate": true,
+    "expected_output": {
+      "reason_keyword": "成本"
+    }
+  },
+  {
+    "case_id": "P1-CAP-004",
+    "case_type": "decision_capture",
+    "pain_point": "决策沉没",
+    "points": 10,
+    "text": "埋点这块统一走 OpenTelemetry 算了，后面和后端 Trace 也能串起来。",
+    "expected_candidate": true,
+    "expected_output": {
+      "reason_keyword": "Trace"
+    }
+  },
+  {
+    "case_id": "P1-CAP-005",
+    "case_type": "decision_capture",
+    "pain_point": "决策沉没",
+    "points": 10,
+    "text": "对象存储还是继续用 S3 兼容吧，换云的时候改动最小。",
+    "expected_candidate": true,
+    "expected_output": {
+      "reason_keyword": "换云"
+    }
+  },
+  {
+    "case_id": "P1-CAP-006",
+    "case_type": "decision_capture",
+    "pain_point": "决策沉没",
+    "points": 10,
+    "text": "灰度先放 10% 观察一下，别一上来就全量，稳一点。",
+    "expected_candidate": true,
+    "expected_output": {
+      "reason_keyword": "观察"
+    }
+  },
+  {
+    "case_id": "P1-CAP-007",
+    "case_type": "decision_capture",
+    "pain_point": "决策沉没",
+    "points": 10,
+    "text": "告警以后走值班机器人吧，不用人工刷群了，漏接也少了。",
+    "expected_candidate": true,
+    "expected_output": {
+      "reason_keyword": "人工"
+    }
+  },
+  {
+    "case_id": "P1-CAP-008",
+    "case_type": "decision_capture",
+    "pain_point": "决策沉没",
+    "points": 10,
+    "text": "认证这块用 OAuth2 + PKCE 吧，移动端现在安全要求高。",
+    "expected_candidate": true,
+    "expected_output": {
+      "reason_keyword": "移动端"
+    }
+  },
+  {
+    "case_id": "P1-CAP-009",
+    "case_type": "decision_capture",
+    "pain_point": "决策沉没",
+    "points": 10,
+    "text": "CI 那边迁到 GitHub Actions 吧，密钥托管和审计都比现在规范。",
+    "expected_candidate": true,
+    "expected_output": {
+      "reason_keyword": "密钥"
+    }
+  },
+  {
+    "case_id": "P1-CAP-010",
+    "case_type": "decision_capture",
+    "pain_point": "决策沉没",
+    "points": 10,
+    "text": "搜索换 OpenSearch 托管版，我们这边没人维护 ES 集群。",
+    "expected_candidate": true,
+    "expected_output": {
+      "reason_keyword": "维护"
+    }
+  },
+  {
+    "case_id": "P1-CAP-NEG-001",
+    "case_type": "decision_capture",
+    "pain_point": "决策沉没",
+    "points": 8,
+    "text": "午饭吃啥？我两点还有个会。",
+    "expected_candidate": false
+  },
+  {
+    "case_id": "P1-CAP-NEG-002",
+    "case_type": "decision_capture",
+    "pain_point": "决策沉没",
+    "points": 8,
+    "text": "会议纪要我晚点整理完发群里，大家先看着。",
+    "expected_candidate": false
+  },
+  {
+    "case_id": "P1-CAP-NEG-003",
+    "case_type": "decision_capture",
+    "pain_point": "决策沉没",
+    "points": 8,
+    "text": "这个页面的蓝色是不是再浅一点更好看？",
+    "expected_candidate": false
+  },
+  {
+    "case_id": "P1-CAP-NEG-004",
+    "case_type": "decision_capture",
+    "pain_point": "决策沉没",
+    "points": 8,
+    "text": "我这边网络有点抖，先文字吧，语音听不清。",
+    "expected_candidate": false
+  },
+  {
+    "case_id": "P1-CAP-NEG-005",
+    "case_type": "decision_capture",
+    "pain_point": "决策沉没",
+    "points": 8,
+    "text": "报表我补个截图，你们先看当前这个版本。",
+    "expected_candidate": false
+  },
+  {
+    "case_id": "P1-ANTI-001",
+    "case_type": "anti_interference",
+    "pain_point": "决策沉没",
+    "points": 20,
+    "project": "_benchmark_sry_p1_anti_weekly",
+    "simulate_days_ago": 7,
+    "anchor_event": "周报以后发 A 组就行，他们负责业务验收。",
+    "distractor_events": [
+      "缓存用 Redis Cluster 吧，QPS 高峰顶得住。",
+      "日志采集换 Vector，资源占用比 Fluentd 低。",
+      "灰度先 10% 试试水，风险小点。"
+    ],
+    "noise_events": [
+      "今天咖啡机又坏了，谁知道报修电话？",
+      "会议室 A 被占了，改 B 吧。",
+      "下午先把设计稿过一下。",
+      "这个动效有点卡，是不是贴图太大了。",
+      "发布群里有人发错链接了，不管它。",
+      "晚上一起吃饭吗？我请。",
+      "我这边网络抖，刚才掉线了。",
+      "明天是不是要下雨，带把伞？",
+      "这个头像挺好看，谁做的？",
+      "今天地铁又晚点了，迟到了。",
+      "打印机没纸了，谁去加一下。",
+      "周末大家怎么安排，打球吗？",
+      "这个表情包太好笑了，存了。",
+      "帮我看下这个截图，是不是有问题。",
+      "谁有上次团建的照片，发我一下。",
+      "今天先到这里，早点走。",
+      "明天早点，九点有个会。",
+      "这个 Excel 公式不对，我改了一下。",
+      "测试同学下午在吗，有个环境问题。",
+      "先同步一下风险项，别到时候翻车。",
+      "这个需求排下个迭代吧，这版太赶了。",
+      "我去拿个外卖，马上回来。",
+      "老板刚开完会，脸色不太对。",
+      "文档我补充了两句，你们看下。",
+      "稍后回你，现在在开会。",
+      "中午太阳好大，不想出门。"
+    ],
+    "query": "/recall 周报发给谁",
+    "top_k": 5,
+    "min_noise_inputs": 25,
+    "expected_output": {
+      "expected_active_value": "周报发给A组",
+      "max_rank": 1,
+      "forbidden_values": [
+        "发给C组",
+        "发给D组"
+      ]
+    }
+  },
+  {
+    "case_id": "P1-ANTI-002",
+    "case_type": "anti_interference",
+    "pain_point": "决策沉没",
+    "points": 20,
+    "project": "_benchmark_sry_p1_anti_gateway",
+    "simulate_days_ago": 10,
+    "anchor_event": "网关就用 APISIX 吧，etcd 现成的能复用。",
+    "distractor_events": [
+      "日志存储换 ClickHouse，查询快多了。",
+      "对象存储走 S3 兼容接口，换云也顺。",
+      "链路追踪用 OpenTelemetry，标准化嘛。"
+    ],
+    "noise_events": [
+      "今天食堂排队好长，不吃了。",
+      "这个会议链接好像失效了，谁能补一个。",
+      "你们谁还在办公室，帮我收个快递。",
+      "这版图标颜色太亮了，换暗一点的。",
+      "我晚点把纪要补上，现在在忙。",
+      "周会能不能提前 10 分钟，我有事。",
+      "刚才电话进来了，没听见。",
+      "谁有测试环境账号，我的过期了。",
+      "我这边 IDE 卡了一下，重启试试。",
+      "先把需求单转给产品那边吧。",
+      "大家看到日报了吗，数据有点怪。",
+      "我把文档目录重排了一下，更清楚。",
+      "谁去拿个快递，我在打电话。",
+      "这个字段命名不统一，要改吗？",
+      "下午是不是加个站会，同步一下。",
+      "我先去吃饭了，你们聊。",
+      "刚才网络闪断了一下，现在好了。",
+      "这个截图我发错群了，不管了。",
+      "明天有人请假吗，排个班。",
+      "我把链接放评论区了，你们看。",
+      "这条不用回，我自己搞定了。",
+      "先记到待办里，别忘记了。",
+      "晚上统一处理消息，现在在写代码。",
+      "这个文件有重复行，我清一下。",
+      "我去泡杯咖啡，谁要带的。",
+      "今天温度好高，空调开低一点。"
+    ],
+    "query": "/query API网关定的啥",
+    "top_k": 5,
+    "min_noise_inputs": 25,
+    "expected_output": {
+      "expected_active_value": "APISIX",
+      "max_rank": 1,
+      "forbidden_values": [
+        "Kong",
+        "Nginx Ingress"
+      ]
+    }
+  }
+]

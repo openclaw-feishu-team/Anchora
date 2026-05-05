@@ -1,0 +1,317 @@
+[
+  {
+    "case_id": "P5-PUSH-001",
+    "case_type": "decision_repeat_push",
+    "pain_point": "决策重复",
+    "points": 15,
+    "events": [
+      {
+        "content": "决定：API网关采用APISIX。理由是团队已有etcd集群，Kong插件维护成本高。"
+      }
+    ],
+    "trigger_message": "Kong dashboard看起来不错，要不要改成Kong？",
+    "expected_output": {
+      "expected_active_value": "API网关采用APISIX",
+      "expected_reminder": true
+    }
+  },
+  {
+    "case_id": "P5-PUSH-002",
+    "case_type": "decision_repeat_push",
+    "pain_point": "决策重复",
+    "points": 15,
+    "events": [
+      {
+        "content": "决定：接口鉴权采用OAuth2 + PKCE。"
+      }
+    ],
+    "trigger_message": "移动端是不是可以直接上Implicit Flow？",
+    "expected_output": {
+      "expected_active_value": "接口鉴权采用OAuth2 + PKCE",
+      "expected_reminder": true
+    }
+  },
+  {
+    "case_id": "P5-PUSH-003",
+    "case_type": "decision_repeat_push",
+    "pain_point": "决策重复",
+    "points": 15,
+    "events": [
+      {
+        "content": "决定：缓存方案采用Redis Cluster。"
+      }
+    ],
+    "trigger_message": "我们是不是要重新讨论缓存方案？",
+    "expected_output": {
+      "expected_active_value": "缓存方案采用Redis Cluster",
+      "expected_reminder": true
+    }
+  },
+  {
+    "case_id": "P5-PUSH-004",
+    "case_type": "decision_repeat_push",
+    "pain_point": "决策重复",
+    "points": 15,
+    "events": [
+      {
+        "content": "决定：发布策略是先灰度10%，观察24小时再全量。"
+      }
+    ],
+    "trigger_message": "今晚直接全量上线可以吗？",
+    "expected_output": {
+      "expected_active_value": "先灰度10%",
+      "expected_reminder": true
+    }
+  },
+  {
+    "case_id": "P5-PUSH-005",
+    "case_type": "decision_repeat_push",
+    "pain_point": "决策重复",
+    "points": 15,
+    "events": [
+      {
+        "content": "决定：日志采集统一采用Vector。"
+      }
+    ],
+    "trigger_message": "Filebeat是不是更合适，我们要不要切一下？",
+    "expected_output": {
+      "expected_active_value": "日志采集统一采用Vector",
+      "expected_reminder": true
+    }
+  },
+  {
+    "case_id": "P5-PUSH-006",
+    "case_type": "decision_repeat_push",
+    "pain_point": "决策重复",
+    "points": 15,
+    "events": [
+      {
+        "content": "决定：主库采用MySQL 8。"
+      }
+    ],
+    "trigger_message": "主库是不是可以改回PostgreSQL？",
+    "expected_output": {
+      "expected_active_value": "主库采用MySQL 8",
+      "expected_reminder": true
+    }
+  },
+  {
+    "case_id": "P5-PUSH-007",
+    "case_type": "decision_repeat_push",
+    "pain_point": "决策重复",
+    "points": 15,
+    "events": [
+      {
+        "content": "决定：消息队列采用云托管RocketMQ。"
+      }
+    ],
+    "trigger_message": "要不我们再评估下自建Kafka？",
+    "expected_output": {
+      "expected_active_value": "消息队列采用云托管RocketMQ",
+      "expected_reminder": true
+    }
+  },
+  {
+    "case_id": "P5-PUSH-008",
+    "case_type": "decision_repeat_push",
+    "pain_point": "决策重复",
+    "points": 15,
+    "events": [
+      {
+        "content": "决定：CI/CD迁移到GitHub Actions并使用OIDC凭证。"
+      }
+    ],
+    "trigger_message": "要不要继续用Jenkins，感觉大家熟悉一点？",
+    "expected_output": {
+      "expected_active_value": "CI/CD迁移到GitHub Actions",
+      "expected_reminder": true
+    }
+  },
+  {
+    "case_id": "P5-PUSH-009",
+    "case_type": "decision_repeat_push",
+    "pain_point": "决策重复",
+    "points": 15,
+    "events": [
+      {
+        "content": "决定：搜索服务采用OpenSearch托管版。"
+      }
+    ],
+    "trigger_message": "我们要不要重新上Elasticsearch自建集群？",
+    "expected_output": {
+      "expected_active_value": "搜索服务采用OpenSearch托管版",
+      "expected_reminder": true
+    }
+  },
+  {
+    "case_id": "P5-PUSH-010",
+    "case_type": "decision_repeat_push",
+    "pain_point": "决策重复",
+    "points": 15,
+    "events": [
+      {
+        "content": "决定：告警P1需要通知值班群和技术负责人。"
+      }
+    ],
+    "trigger_message": "P1是不是只通知值班群就行？",
+    "expected_output": {
+      "expected_active_value": "通知值班群和技术负责人",
+      "expected_reminder": true
+    }
+  },
+  {
+    "case_id": "P5-PUSH-011",
+    "case_type": "decision_repeat_push",
+    "pain_point": "决策重复",
+    "points": 15,
+    "events": [
+      {
+        "content": "决定：验证码有效期2分钟。"
+      }
+    ],
+    "trigger_message": "验证码时效改回5分钟吧，用户输得慢。",
+    "expected_output": {
+      "expected_active_value": "验证码有效期2分钟",
+      "expected_reminder": true
+    }
+  },
+  {
+    "case_id": "P5-PUSH-012",
+    "case_type": "decision_repeat_push",
+    "pain_point": "决策重复",
+    "points": 15,
+    "events": [
+      {
+        "content": "决定：工单SLA关键客户4小时响应。"
+      }
+    ],
+    "trigger_message": "关键客户工单是不是还能按24小时处理？",
+    "expected_output": {
+      "expected_active_value": "关键客户4小时响应",
+      "expected_reminder": true
+    }
+  },
+  {
+    "case_id": "P5-PUSH-013",
+    "case_type": "decision_repeat_push",
+    "pain_point": "决策重复",
+    "points": 15,
+    "events": [
+      {
+        "content": "决定：通知采用站内信+邮件，P1加短信兜底。"
+      }
+    ],
+    "trigger_message": "短信成本高，P1能不能去掉短信？",
+    "expected_output": {
+      "expected_active_value": "P1加短信兜底",
+      "expected_reminder": true
+    }
+  },
+  {
+    "case_id": "P5-PUSH-014",
+    "case_type": "decision_repeat_push",
+    "pain_point": "决策重复",
+    "points": 15,
+    "events": [
+      {
+        "content": "决定：审计日志保留365天且不可物理删除。"
+      }
+    ],
+    "trigger_message": "审计日志留180天行不行，节省点空间？",
+    "expected_output": {
+      "expected_active_value": "保留365天",
+      "expected_reminder": true
+    }
+  },
+  {
+    "case_id": "P5-PUSH-015",
+    "case_type": "decision_repeat_push",
+    "pain_point": "决策重复",
+    "points": 15,
+    "events": [
+      {
+        "content": "决定：Feature Flag平台采用LaunchDarkly托管。"
+      }
+    ],
+    "trigger_message": "我们要不要还是做自研开关平台？",
+    "expected_output": {
+      "expected_active_value": "LaunchDarkly托管",
+      "expected_reminder": true
+    }
+  },
+  {
+    "case_id": "P5-PUSH-NEG-001",
+    "case_type": "decision_repeat_push",
+    "pain_point": "决策重复",
+    "points": 10,
+    "events": [
+      {
+        "content": "决定：缓存方案采用Redis Cluster。"
+      }
+    ],
+    "trigger_message": "今天Redis咖啡店排队好长。",
+    "expected_output": {
+      "expected_reminder": false
+    }
+  },
+  {
+    "case_id": "P5-PUSH-NEG-002",
+    "case_type": "decision_repeat_push",
+    "pain_point": "决策重复",
+    "points": 10,
+    "events": [
+      {
+        "content": "决定：主库采用MySQL 8。"
+      }
+    ],
+    "trigger_message": "MySQL这个单词怎么读更标准？",
+    "expected_output": {
+      "expected_reminder": false
+    }
+  },
+  {
+    "case_id": "P5-PUSH-NEG-003",
+    "case_type": "decision_repeat_push",
+    "pain_point": "决策重复",
+    "points": 10,
+    "events": [
+      {
+        "content": "决定：移动端鉴权采用OAuth2 + PKCE。"
+      }
+    ],
+    "trigger_message": "PKCE这个缩写在文档里要不要全大写？",
+    "expected_output": {
+      "expected_reminder": false
+    }
+  },
+  {
+    "case_id": "P5-PUSH-NEG-004",
+    "case_type": "decision_repeat_push",
+    "pain_point": "决策重复",
+    "points": 10,
+    "events": [
+      {
+        "content": "决定：发布先灰度10%。"
+      }
+    ],
+    "trigger_message": "10%这个数字在图表上看着好丑，能改下配色吗？",
+    "expected_output": {
+      "expected_reminder": false
+    }
+  },
+  {
+    "case_id": "P5-PUSH-NEG-005",
+    "case_type": "decision_repeat_push",
+    "pain_point": "决策重复",
+    "points": 10,
+    "events": [
+      {
+        "content": "决定：审计日志保留365天。"
+      }
+    ],
+    "trigger_message": "365这个数字是闰年天数吗？",
+    "expected_output": {
+      "expected_reminder": false
+    }
+  }
+]

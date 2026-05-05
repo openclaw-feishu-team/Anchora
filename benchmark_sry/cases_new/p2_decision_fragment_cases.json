@@ -1,0 +1,462 @@
+[
+  {
+    "case_id": "P2-AGG-001",
+    "case_type": "decision_aggregation",
+    "pain_point": "决策碎片",
+    "points": 20,
+    "project": "_benchmark_sry_p2_auth",
+    "events": [
+      "移动端登录这块先走 OAuth2 授权码吧，Implicit Flow 风险太高了",
+      "对了，客户端那边要求标准授权，还得支持密钥轮换，OAuth2 能对上",
+      "安全那边提了个要求，移动端必须加 PKCE，授权码被拦就麻烦了",
+      "OAuth2 授权码加 PKCE 这套应该可以了，移动端和第三方都能覆盖"
+    ],
+    "query": "/recall 移动端登录认证定了吗",
+    "expected_output": {
+      "expected_active_value": "OAuth2授权码 + PKCE",
+      "evidence_keywords": [
+        "Implicit Flow",
+        "密钥轮换",
+        "PKCE"
+      ],
+      "source_count_min": 3
+    }
+  },
+  {
+    "case_id": "P2-AGG-002",
+    "case_type": "decision_aggregation",
+    "pain_point": "决策碎片",
+    "points": 18,
+    "project": "_benchmark_sry_p2_obs",
+    "events": [
+      "监控这块用 Prometheus 拉指标，Grafana 做大盘，别一上来就搞重套件",
+      "Prometheus 的告警规则还是落 Git 管吧，别在线上手工改，漂移了都不知道",
+      "业务大盘和系统大盘拆成两个目录，误操作也少点",
+      "那就 Prometheus + Grafana，告警规则 Git 化，大盘分层，这么定吧"
+    ],
+    "query": "/query 监控观测方案",
+    "expected_output": {
+      "expected_active_value": "Prometheus + Grafana",
+      "evidence_keywords": [
+        "Prometheus",
+        "Grafana",
+        "Git"
+      ],
+      "source_count_min": 3
+    }
+  },
+  {
+    "case_id": "P2-AGG-003",
+    "case_type": "decision_aggregation",
+    "pain_point": "决策碎片",
+    "points": 18,
+    "project": "_benchmark_sry_p2_storage",
+    "events": [
+      "对象存储走 S3 兼容吧，桶按 dev/staging/prod 三套隔离",
+      "归档策略写一下，180 天后转低频，再评估要不要删",
+      "生命周期规则必须可审计，别让人直接手工改桶策略",
+      "存储就 S3 兼容，环境分桶，180 天归档，定了吧"
+    ],
+    "query": "/recall 存储和归档怎么定的",
+    "expected_output": {
+      "expected_active_value": "S3兼容对象存储",
+      "evidence_keywords": [
+        "S3兼容",
+        "180天",
+        "生命周期"
+      ],
+      "source_count_min": 3
+    }
+  },
+  {
+    "case_id": "P2-AGG-004",
+    "case_type": "decision_aggregation",
+    "pain_point": "决策碎片",
+    "points": 18,
+    "project": "_benchmark_sry_p2_release",
+    "events": [
+      "发布先灰 10% 看看，没问题再全量",
+      "灰度观察窗口最好不少于 24 小时，核心接口错误率设个回滚阈值",
+      "回滚要能一键生效，别手工逐台改配置，太慢了",
+      "发布策略就这么定：灰 10%，观察 24 小时，一键回滚"
+    ],
+    "query": "/query 上线发布策略是什么",
+    "expected_output": {
+      "expected_active_value": "灰度10%",
+      "evidence_keywords": [
+        "10%",
+        "24小时",
+        "一键回滚"
+      ],
+      "source_count_min": 3
+    }
+  },
+  {
+    "case_id": "P2-AGG-005",
+    "case_type": "decision_aggregation",
+    "pain_point": "决策碎片",
+    "points": 18,
+    "project": "_benchmark_sry_p2_db",
+    "events": [
+      "主库用 MySQL 8 吧，团队值班对 MySQL 熟",
+      "要 GTID 复制和在线 DDL，MySQL 这边工具链成熟",
+      "故障演练脚本也是 MySQL 版本的，迁移成本最小",
+      "核心交易库定 MySQL 8，GTID 复制，在线 DDL，就这么着"
+    ],
+    "query": "/recall 主交易库定的什么",
+    "expected_output": {
+      "expected_active_value": "MySQL 8",
+      "evidence_keywords": [
+        "值班",
+        "GTID",
+        "在线DDL"
+      ],
+      "source_count_min": 3
+    }
+  },
+  {
+    "case_id": "P2-AGG-006",
+    "case_type": "decision_aggregation",
+    "pain_point": "决策碎片",
+    "points": 18,
+    "project": "_benchmark_sry_p2_mq",
+    "events": [
+      "消息队列用云托管 RocketMQ 吧，少个运维负担",
+      "预算那边要求资源可弹性缩放，按量计费稳一点",
+      "跨可用区容灾需要托管版的 SLA 保障，自建搞不定",
+      "RocketMQ 云托管，按量计费，跨可用区容灾，定了"
+    ],
+    "query": "/query 消息队列方案",
+    "expected_output": {
+      "expected_active_value": "云托管RocketMQ",
+      "evidence_keywords": [
+        "运维",
+        "按量计费",
+        "跨可用区"
+      ],
+      "source_count_min": 3
+    }
+  },
+  {
+    "case_id": "P2-AGG-007",
+    "case_type": "decision_aggregation",
+    "pain_point": "决策碎片",
+    "points": 18,
+    "project": "_benchmark_sry_p2_cache",
+    "events": [
+      "缓存统一 Redis Cluster 吧，单节点风险太高",
+      "热点 Key 要做多副本，过期时间也加点抖动，别同时失效",
+      "缓存穿透一律接布隆过滤器，DB 冲不垮",
+      "缓存方案：Redis Cluster，热点多副本，布隆过滤器，就这么定"
+    ],
+    "query": "/recall 缓存层方案定了没",
+    "expected_output": {
+      "expected_active_value": "Redis Cluster",
+      "evidence_keywords": [
+        "单节点",
+        "过期抖动",
+        "布隆过滤器"
+      ],
+      "source_count_min": 3
+    }
+  },
+  {
+    "case_id": "P2-AGG-008",
+    "case_type": "decision_aggregation",
+    "pain_point": "决策碎片",
+    "points": 18,
+    "project": "_benchmark_sry_p2_cicd",
+    "events": [
+      "流水线迁到 GitHub Actions 吧，自建维护太累",
+      "所有发布凭据走 OIDC 临时凭证，别落地长期密钥",
+      "必须留审批门禁，生产环境还要隔离",
+      "CI/CD 定 GitHub Actions + OIDC + 审批门禁，可以了"
+    ],
+    "query": "/query CI/CD 最终方案是什么",
+    "expected_output": {
+      "expected_active_value": "GitHub Actions",
+      "evidence_keywords": [
+        "自建",
+        "OIDC",
+        "审批"
+      ],
+      "source_count_min": 3
+    }
+  },
+  {
+    "case_id": "P2-AGG-009",
+    "case_type": "decision_aggregation",
+    "pain_point": "决策碎片",
+    "points": 18,
+    "project": "_benchmark_sry_p2_gateway",
+    "events": [
+      "网关优先 APISIX 吧，etcd 集群现成的能复用",
+      "要支持灰度路由和插件扩展，APISIX 能满足",
+      "必须能按路由限流和挂鉴权策略，这个不能少",
+      "API 网关定 APISIX，etcd 复用，按路由限流鉴权"
+    ],
+    "query": "/recall API 网关方案",
+    "expected_output": {
+      "expected_active_value": "APISIX",
+      "evidence_keywords": [
+        "etcd",
+        "灰度路由",
+        "限流"
+      ],
+      "source_count_min": 3
+    }
+  },
+  {
+    "case_id": "P2-AGG-010",
+    "case_type": "decision_aggregation",
+    "pain_point": "决策碎片",
+    "points": 18,
+    "project": "_benchmark_sry_p2_trace",
+    "events": [
+      "链路追踪用 OpenTelemetry 标准采，别自研了",
+      "TraceID 要从网关一直透传到下游异步任务",
+      "采样率默认 10% 吧，事故期间可以临时拉高",
+      "追踪方案：OpenTelemetry，全链路 TraceID，默认 10% 采样"
+    ],
+    "query": "/query 链路追踪方案定了吗",
+    "expected_output": {
+      "expected_active_value": "OpenTelemetry",
+      "evidence_keywords": [
+        "标准",
+        "TraceID",
+        "10%"
+      ],
+      "source_count_min": 3
+    }
+  },
+  {
+    "case_id": "P2-AGG-011",
+    "case_type": "decision_aggregation",
+    "pain_point": "决策碎片",
+    "points": 18,
+    "project": "_benchmark_sry_p2_search",
+    "events": [
+      "搜索服务换 OpenSearch 托管版吧，先保证稳定",
+      "索引模板必须版本化，改坏了能回滚",
+      "查询 DSL 搞个白名单，别让人写任意脚本",
+      "搜索定 OpenSearch 托管版，模板版本化，DSL 白名单"
+    ],
+    "query": "/recall 搜索服务方案",
+    "expected_output": {
+      "expected_active_value": "OpenSearch托管版",
+      "evidence_keywords": [
+        "稳定",
+        "版本化",
+        "白名单"
+      ],
+      "source_count_min": 3
+    }
+  },
+  {
+    "case_id": "P2-AGG-012",
+    "case_type": "decision_aggregation",
+    "pain_point": "决策碎片",
+    "points": 18,
+    "project": "_benchmark_sry_p2_billing",
+    "events": [
+      "计费先做日结批处理，不搞实时秒级结算，太复杂",
+      "账单任务失败了要能重跑，还要留审计轨迹",
+      "金额字段统一 Decimal128，别用浮点，误差坑死人",
+      "计费方案：日结批处理，失败可重跑，Decimal128 金额"
+    ],
+    "query": "/query 计费系统方案",
+    "expected_output": {
+      "expected_active_value": "日结批处理",
+      "evidence_keywords": [
+        "重跑",
+        "审计",
+        "Decimal128"
+      ],
+      "source_count_min": 3
+    }
+  },
+  {
+    "case_id": "P2-AGG-013",
+    "case_type": "decision_aggregation",
+    "pain_point": "决策碎片",
+    "points": 18,
+    "project": "_benchmark_sry_p2_flag",
+    "events": [
+      "功能开关统一接 LaunchDarkly 托管吧，别自研了",
+      "开关变更必须记录操作者和变更原因，这个不能少",
+      "发布窗口内禁止新建高风险开关，稳一点",
+      "Feature Flag 定 LaunchDarkly 托管，全量审计，窗口管控"
+    ],
+    "query": "/recall 功能开关平台方案",
+    "expected_output": {
+      "expected_active_value": "LaunchDarkly托管",
+      "evidence_keywords": [
+        "操作者",
+        "变更原因",
+        "高风险"
+      ],
+      "source_count_min": 3
+    }
+  },
+  {
+    "case_id": "P2-AGG-014",
+    "case_type": "decision_aggregation",
+    "pain_point": "决策碎片",
+    "points": 18,
+    "project": "_benchmark_sry_p2_backup",
+    "events": [
+      "备份策略用每日全量加每小时增量吧",
+      "备份至少跨可用区放，保留 30 天",
+      "每个月必须做一次恢复演练，别到用的时候傻眼",
+      "备份方案定了：每日全量+每小时增量，跨可用区，30 天，月度演练"
+    ],
+    "query": "/query 备份和恢复策略",
+    "expected_output": {
+      "expected_active_value": "每日全量+每小时增量",
+      "evidence_keywords": [
+        "跨可用区",
+        "30天",
+        "演练"
+      ],
+      "source_count_min": 3
+    }
+  },
+  {
+    "case_id": "P2-AGG-015",
+    "case_type": "decision_aggregation",
+    "pain_point": "决策碎片",
+    "points": 18,
+    "project": "_benchmark_sry_p2_retry",
+    "events": [
+      "下游调用统一搞指数退避重试，别让雪崩发生",
+      "非幂等接口默认不要自动重试，数据会乱",
+      "重试总时长上限 2 秒，超了就走降级",
+      "重试策略：指数退避，幂等校验，2 秒上限后降级"
+    ],
+    "query": "/recall 服务重试策略定了没",
+    "expected_output": {
+      "expected_active_value": "指数退避",
+      "evidence_keywords": [
+        "雪崩",
+        "非幂等",
+        "2秒"
+      ],
+      "source_count_min": 3
+    }
+  },
+  {
+    "case_id": "P2-AGG-016",
+    "case_type": "decision_aggregation",
+    "pain_point": "决策碎片",
+    "points": 18,
+    "project": "_benchmark_sry_p2_notify",
+    "events": [
+      "通知通道优先站内信加邮件双通道吧",
+      "P1 事故升级必须追加短信兜底，这个不能省",
+      "同一事件 30 分钟内去重推送，别轰炸",
+      "通知策略：站内信+邮件，P1 加短信，30 分钟去重"
+    ],
+    "query": "/query 告警通知策略",
+    "expected_output": {
+      "expected_active_value": "站内信+邮件",
+      "evidence_keywords": [
+        "短信",
+        "P1",
+        "去重"
+      ],
+      "source_count_min": 3
+    }
+  },
+  {
+    "case_id": "P2-AGG-017",
+    "case_type": "decision_aggregation",
+    "pain_point": "决策碎片",
+    "points": 18,
+    "project": "_benchmark_sry_p2_quality",
+    "events": [
+      "数据质量校验放在入仓前执行，先把脏数据拦住",
+      "主键唯一性和时间戳单调性必须校验",
+      "校验失败的task自动进隔离队列，别污染好数据",
+      "数据质量策略：入仓前校验，主键+时间戳校验，失败隔离"
+    ],
+    "query": "/recall 数据质量怎么做",
+    "expected_output": {
+      "expected_active_value": "入仓前校验",
+      "evidence_keywords": [
+        "脏数据",
+        "时间戳",
+        "隔离"
+      ],
+      "source_count_min": 3
+    }
+  },
+  {
+    "case_id": "P2-AGG-018",
+    "case_type": "decision_aggregation",
+    "pain_point": "决策碎片",
+    "points": 18,
+    "project": "_benchmark_sry_p2_versioning",
+    "events": [
+      "对外 API 版本管理用 URI 版本号吧，别走 Header 协商，太绕",
+      "每个大版本至少维护 12 个月，给下游升级时间",
+      "废弃版本提前 90 天公告，别突然下线",
+      "API 版本策略：URI 版本号，大版本维护 12 个月，90 天废弃公告"
+    ],
+    "query": "/query 对外API版本策略是什么",
+    "expected_output": {
+      "expected_active_value": "URI版本号",
+      "evidence_keywords": [
+        "Header",
+        "12个月",
+        "90天"
+      ],
+      "source_count_min": 3
+    }
+  },
+  {
+    "case_id": "P2-AGG-019",
+    "case_type": "decision_aggregation",
+    "pain_point": "决策碎片",
+    "points": 18,
+    "project": "_benchmark_sry_p2_authz",
+    "events": [
+      "权限控制用 RBAC 吧，资源级细粒度到项目维度",
+      "关键接口加 ABAC 条件判断，防止跨组织读写",
+      "权限变更必须双人审批，这个不能省",
+      "授权策略：RBAC 为主，关键接口 ABAC 补充，双人审批"
+    ],
+    "query": "/recall 权限授权方案是什么",
+    "expected_output": {
+      "expected_active_value": "RBAC为主",
+      "evidence_keywords": [
+        "项目维度",
+        "ABAC",
+        "双人审批"
+      ],
+      "source_count_min": 3
+    }
+  },
+  {
+    "case_id": "P2-AGG-020",
+    "case_type": "decision_aggregation",
+    "pain_point": "决策碎片",
+    "points": 18,
+    "project": "_benchmark_sry_p2_audit",
+    "events": [
+      "审计日志统一写独立库，别和业务库混在一起",
+      "日志字段至少包含操作者、动作、对象、时间这四个",
+      "审计日志保留 365 天，而且不能物理删除",
+      "审计策略：独立审计库，四元字段标准，保留 365 天不可删"
+    ],
+    "query": "/query 审计日志方案",
+    "expected_output": {
+      "expected_active_value": "独立审计库",
+      "evidence_keywords": [
+        "操作者",
+        "四元",
+        "365天"
+      ],
+      "source_count_min": 3
+    }
+  }
+]

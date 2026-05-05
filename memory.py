@@ -509,7 +509,7 @@ def store_decision(project, decision, reasoning="", conclusion="", objections=""
     mem_id = generate_id(project, decision, now_iso())
     created = now_iso()
 
-    # 检查同一项目是否有相似决策（简单文本匹配）
+    # 检查同一项目是否有相似决策（Jaccard + 语义相似度综合判定）
     conn = db_conn()
     c = conn.cursor()
     # 只查未被覆盖的 active 决策
@@ -517,11 +517,13 @@ def store_decision(project, decision, reasoning="", conclusion="", objections=""
     existing = c.fetchall()
 
     # 如果内容高度相似，标记为版本更新
+    # 策略：Jaccard > 0.25 或 语义相似度 > 0.3 即视为潜在冲突
     superseded = None
     has_conflict = False
     for eid, edecision in existing:
-        sim = _similarity(decision, edecision)
-        if sim > 0.5:
+        jaccard_sim = _similarity(decision, edecision)
+        semantic_sim = _semantic_similarity(decision, edecision)
+        if jaccard_sim > 0.25 or semantic_sim > 0.3:
             superseded = eid
             has_conflict = True
             break
@@ -605,12 +607,30 @@ def store_decision(project, decision, reasoning="", conclusion="", objections=""
 
 
 def _similarity(a: str, b: str) -> float:
-    """简单 Jaccard 相似度"""
+    """简单 Jaccard 相似度（字符级，适合短文本）"""
     sa = set(a.lower())
     sb = set(b.lower())
     if not sa or not sb:
         return 0.0
     return len(sa & sb) / len(sa | sb)
+
+
+def _semantic_similarity(a: str, b: str) -> float:
+    """语义相似度：基于简单 token 重叠（project/技术名词/动作词）"""
+    import re
+    # 提取有意义的词（中文词、英文单词、技术名词）
+    def _tokens(text: str) -> set:
+        text = text.lower()
+        # 中文连续字符
+        zh = set(re.findall(r'[\u4e00-\u9fff]{2,}', text))
+        # 英文单词（含技术名词）
+        en = set(re.findall(r'[a-z][a-z0-9]*', text))
+        return zh | en
+    ta = _tokens(a)
+    tb = _tokens(b)
+    if not ta or not tb:
+        return 0.0
+    return len(ta & tb) / len(ta | tb)
 
 
 # ─── 查询与检索 ───

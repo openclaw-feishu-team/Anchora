@@ -1,0 +1,417 @@
+[
+  {
+    "case_id": "P1-CAP-001",
+    "case_type": "decision_capture",
+    "pain_point": "决策沉没",
+    "points": 10,
+    "text": "项目Phoenix决定采用APISIX作为网关，理由是团队已有etcd集群。",
+    "expected_candidate": true,
+    "expected_output": {
+      "reason_keyword": "团队已有etcd集群"
+    }
+  },
+  {
+    "case_id": "P1-CAP-002",
+    "case_type": "decision_capture",
+    "pain_point": "决策沉没",
+    "points": 10,
+    "text": "结论：日志采集选Vector，原因是资源占用更低，部署更轻量。",
+    "expected_candidate": true,
+    "expected_output": {
+      "reason_keyword": "资源占用更低"
+    }
+  },
+  {
+    "case_id": "P1-CAP-003",
+    "case_type": "decision_capture",
+    "pain_point": "决策沉没",
+    "points": 10,
+    "text": "拍板：配置中心采用Nacos，理由是现有服务注册已在Nacos上，迁移成本最低。",
+    "expected_candidate": true,
+    "expected_output": {
+      "reason_keyword": "迁移成本最低"
+    }
+  },
+  {
+    "case_id": "P1-CAP-004",
+    "case_type": "decision_capture",
+    "pain_point": "决策沉没",
+    "points": 10,
+    "text": "决定本季度移动端埋点统一走OpenTelemetry，原因是可以和后端Trace打通。",
+    "expected_candidate": true,
+    "expected_output": {
+      "reason_keyword": "和后端Trace打通"
+    }
+  },
+  {
+    "case_id": "P1-CAP-005",
+    "case_type": "decision_capture",
+    "pain_point": "决策沉没",
+    "points": 10,
+    "text": "结论明确：对象存储继续用S3兼容方案，理由是多云切换时改造最少。",
+    "expected_candidate": true,
+    "expected_output": {
+      "reason_keyword": "多云切换时改造最少"
+    }
+  },
+  {
+    "case_id": "P1-CAP-006",
+    "case_type": "decision_capture",
+    "pain_point": "决策沉没",
+    "points": 10,
+    "text": "团队决定灰度发布先固定10%，原因是先观察核心链路错误率更稳妥。",
+    "expected_candidate": true,
+    "expected_output": {
+      "reason_keyword": "观察核心链路错误率更稳妥"
+    }
+  },
+  {
+    "case_id": "P1-CAP-007",
+    "case_type": "decision_capture",
+    "pain_point": "决策沉没",
+    "points": 10,
+    "text": "最终口径：告警分派使用值班机器人，理由是减少人工轮询和漏接。",
+    "expected_candidate": true,
+    "expected_output": {
+      "reason_keyword": "减少人工轮询和漏接"
+    }
+  },
+  {
+    "case_id": "P1-CAP-008",
+    "case_type": "decision_capture",
+    "pain_point": "决策沉没",
+    "points": 10,
+    "text": "决定：认证协议采用OAuth2授权码加PKCE，原因是移动端安全要求提升。",
+    "expected_candidate": true,
+    "expected_output": {
+      "reason_keyword": "移动端安全要求提升"
+    }
+  },
+  {
+    "case_id": "P1-CAP-009",
+    "case_type": "decision_capture",
+    "pain_point": "决策沉没",
+    "points": 10,
+    "text": "拍板：CI流水线统一迁移到GitHub Actions，理由是审计和密钥托管更规范。",
+    "expected_candidate": true,
+    "expected_output": {
+      "reason_keyword": "密钥托管更规范"
+    }
+  },
+  {
+    "case_id": "P1-CAP-010",
+    "case_type": "decision_capture",
+    "pain_point": "决策沉没",
+    "points": 10,
+    "text": "结论：搜索组件改为OpenSearch托管版，原因是运维人力不足且托管更稳定。",
+    "expected_candidate": true,
+    "expected_output": {
+      "reason_keyword": "运维人力不足"
+    }
+  },
+  {
+    "case_id": "P1-CAP-NEG-001",
+    "case_type": "decision_capture",
+    "pain_point": "决策沉没",
+    "points": 8,
+    "text": "今天午饭吃啥？我两点要开会。",
+    "expected_candidate": false
+  },
+  {
+    "case_id": "P1-CAP-NEG-002",
+    "case_type": "decision_capture",
+    "pain_point": "决策沉没",
+    "points": 8,
+    "text": "我把会议纪要先发群里，大家有空再看。",
+    "expected_candidate": false
+  },
+  {
+    "case_id": "P1-CAP-NEG-003",
+    "case_type": "decision_capture",
+    "pain_point": "决策沉没",
+    "points": 8,
+    "text": "这个页面颜色是不是再浅一点会更好看？",
+    "expected_candidate": false
+  },
+  {
+    "case_id": "P1-CAP-NEG-004",
+    "case_type": "decision_capture",
+    "pain_point": "决策沉没",
+    "points": 8,
+    "text": "我今天网络有点抖，先语音改文字。",
+    "expected_candidate": false
+  },
+  {
+    "case_id": "P1-CAP-NEG-005",
+    "case_type": "decision_capture",
+    "pain_point": "决策沉没",
+    "points": 8,
+    "text": "这个报表我晚点补充截图，你们先看当前版本。",
+    "expected_candidate": false
+  },
+  {
+    "case_id": "P1-ANTI-001",
+    "case_type": "anti_interference",
+    "pain_point": "决策沉没",
+    "points": 20,
+    "project": "_benchmark_sry_p1_anti_weekly",
+    "simulate_days_ago": 7,
+    "anchor_event": "决定：以后周报统一发给A组。理由是A组负责业务验收。",
+    "distractor_events": [
+      "决定：缓存方案采用Redis Cluster，原因是QPS高峰需要扩展。",
+      "决定：日志采集采用Vector，原因是资源占用更低。",
+      "决定：灰度策略采用10%分流，原因是降低发布风险。"
+    ],
+    "noise_events": [
+      "今天咖啡机坏了，谁知道报修流程？",
+      "会议室A被占用了，改到B吧。",
+      "下午先过一下设计稿。",
+      "这个动效看起来有点卡。",
+      "发布群里有人发错链接了。",
+      "晚点一起吃饭吗？",
+      "我这边网络有点抖动。",
+      "明天是不是要下雨？",
+      "这个头像挺好看。",
+      "今天地铁又晚点了。",
+      "打印机没纸了。",
+      "周末大家怎么安排？",
+      "这个表情包太好笑了。",
+      "帮我看下这个截图。",
+      "谁有上次团建照片？",
+      "今天先到这里。",
+      "明天早点开会。",
+      "这个Excel我发群里了。",
+      "测试同学下午在吗？",
+      "先同步一下风险项。",
+      "这个需求排到下个迭代。",
+      "我去拿个外卖。",
+      "老板刚开完会。",
+      "文档我补充好了。",
+      "稍后我回你。",
+      "中午太阳很大。"
+    ],
+    "query": "/recall 周报发给谁",
+    "top_k": 5,
+    "min_noise_inputs": 25,
+    "expected_output": {
+      "expected_active_value": "周报统一发给A组",
+      "max_rank": 1,
+      "forbidden_values": [
+        "发给C组",
+        "发给D组"
+      ]
+    }
+  },
+  {
+    "case_id": "P1-ANTI-002",
+    "case_type": "anti_interference",
+    "pain_point": "决策沉没",
+    "points": 20,
+    "project": "_benchmark_sry_p1_anti_gateway",
+    "simulate_days_ago": 10,
+    "anchor_event": "决定：统一网关采用APISIX。理由是现有etcd基础设施可复用。",
+    "distractor_events": [
+      "决定：日志存储采用ClickHouse，原因是查询分析性能更高。",
+      "决定：对象存储采用S3兼容接口，原因是跨云迁移更顺滑。",
+      "决定：链路追踪采用OpenTelemetry，原因是标准化程度高。"
+    ],
+    "noise_events": [
+      "今天食堂排队有点长。",
+      "这个会议链接好像失效了。",
+      "你们谁在办公室？",
+      "这版图标颜色太亮。",
+      "我晚点补纪要。",
+      "周会要不要提前10分钟？",
+      "刚刚电话进来了。",
+      "谁有测试环境账号？",
+      "我这里IDE卡了一下。",
+      "先把需求单转给产品。",
+      "大家看到日报了吗？",
+      "文档目录我重排了。",
+      "我去拿快递。",
+      "需要我拉个临时群吗？",
+      "这个字段命名不统一。",
+      "下午是否要加一个站会？",
+      "我先去吃饭了。",
+      "刚才网络闪断。",
+      "这个截图发错群了。",
+      "明天有人请假吗？",
+      "我把链接放评论区了。",
+      "这条消息不用回。",
+      "先记到待办里。",
+      "晚上再统一处理。",
+      "我这边先同步风险。",
+      "这个文件有重复行。"
+    ],
+    "query": "/query API网关现在定的是啥",
+    "top_k": 5,
+    "min_noise_inputs": 25,
+    "expected_output": {
+      "expected_active_value": "统一网关采用APISIX",
+      "max_rank": 1,
+      "forbidden_values": [
+        "采用Kong",
+        "采用Nginx Ingress"
+      ]
+    }
+  },
+  {
+    "case_id": "P1-ANTI-003",
+    "case_type": "anti_interference",
+    "pain_point": "决策沉没",
+    "points": 20,
+    "project": "_benchmark_sry_p1_anti_auth",
+    "simulate_days_ago": 6,
+    "anchor_event": "决定：移动端鉴权采用OAuth2授权码+PKCE。理由是防止授权码拦截。",
+    "distractor_events": [
+      "决定：短信验证码长度改为6位，原因是兼容旧终端。",
+      "决定：登录页先保留手机号入口，原因是海外邮箱送达不稳定。",
+      "决定：会话时长保持7天，原因是用户反馈频繁登录体验差。"
+    ],
+    "noise_events": [
+      "今天谁值班来着？",
+      "投影仪又连不上了。",
+      "这个PR我下午看。",
+      "刚开完会有点晚。",
+      "有人知道打印机密码吗？",
+      "我发了新版本截图。",
+      "先把例会议程补一下。",
+      "我这里音频没声音。",
+      "要不要把文档转成英文版？",
+      "今天风有点大。",
+      "我晚点提交周报。",
+      "这个埋点命名再确认下。",
+      "你们先走评审流程。",
+      "这个需求排期要改。",
+      "先同步一个风险。",
+      "链接权限开一下。",
+      "刚才那条消息撤回了。",
+      "今天晚高峰很堵。",
+      "下班前记得打卡。",
+      "这个接口返回慢。",
+      "我去泡杯咖啡。",
+      "该需求先不做。",
+      "我这边已收到。",
+      "稍后补充截图。",
+      "今晚我会值班。",
+      "这张图我重新导出。"
+    ],
+    "query": "/recall 移动端鉴权最终方案",
+    "top_k": 5,
+    "min_noise_inputs": 25,
+    "expected_output": {
+      "expected_active_value": "OAuth2授权码+PKCE",
+      "max_rank": 1,
+      "forbidden_values": [
+        "Implicit Flow",
+        "仅短信验证码登录"
+      ]
+    }
+  },
+  {
+    "case_id": "P1-ANTI-004",
+    "case_type": "anti_interference",
+    "pain_point": "决策沉没",
+    "points": 20,
+    "project": "_benchmark_sry_p1_anti_release",
+    "simulate_days_ago": 8,
+    "anchor_event": "决定：线上发布采用10%灰度并观察24小时后再全量。理由是降低回归风险。",
+    "distractor_events": [
+      "决定：夜间巡检时间调整到23点，原因是避开备份窗口。",
+      "决定：报警语音改为短信，原因是夜间误触频率高。",
+      "决定：压测频率改为每周一次，原因是资源预算受限。"
+    ],
+    "noise_events": [
+      "大家早上好。",
+      "会议室空调有点冷。",
+      "日报我已更新。",
+      "这个图表看不清。",
+      "今天谁有空review。",
+      "我先去接个电话。",
+      "刚刚网络恢复了。",
+      "链接访问失败了。",
+      "我加了两条备注。",
+      "下个版本什么时候提测？",
+      "这个按钮位置怪怪的。",
+      "接口超时又出现了。",
+      "我把日志打包了。",
+      "稍后我发复盘。",
+      "这个任务先暂停。",
+      "今晚可能加班。",
+      "明天谁主持站会？",
+      "PR冲突我在解。",
+      "你们先吃饭吧。",
+      "咖啡要不要一起点？",
+      "今天温度有点高。",
+      "我把排期改了。",
+      "这周目标再确认。",
+      "先同步外部依赖。",
+      "这个版本号写错了。",
+      "我去改下文案。"
+    ],
+    "query": "/query 当前线上发布策略",
+    "top_k": 5,
+    "min_noise_inputs": 25,
+    "expected_output": {
+      "expected_active_value": "10%灰度并观察24小时后再全量",
+      "max_rank": 1,
+      "forbidden_values": [
+        "直接全量发布",
+        "固定周五晚22点全量"
+      ]
+    }
+  },
+  {
+    "case_id": "P1-ANTI-005",
+    "case_type": "anti_interference",
+    "pain_point": "决策沉没",
+    "points": 20,
+    "project": "_benchmark_sry_p1_anti_db",
+    "simulate_days_ago": 9,
+    "anchor_event": "决定：主库采用MySQL 8。理由是运维团队对MySQL故障处置更熟悉。",
+    "distractor_events": [
+      "决定：报表查询引擎采用ClickHouse，原因是聚合查询更快。",
+      "决定：审计日志保留180天，原因是合规要求。",
+      "决定：缓存采用Redis Cluster，原因是高并发下扩展性更好。"
+    ],
+    "noise_events": [
+      "中午谁一起吃饭？",
+      "刚刚开会迟到了。",
+      "我先处理邮件。",
+      "这个链接打不开。",
+      "PR描述再补充下。",
+      "谁帮我看下截图。",
+      "今天的目标是什么？",
+      "我这里还在跑测试。",
+      "这个字段需要脱敏。",
+      "线上日志有点多。",
+      "晚点我发更新。",
+      "这个会议能延后吗？",
+      "我先去拿外卖。",
+      "需求池里又加了一条。",
+      "先把bug优先级排下。",
+      "你们先继续，我插个会。",
+      "刚刚重启了一次。",
+      "这个图我重画了。",
+      "数据看起来有偏差。",
+      "明天要不要晨会？",
+      "我把附件重新上传。",
+      "这个命名再统一一下。",
+      "我去补个文档。",
+      "请假单我提交了。",
+      "待会儿我回看录屏。",
+      "今晚可能会降温。"
+    ],
+    "query": "/recall 主库数据库选型",
+    "top_k": 5,
+    "min_noise_inputs": 25,
+    "expected_output": {
+      "expected_active_value": "主库采用MySQL 8",
+      "max_rank": 1,
+      "forbidden_values": [
+        "主库采用PostgreSQL",
+        "主库采用SQLite"
+      ]
+    }
+  }
+]

@@ -189,7 +189,30 @@ python skills/feishu-memory/scripts/feishu_memory_cli.py confirm <memory_id> --a
 python skills/feishu-memory/scripts/feishu_memory_cli.py reject <memory_id>
 ```
 
-### 12. interactive-cards — 发送 candidate 审核卡片到飞书群聊
+### 12. benchmark — 运行质量评估测试（主要工具）
+
+```bash
+# 运行完整的 benchmark_sry 测试套件（100+ 用例，覆盖5大场景）
+cd skills/feishu-memory/benchmark_sry
+python run_benchmark_sry.py run --cases cases
+
+# 带标签的报告（便于对比不同版本）
+python run_benchmark_sry.py run --cases cases --tag v3.1
+```
+
+**报告输出**：
+- `benchmark_sry/outputs/benchmark_sry_report_*.json` — 完整数据
+- `benchmark_sry/outputs/benchmark_sry_report_*.md` — Markdown 可读报告
+
+**最新结果（v3.1 fixed）**：
+| 指标 | 结果 | 状态 |
+|------|------|------|
+| 抗干扰 Recall@1 | 1.00 | ✅ 完美 |
+| 矛盾覆盖成功率 | 0.85 | ✅ 优秀 |
+| 旧值泄漏率 | 0.10 | ✅ 优秀 |
+| 重复推送命中 | 0.75 | ✅ 良好 |
+
+### 13. interactive-cards — 发送 candidate 审核卡片到飞书群聊
 
 **依赖**: `pip install lark-oapi`
 

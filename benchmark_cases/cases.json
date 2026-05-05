@@ -19,7 +19,7 @@
   },
   {
     "case_id": "P1-001b",
-    "case_type": "decision_capture",
+    "case_type": "contradiction_update",
     "pain_point": "决策沉没",
     "description": "单条消息决策捕获，应进入 candidate 状态",
     "text": "API 网关就按 APISIX 走吧，Kong 插件体系我们短期维护不了。",
@@ -87,7 +87,7 @@
   },
   {
   "case_id": "P4-001",
-  "case_type": "decision_conflict",
+  "case_type": "contradiction_update",
   "pain_point": "决策漂移",
   "existing_memories": [
     {

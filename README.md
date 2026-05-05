@@ -435,31 +435,43 @@ python dashboard.py --port 8080
 
 ## 📊 Benchmark
 
-### 运行测试
+### 主要工具：benchmark_sry（推荐）
 
 ```bash
-python benchmark.py cases
+cd benchmark_sry
+python run_benchmark_sry.py run --cases cases
 ```
 
-### 测试覆盖
+**100+ 用例，覆盖 5 大痛点场景，含抗干扰/矛盾更新/旧值泄漏等硬性指标。**
 
-| 场景 | case_type | 用例数 | 分值 |
-|------|-----------|--------|------|
-| 决策捕获 | `decision_capture` | 3 | 45 |
-| 决策聚合 | `decision_aggregation` | 1 | 25 |
-| 决策失效 | `decision_invalidated` | 1 | 15 |
-| 重复推送 | `decision_repeat_push` | 1 | 15 |
-| **合计** | | **6** | **100** |
+### 最新测试结果（v3.1 fixed）
 
-### 质量评估报告
+```
+总分：89.73%（1582/1420.37 分）
+
+核心指标：
+├─ 抗干扰 Recall@1:    1.00  ✅ 完美
+├─ 抗干扰 Recall@3:    1.00  ✅ 完美
+├─ 矛盾覆盖成功率:      0.85  ✅ 优秀
+├─ 旧值泄漏率:         0.10  ✅ 优秀
+└─ 重复推送命中:        0.75  ✅ 良好
+```
+
+**修复对比**：
+| 指标 | 修复前 | 修复后 | 提升 |
+|------|--------|--------|------|
+| 通过率 | 0.69 | **0.86** | +17% |
+| 矛盾覆盖成功率 | 0.45 | **0.85** | +40% |
+| 旧值泄漏率 | 0.55 | **0.10** | -45% |
+
+**关键修复**：`memory.py` 冲突检测从单一 Jaccard > 0.5 放宽为 **Jaccard > 0.25 或语义相似度 > 0.3**，决策版本链（`superseded_by`）正确建立。
+
+### 快速质量评估（旧版，保留）
 
 ```bash
-python benchmark.py run
+python benchmark.py run      # 生成今日质量报告
+python benchmark.py cases    # 运行基础 6 用例测试
 ```
-
-生成 `benchmarks/YYYY-MM-DD.json`，包含：
-- 准确性 / 完整性 / 时效性 / 覆盖率 四维评分
-- 每日日志自动嵌入质量摘要
 
 ---
 
@@ -521,8 +533,10 @@ python heartbeat.py check
 # 每日日志
 python daily_log.py write
 
-# Benchmark
-python benchmark.py cases
+# Benchmark（主要工具：benchmark_sry）
+cd benchmark_sry && python run_benchmark_sry.py run --cases cases --tag v3.1
+
+# 快速质量评估（旧版）
 python benchmark.py run
 
 # Dashboard

@@ -1,0 +1,303 @@
+[
+  {
+    "case_id": "P4-CONFLICT-001",
+    "case_type": "contradiction_update",
+    "pain_point": "决策漂移",
+    "points": 25,
+    "project": "_benchmark_sry_p4_weekly",
+    "old_event": "周报发 A 就行。",
+    "new_event": "等等，A 不负责这块了，改发 B 吧。",
+    "query": "/recall 周报发给谁",
+    "expected_output": {
+      "expected_active_value": "周报发给B",
+      "forbidden_values": [
+        "周报发给A"
+      ]
+    }
+  },
+  {
+    "case_id": "P4-CONFLICT-002",
+    "case_type": "contradiction_update",
+    "pain_point": "决策漂移",
+    "points": 20,
+    "old_event": "告警升 P1 的时候通知值班群就够了。",
+    "new_event": "上次 P1 没及时升级，技术负责人不知道，要同时发他。",
+    "query": "/query 告警通知策略",
+    "expected_output": {
+      "expected_active_value": "通知值班群和技术负责人",
+      "forbidden_values": [
+        "仅通知值班群"
+      ]
+    }
+  },
+  {
+    "case_id": "P4-CONFLICT-003",
+    "case_type": "contradiction_update",
+    "pain_point": "决策漂移",
+    "points": 20,
+    "old_event": "发版窗口周五晚 22 点吧，业务低峰。",
+    "new_event": "周五晚有促销，流量峰值高，改周三 22 点发吧。",
+    "query": "/recall 发版窗口",
+    "expected_output": {
+      "expected_active_value": "发版窗口调整为周三晚22点",
+      "forbidden_values": [
+        "周五晚22点"
+      ]
+    }
+  },
+  {
+    "case_id": "P4-CONFLICT-004",
+    "case_type": "contradiction_update",
+    "pain_point": "决策漂移",
+    "points": 20,
+    "old_event": "周会每周一上午 10 点吧，和迭代开始对齐。",
+    "new_event": "周一上午有外部客户会，核心成员都冲突，改周二 10 点。",
+    "query": "/query 周会时间",
+    "expected_output": {
+      "expected_active_value": "周会改为每周二上午10点",
+      "forbidden_values": [
+        "每周一上午10点"
+      ]
+    }
+  },
+  {
+    "case_id": "P4-CONFLICT-005",
+    "case_type": "contradiction_update",
+    "pain_point": "决策漂移",
+    "points": 20,
+    "old_event": "主库用 PostgreSQL 吧，JSONB 挺好用的。",
+    "new_event": "PG 专家转岗了，没人维护，换 MySQL 8。",
+    "query": "/recall 主库选型",
+    "expected_output": {
+      "expected_active_value": "主库改为MySQL 8",
+      "forbidden_values": [
+        "主库采用PostgreSQL"
+      ]
+    }
+  },
+  {
+    "case_id": "P4-CONFLICT-006",
+    "case_type": "contradiction_update",
+    "pain_point": "决策漂移",
+    "points": 20,
+    "old_event": "消息队列用 Kafka 吧，吞吐高。",
+    "new_event": "预算砍了，自建 Kafka 养不起，换云托管 RocketMQ。",
+    "query": "/query 消息队列用什么",
+    "expected_output": {
+      "expected_active_value": "消息队列采用云托管RocketMQ",
+      "forbidden_values": [
+        "消息队列采用Kafka"
+      ]
+    }
+  },
+  {
+    "case_id": "P4-CONFLICT-007",
+    "case_type": "contradiction_update",
+    "pain_point": "决策漂移",
+    "points": 20,
+    "old_event": "网关用 Kong 吧，插件多。",
+    "new_event": "Kong 插件我们维护不了，还是 APISIX，etcd 现成的。",
+    "query": "/recall 网关方案",
+    "expected_output": {
+      "expected_active_value": "网关统一使用APISIX",
+      "forbidden_values": [
+        "网关使用Kong"
+      ]
+    }
+  },
+  {
+    "case_id": "P4-CONFLICT-008",
+    "case_type": "contradiction_update",
+    "pain_point": "决策漂移",
+    "points": 20,
+    "old_event": "缓存用单机 Redis 就行，量不大。",
+    "new_event": "单机风险太高了，换 Redis Cluster，高可用。",
+    "query": "/query 缓存方案",
+    "expected_output": {
+      "expected_active_value": "缓存采用Redis Cluster",
+      "forbidden_values": [
+        "缓存采用单机Redis"
+      ]
+    }
+  },
+  {
+    "case_id": "P4-CONFLICT-009",
+    "case_type": "contradiction_update",
+    "pain_point": "决策漂移",
+    "points": 20,
+    "old_event": "追踪采样率固定 1% 吧，别采太多了。",
+    "new_event": "出问题的时候采样太低找不到根因，改 10%。",
+    "query": "/recall 追踪采样率",
+    "expected_output": {
+      "expected_active_value": "默认10%",
+      "forbidden_values": [
+        "固定1%"
+      ]
+    }
+  },
+  {
+    "case_id": "P4-CONFLICT-010",
+    "case_type": "contradiction_update",
+    "pain_point": "决策漂移",
+    "points": 20,
+    "old_event": "备份保留 7 天够了，以前恢复窗口就短。",
+    "new_event": "审计要求至少 90 天，财务系统那边是硬指标。",
+    "query": "/query 备份保留多久",
+    "expected_output": {
+      "expected_active_value": "备份保留90天",
+      "forbidden_values": [
+        "仅保留7天"
+      ]
+    }
+  },
+  {
+    "case_id": "P4-CONFLICT-011",
+    "case_type": "contradiction_update",
+    "pain_point": "决策漂移",
+    "points": 20,
+    "old_event": "验证码有效期 5 分钟吧，用户容错高。",
+    "new_event": "撞库攻击上来了，有效期改 2 分钟，降攻击窗口。",
+    "query": "/recall 验证码有效期",
+    "expected_output": {
+      "expected_active_value": "有效期2分钟",
+      "forbidden_values": [
+        "有效期5分钟"
+      ]
+    }
+  },
+  {
+    "case_id": "P4-CONFLICT-012",
+    "case_type": "contradiction_update",
+    "pain_point": "决策漂移",
+    "points": 20,
+    "old_event": "日志保留 30 天吧，存储成本考虑。",
+    "new_event": "合规那边要求至少 180 天，这个是硬性的。",
+    "query": "/query 日志保留期限",
+    "expected_output": {
+      "expected_active_value": "日志保留180天",
+      "forbidden_values": [
+        "日志保留30天"
+      ]
+    }
+  },
+  {
+    "case_id": "P4-CONFLICT-013",
+    "case_type": "contradiction_update",
+    "pain_point": "决策漂移",
+    "points": 20,
+    "old_event": "发布直接全量吧，省事。",
+    "new_event": "上次全量发上去崩了，要先灰 10% 再全量。",
+    "query": "/recall 发布流程",
+    "expected_output": {
+      "expected_active_value": "先灰度10%再全量",
+      "forbidden_values": [
+        "发布直接全量"
+      ]
+    }
+  },
+  {
+    "case_id": "P4-CONFLICT-014",
+    "case_type": "contradiction_update",
+    "pain_point": "决策漂移",
+    "points": 20,
+    "old_event": "内部接口继续 HTTP/JSON 吧，简单。",
+    "new_event": "服务数量上来了，要 IDL 治理，改 gRPC。",
+    "query": "/query 内部接口协议",
+    "expected_output": {
+      "expected_active_value": "内部接口改为gRPC",
+      "forbidden_values": [
+        "继续HTTP/JSON"
+      ]
+    }
+  },
+  {
+    "case_id": "P4-CONFLICT-015",
+    "case_type": "contradiction_update",
+    "pain_point": "决策漂移",
+    "points": 20,
+    "old_event": "权限模型用 RBAC 就行，实现简单。",
+    "new_event": "出跨组织越权的事了，要加 ABAC 补上下文约束。",
+    "query": "/recall 权限模型",
+    "expected_output": {
+      "expected_active_value": "RBAC+ABAC",
+      "forbidden_values": [
+        "仅RBAC"
+      ]
+    }
+  },
+  {
+    "case_id": "P4-CONFLICT-016",
+    "case_type": "contradiction_update",
+    "pain_point": "决策漂移",
+    "points": 20,
+    "old_event": "工单 SLA 24 小时响应吧，现在人力够。",
+    "new_event": "关键客户合同新加了 4 小时条款，要满足。",
+    "query": "/query 关键客户SLA",
+    "expected_output": {
+      "expected_active_value": "4小时响应",
+      "forbidden_values": [
+        "24小时响应"
+      ]
+    }
+  },
+  {
+    "case_id": "P4-CONFLICT-017",
+    "case_type": "contradiction_update",
+    "pain_point": "决策漂移",
+    "points": 20,
+    "old_event": "对象存储归档按周来吧，频率低点。",
+    "new_event": "热数据成本太高了，要按天归档，降本快。",
+    "query": "/recall 对象存储归档频率",
+    "expected_output": {
+      "expected_active_value": "按天归档",
+      "forbidden_values": [
+        "按周归档"
+      ]
+    }
+  },
+  {
+    "case_id": "P4-CONFLICT-018",
+    "case_type": "contradiction_update",
+    "pain_point": "决策漂移",
+    "points": 20,
+    "old_event": "审计日志保留 180 天吧。",
+    "new_event": "审计那边要求 365 天，而且不能物理删除。",
+    "query": "/query 审计日志保留策略",
+    "expected_output": {
+      "expected_active_value": "保留365天",
+      "forbidden_values": [
+        "保留180天"
+      ]
+    }
+  },
+  {
+    "case_id": "P4-CONFLICT-019",
+    "case_type": "contradiction_update",
+    "pain_point": "决策漂移",
+    "points": 20,
+    "old_event": "通知用邮件就够了。",
+    "new_event": "P1 事故没及时看到邮件，要加站内信双通道。",
+    "query": "/recall 通知通道策略",
+    "expected_output": {
+      "expected_active_value": "站内信+邮件",
+      "forbidden_values": [
+        "通知仅邮件"
+      ]
+    }
+  },
+  {
+    "case_id": "P4-CONFLICT-020",
+    "case_type": "contradiction_update",
+    "pain_point": "决策漂移",
+    "points": 20,
+    "old_event": "功能开关平台自己搞吧，灵活。",
+    "new_event": "自研维护成本太高了，换 LaunchDarkly 托管。",
+    "query": "/query Feature Flag平台方案",
+    "expected_output": {
+      "expected_active_value": "LaunchDarkly托管",
+      "forbidden_values": [
+        "平台自研"
+      ]
+    }
+  }
+]

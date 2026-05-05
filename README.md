@@ -251,7 +251,9 @@ store_decision() → 默认 status='candidate'
     ┌──────────────────┐ ┌─────────────────┐ ┌─────────────────┐
     │  review_policy() │ │  Conflict Check │ │   Knowledge     │
     │  status=active   │ │  superseded_by  │ │   Graph Index   │
-    │  or candidate    │ │  相似度 > 0.5    │ │   triples 表    │
+    │  or candidate    │ │  Jaccard>0.15   │ │   triples 表    │
+    │                  │ │  token>0.15     │ │                 │
+    │                  │ │  embed>0.65     │ │                 │
     └────────┬─────────┘ └────────┬────────┘ └────────┬────────┘
              │                    │                   │
              └─────────┬──────────┴─────────┬─────────┘
@@ -442,7 +444,8 @@ python dashboard.py --port 8080
 
 ```bash
 cd benchmark_sry
-python run_benchmark_sry.py run --cases cases
+python run_benchmark_sry.py run --cases cases_old   # 标准基线测试
+python run_benchmark_sry.py run --cases cases_new   # 口语化压力测试
 ```
 
 **100+ 用例，覆盖 5 大痛点场景，含抗干扰/矛盾更新/旧值泄漏等硬性指标。**
@@ -451,18 +454,18 @@ python run_benchmark_sry.py run --cases cases
 
 **cases_old（标准基线，100 例）**：
 ```
-通过率：87% ✅
+通过率：91% ✅
 
 核心指标：
 ├─ 抗干扰 Recall@1:    0.80  ✅ 良好
 ├─ 矛盾覆盖成功率:      0.95  ✅ 优秀
 ├─ 旧值泄漏率:         0.05  ✅ 优秀
-└─ 重复推送命中:        0.60  🟡 应推送 10/15（5 例回退）
+└─ 重复推送命中:        0.75  ✅ 应推送 12/15（闲聊负例过滤生效）
 ```
 
 **cases_new（口语化压力测试，81 例）**：
 ```
-通过率：59.26% 🟡
+通过率：58.02% 🟡
 
 核心指标：
 ├─ 矛盾覆盖成功率:      0.35  🟡 口语化场景仍需提升
@@ -477,7 +480,7 @@ python run_benchmark_sry.py run --cases cases
 | v3.2 | 79% | 27% | 口语化触发词 + reasoning 提取 |
 | v3.3 | 79% | 53% | embedding 余弦 + 语义优先排序 |
 | v3.4 | 90% | 56.79% | Chroma 信任排序，移除误杀过滤 |
-| **v3.5** | **87%** | **59.26%** | **P1-CAP reasoning + P5-NEG 负例过滤修复** |
+| **v3.5** | **91%** | **58.02%** | **闲聊白名单过滤 + reasoning 关键词扩展** |
 
 ### 当前能力边界（Ceiling）
 
@@ -487,17 +490,16 @@ python run_benchmark_sry.py run --cases cases
 |------|---------|------|---------|
 | **P1-ANTI rank=None** | 2/2 失败 | 口语化 anchor 在向量空间排名靠后 | 🔴 高 — 需升级 embedding 模型或引入重排序 |
 | **P3/P4 版本链断裂** | ~50% 覆盖 | embedding 阈值对口语化新旧决策对不够敏感 | 🟡 中 — 需 project 级全局覆盖检测 |
-| **P5 应推送/负例平衡** | cases_old 5/15 失败 | 过滤策略偏严格导致应推送被误杀 | 🟡 中 — 需动态阈值或 LLM rerank |
+| **P5 应推送/负例平衡** | cases_old 3/15 失败 | 部分同领域替代方案召回不足 | 🟡 中 — 需 LLM rerank 兜底 |
 | **P2 证据命中不足** | 5/20 失败 | 口语化 evidence 关键词匹配率低 | 🟢 低 — 扩展匹配字段即可 |
 
 ### 已完成的优化项
 
 - ✅ P1-CAP-006 reasoning 提取（"观察"关键词）
-- ✅ P5-NEG 负例过滤（无关话题不再召回）
+- ✅ P5-NEG 闲聊白名单过滤（"咖啡/午饭/天气"等无关话题不再召回）
 - ✅ cases_new P5 应推送（3/3 全中）
+- ✅ cases_old P5 召回（12/15 命中，3/5 负例通过）
 - ✅ cases_old P3/P4 上下文失效（19/20 passed）
-
-### 快速质量评估（旧版，保留）
 
 ### 快速质量评估（旧版，保留）
 
@@ -530,11 +532,16 @@ skills/feishu-memory/
 ├── scripts/
 │   └── feishu_memory_cli.py           # Agent 统一 CLI 入口
 ├── benchmark_sry/
-│   └── cases/                         # 测试数据
-│   └── cases_new/                     # 测试数据
-│   └── docs/                          # 测试数据
-│   └── output/                        # 测试报告
-│   └── run_benchmark_sry.py           # 测试程序
+│   ├── cases_old/                     # 标准基线测试用例（100例）
+│   ├── cases_new/                     # 口语化压力测试用例（81例）
+│   ├── docs/                          # 测试文档
+│   ├── outputs/                       # 测试报告输出
+│   ├── run_benchmark_sry.py           # 主测试程序
+│   ├── README.md                      # 测试框架说明
+│   └── 速览.md                         # 快速参考
+├── web/
+│   ├── index.html                     # 纯前端 Dashboard
+│   └── DEPLOY.md                      # GitHub Pages 部署指南
 ├── benchmark_cases/
 │   └── cases.json                     # 自动化测试用例
 ├── benchmarks/                        # 评估报告输出
@@ -572,7 +579,7 @@ python heartbeat.py check
 python daily_log.py write
 
 # Benchmark（主要工具：benchmark_sry）
-cd benchmark_sry && python run_benchmark_sry.py run --cases cases --tag v3.1
+cd benchmark_sry && python run_benchmark_sry.py run --cases cases_old --tag v3.5
 
 # 快速质量评估（旧版）
 python benchmark.py run

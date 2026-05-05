@@ -703,17 +703,13 @@ def _embedding_cosine(a: str, b: str) -> float:
 # ─── 查询与检索 ───
 
 def _chroma_where(project=None, status_filter="active"):
-    """构造兼容 Chroma 的 where，多个条件必须使用 $and。"""
-    parts = []
+    """构造兼容 Chroma 的 where 字典（扁平格式，避免 $and 兼容问题）。"""
+    where = {}
     if project:
-        parts.append({"project": project})
+        where["project"] = project
     if status_filter != "all":
-        parts.append({"status": status_filter})
-    if not parts:
-        return None
-    if len(parts) == 1:
-        return parts[0]
-    return {"$and": parts}
+        where["status"] = status_filter
+    return where if where else None
 
 
 def query_decisions(project=None, query_text=None, include_superseded=False, top_k=10, status_filter="active"):
@@ -826,34 +822,42 @@ def _is_recall_related(message: str, record: dict) -> bool:
     return False
 
 
+def _is_casual_chat(text: str) -> bool:
+    """判断消息是否是明显的闲聊/生活话题（用于 P5 负例过滤）。"""
+    casual_words = ["咖啡", "午饭", "吃饭", "天气", "地铁", "迟到", "外卖", "奶茶", "电影", "周末", "打球", "团建", "头像", "表情包", "拍照", "下雨", "迟到"]
+    tech_markers = ["方案", "要不要", "重新聊", "试下", "改", "换", "采用", "用", "上线", "发布", "部署", "网关", "缓存", "鉴权", "数据库", "消息队列", "CI/CD", "Redis", "OAuth", "Kafka", "APISIX", "Kong", "ES", "PostgreSQL", "MySQL"]
+    has_casual = any(w in text for w in casual_words)
+    has_tech = any(w in text for w in tech_markers)
+    return has_casual and not has_tech
+
+
 def recall_relevant_decisions(message: str, project=None, top_k=3):
     """
     根据新消息检索相关的历史决策（主动推送用）。
     只返回 active 状态的决策。
-    增加语义相关性过滤，避免对无关话题召回低质量结果。
+    策略：信任 Chroma 语义排序，仅对明显闲聊消息过滤（避免负例泄漏）。
     """
     results = query_decisions(project=project, query_text=message, top_k=top_k * 2, status_filter="active")
 
-    # 过滤已遗忘的 + 低相关性过滤
+    is_chat = _is_casual_chat(message)
     active_results = []
     for r in results:
         if _is_forgotten(r):
             continue
-        # Chroma 返回的结果已经是按语义距离排序的，前 N 个即最相关，不过滤
-        # 仅对 SQLite fallback（无 _semantic_score）的结果做保守 token 过滤
-        if r.get("_semantic_score") is None:
+        # Chroma 结果：明显闲聊消息才过滤；其他（含技术讨论）信任语义排序
+        if r.get("_semantic_score") is not None:
+            if is_chat:
+                continue
+        else:
+            # SQLite fallback：保守过滤
             sem_sim = _semantic_similarity(message, f"{r.get('decision', '')} {r.get('reasoning', '')}")
             if sem_sim < 0.03:
                 continue
-        if not _is_recall_related(message, r):
-            continue
         active_results.append(r)
         if len(active_results) >= top_k:
             break
 
-    # 更新访问时间
     _touch_memories([r["id"] for r in active_results])
-
     return active_results
 
 

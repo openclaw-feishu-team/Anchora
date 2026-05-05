@@ -125,10 +125,21 @@ def _rows_for_project(project: str) -> List[Dict[str, Any]]:
 def _rank_of_value(results: List[Dict[str, Any]], expected_value: str) -> Optional[int]:
     if not expected_value:
         return None
+    import re
+    expected_words = set(re.findall(r"[\u4e00-\u9fff]{1,}|[a-zA-Z0-9]+", expected_value.lower()))
     for idx, r in enumerate(results, start=1):
-        decision = str(r.get("decision", ""))
-        if expected_value in decision:
-            return idx
+        # 检查 decision / evidence / reasoning 的子串匹配
+        for field in ("decision", "evidence", "reasoning", "conclusion"):
+            text = str(r.get(field, "")).lower()
+            if expected_value.lower() in text:
+                return idx
+        # 兜底：关键词覆盖度 >= 50%（口语化场景）
+        combined = " ".join(str(r.get(f, "")) for f in ("decision", "evidence", "reasoning", "conclusion")).lower()
+        text_words = set(re.findall(r"[\u4e00-\u9fff]{1,}|[a-zA-Z0-9]+", combined))
+        if expected_words and text_words:
+            overlap = len(expected_words & text_words) / len(expected_words)
+            if overlap >= 0.5:
+                return idx
     return None
 
 

@@ -1,0 +1,2506 @@
+{
+  "status": "ok",
+  "generated_at": "2026-05-05T12:11:21",
+  "tag": "v3.3_full_fix",
+  "cases_file": "cases_new",
+  "summary": {
+    "total_cases": 81,
+    "total_points": 1302.0,
+    "earned_points": 982.97,
+    "score_percent": 75.5
+  },
+  "metrics": {
+    "case_count": 81,
+    "case_pass_rate": 0.5309,
+    "case_partial_rate": 0.3951,
+    "avg_latency_ms": 14.89,
+    "anti_interference_recall_at_1": 0.0,
+    "anti_interference_recall_at_3": 0.0,
+    "contradiction_overwrite_success_rate": 0.35,
+    "stale_leakage_rate": 0.05,
+    "repeat_push_hit_rate": 0.25
+  },
+  "db_change_preview": {
+    "before": {
+      "captured_at": "2026-05-05T12:09:27",
+      "table_counts": {
+        "decisions": 27,
+        "access_log": 17,
+        "audit_log": 43,
+        "memory_edges": 5,
+        "embed_cache": 770,
+        "push_log": 0,
+        "decision_contexts": 22,
+        "knowledge_triples": 2168
+      },
+      "benchmark_scope": {
+        "project_prefix": "_benchmark_sry_",
+        "decisions_count": 0,
+        "status_distribution": {},
+        "top_projects": []
+      }
+    },
+    "after": {
+      "captured_at": "2026-05-05T12:11:21",
+      "table_counts": {
+        "decisions": 226,
+        "access_log": 17,
+        "audit_log": 242,
+        "memory_edges": 54,
+        "embed_cache": 966,
+        "push_log": 0,
+        "decision_contexts": 22,
+        "knowledge_triples": 2429
+      },
+      "benchmark_scope": {
+        "project_prefix": "_benchmark_sry_",
+        "decisions_count": 199,
+        "status_distribution": {
+          "active": 150,
+          "candidate": 49
+        },
+        "top_projects": [
+          {
+            "project": "_benchmark_sry_p1_anti_gateway",
+            "count": 4
+          },
+          {
+            "project": "_benchmark_sry_p1_anti_weekly",
+            "count": 4
+          },
+          {
+            "project": "_benchmark_sry_p2_audit",
+            "count": 4
+          },
+          {
+            "project": "_benchmark_sry_p2_auth",
+            "count": 4
+          },
+          {
+            "project": "_benchmark_sry_p2_authz",
+            "count": 4
+          },
+          {
+            "project": "_benchmark_sry_p2_backup",
+            "count": 4
+          },
+          {
+            "project": "_benchmark_sry_p2_billing",
+            "count": 4
+          },
+          {
+            "project": "_benchmark_sry_p2_cache",
+            "count": 4
+          },
+          {
+            "project": "_benchmark_sry_p2_cicd",
+            "count": 4
+          },
+          {
+            "project": "_benchmark_sry_p2_db",
+            "count": 4
+          }
+        ]
+      }
+    },
+    "delta": {
+      "table_counts_delta": {
+        "access_log": 0,
+        "audit_log": 199,
+        "decision_contexts": 0,
+        "decisions": 199,
+        "embed_cache": 196,
+        "knowledge_triples": 261,
+        "memory_edges": 49,
+        "push_log": 0
+      },
+      "benchmark_scope_delta": {
+        "project_prefix": "_benchmark_sry_",
+        "decisions_count_delta": 199,
+        "status_distribution_delta": {
+          "active": 150,
+          "candidate": 49
+        }
+      }
+    },
+    "note": "该区块在 benchmark 结束且清理前采集，用于可视化 memory.db 的测试写入变化。"
+  },
+  "results": [
+    {
+      "case_id": "P1-CAP-001",
+      "case_type": "decision_capture",
+      "pain_point": "决策沉没",
+      "status": "passed",
+      "points": 10.0,
+      "earned_points": 10.0,
+      "checks": [
+        {
+          "name": "candidate_触发",
+          "passed": true,
+          "detail": "dry_run=dry_run"
+        },
+        {
+          "name": "reason_keyword_命中",
+          "passed": true,
+          "detail": "期望=etcd 实际=etcd 我们也有了，不然还得新搭"
+        }
+      ],
+      "extra": {
+        "dry_run": {
+          "status": "dry_run",
+          "would_record": true,
+          "project": "未分类",
+          "decision": "APISIX 好像挺合适的，etcd 我们也有了，不然还得新搭。",
+          "reasoning": "etcd 我们也有了，不然还得新搭",
+          "deadline": "",
+          "chat_id": "oc_benchmark_sry"
+        },
+        "runner_elapsed_ms": 2099.8
+      }
+    },
+    {
+      "case_id": "P1-CAP-002",
+      "case_type": "decision_capture",
+      "pain_point": "决策沉没",
+      "status": "passed",
+      "points": 10.0,
+      "earned_points": 10.0,
+      "checks": [
+        {
+          "name": "candidate_触发",
+          "passed": true,
+          "detail": "dry_run=dry_run"
+        },
+        {
+          "name": "reason_keyword_命中",
+          "passed": true,
+          "detail": "期望=资源 实际=资源也省"
+        }
+      ],
+      "extra": {
+        "dry_run": {
+          "status": "dry_run",
+          "would_record": true,
+          "project": "未分类",
+          "decision": "Vector 比 Fluentd 轻多了，资源也省，就它吧。",
+          "reasoning": "资源也省",
+          "deadline": "",
+          "chat_id": "oc_benchmark_sry"
+        },
+        "runner_elapsed_ms": 74.12
+      }
+    },
+    {
+      "case_id": "P1-CAP-003",
+      "case_type": "decision_capture",
+      "pain_point": "决策沉没",
+      "status": "passed",
+      "points": 10.0,
+      "earned_points": 10.0,
+      "checks": [
+        {
+          "name": "candidate_触发",
+          "passed": true,
+          "detail": "dry_run=dry_run"
+        },
+        {
+          "name": "reason_keyword_命中",
+          "passed": true,
+          "detail": "期望=成本 实际=服务注册本来就在上面，迁过来成本最低"
+        }
+      ],
+      "extra": {
+        "dry_run": {
+          "status": "dry_run",
+          "would_record": true,
+          "project": "未分类",
+          "decision": "Nacos 吧，服务注册本来就在上面，迁过来成本最低。",
+          "reasoning": "服务注册本来就在上面，迁过来成本最低",
+          "deadline": "",
+          "chat_id": "oc_benchmark_sry"
+        },
+        "runner_elapsed_ms": 86.19
+      }
+    },
+    {
+      "case_id": "P1-CAP-004",
+      "case_type": "decision_capture",
+      "pain_point": "决策沉没",
+      "status": "passed",
+      "points": 10.0,
+      "earned_points": 10.0,
+      "checks": [
+        {
+          "name": "candidate_触发",
+          "passed": true,
+          "detail": "dry_run=dry_run"
+        },
+        {
+          "name": "reason_keyword_命中",
+          "passed": true,
+          "detail": "期望=Trace 实际=后面和后端 Trace 也能串起来"
+        }
+      ],
+      "extra": {
+        "dry_run": {
+          "status": "dry_run",
+          "would_record": true,
+          "project": "未分类",
+          "decision": "统一走 OpenTelemetry 算了",
+          "reasoning": "后面和后端 Trace 也能串起来",
+          "deadline": "",
+          "chat_id": "oc_benchmark_sry"
+        },
+        "runner_elapsed_ms": 821.94
+      }
+    },
+    {
+      "case_id": "P1-CAP-005",
+      "case_type": "decision_capture",
+      "pain_point": "决策沉没",
+      "status": "passed",
+      "points": 10.0,
+      "earned_points": 10.0,
+      "checks": [
+        {
+          "name": "candidate_触发",
+          "passed": true,
+          "detail": "dry_run=dry_run"
+        },
+        {
+          "name": "reason_keyword_命中",
+          "passed": true,
+          "detail": "期望=换云 实际=换云的时候改动最小"
+        }
+      ],
+      "extra": {
+        "dry_run": {
+          "status": "dry_run",
+          "would_record": true,
+          "project": "未分类",
+          "decision": "继续用 S3 兼容吧",
+          "reasoning": "换云的时候改动最小",
+          "deadline": "",
+          "chat_id": "oc_benchmark_sry"
+        },
+        "runner_elapsed_ms": 584.66
+      }
+    },
+    {
+      "case_id": "P1-CAP-006",
+      "case_type": "decision_capture",
+      "pain_point": "决策沉没",
+      "status": "failed",
+      "points": 10.0,
+      "earned_points": 0.0,
+      "checks": [
+        {
+          "name": "candidate_触发",
+          "passed": false,
+          "detail": "dry_run=skipped"
+        }
+      ],
+      "extra": {
+        "dry_run": {
+          "status": "skipped",
+          "reason": "消息不包含决策或项目节点信息"
+        },
+        "runner_elapsed_ms": 0.04
+      }
+    },
+    {
+      "case_id": "P1-CAP-007",
+      "case_type": "decision_capture",
+      "pain_point": "决策沉没",
+      "status": "passed",
+      "points": 10.0,
+      "earned_points": 10.0,
+      "checks": [
+        {
+          "name": "candidate_触发",
+          "passed": true,
+          "detail": "dry_run=dry_run"
+        },
+        {
+          "name": "reason_keyword_命中",
+          "passed": true,
+          "detail": "期望=人工 实际=不用人工刷群了，漏接也少了"
+        }
+      ],
+      "extra": {
+        "dry_run": {
+          "status": "dry_run",
+          "would_record": true,
+          "project": "未分类",
+          "decision": "走值班机器人吧",
+          "reasoning": "不用人工刷群了，漏接也少了",
+          "deadline": "",
+          "chat_id": "oc_benchmark_sry"
+        },
+        "runner_elapsed_ms": 697.21
+      }
+    },
+    {
+      "case_id": "P1-CAP-008",
+      "case_type": "decision_capture",
+      "pain_point": "决策沉没",
+      "status": "failed",
+      "points": 10.0,
+      "earned_points": 0.0,
+      "checks": [
+        {
+          "name": "candidate_触发",
+          "passed": false,
+          "detail": "dry_run=skipped"
+        }
+      ],
+      "extra": {
+        "dry_run": {
+          "status": "skipped",
+          "reason": "消息不包含决策或项目节点信息"
+        },
+        "runner_elapsed_ms": 0.29
+      }
+    },
+    {
+      "case_id": "P1-CAP-009",
+      "case_type": "decision_capture",
+      "pain_point": "决策沉没",
+      "status": "failed",
+      "points": 10.0,
+      "earned_points": 0.0,
+      "checks": [
+        {
+          "name": "candidate_触发",
+          "passed": false,
+          "detail": "dry_run=skipped"
+        }
+      ],
+      "extra": {
+        "dry_run": {
+          "status": "skipped",
+          "reason": "消息不包含决策或项目节点信息"
+        },
+        "runner_elapsed_ms": 0.02
+      }
+    },
+    {
+      "case_id": "P1-CAP-010",
+      "case_type": "decision_capture",
+      "pain_point": "决策沉没",
+      "status": "passed",
+      "points": 10.0,
+      "earned_points": 10.0,
+      "checks": [
+        {
+          "name": "candidate_触发",
+          "passed": true,
+          "detail": "dry_run=dry_run"
+        },
+        {
+          "name": "reason_keyword_命中",
+          "passed": true,
+          "detail": "期望=维护 实际=我们这边没人维护 ES 集群"
+        }
+      ],
+      "extra": {
+        "dry_run": {
+          "status": "dry_run",
+          "would_record": true,
+          "project": "未分类",
+          "decision": "换 OpenSearch 托管版",
+          "reasoning": "我们这边没人维护 ES 集群",
+          "deadline": "",
+          "chat_id": "oc_benchmark_sry"
+        },
+        "runner_elapsed_ms": 594.84
+      }
+    },
+    {
+      "case_id": "P1-CAP-NEG-001",
+      "case_type": "decision_capture",
+      "pain_point": "决策沉没",
+      "status": "passed",
+      "points": 8.0,
+      "earned_points": 8.0,
+      "checks": [
+        {
+          "name": "negative_不过滤失败",
+          "passed": true,
+          "detail": "dry_run=skipped"
+        }
+      ],
+      "extra": {
+        "dry_run": {
+          "status": "skipped",
+          "reason": "消息不包含决策或项目节点信息"
+        },
+        "runner_elapsed_ms": 0.03
+      }
+    },
+    {
+      "case_id": "P1-CAP-NEG-002",
+      "case_type": "decision_capture",
+      "pain_point": "决策沉没",
+      "status": "passed",
+      "points": 8.0,
+      "earned_points": 8.0,
+      "checks": [
+        {
+          "name": "negative_不过滤失败",
+          "passed": true,
+          "detail": "dry_run=skipped"
+        }
+      ],
+      "extra": {
+        "dry_run": {
+          "status": "skipped",
+          "reason": "消息不包含决策或项目节点信息"
+        },
+        "runner_elapsed_ms": 0.02
+      }
+    },
+    {
+      "case_id": "P1-CAP-NEG-003",
+      "case_type": "decision_capture",
+      "pain_point": "决策沉没",
+      "status": "passed",
+      "points": 8.0,
+      "earned_points": 8.0,
+      "checks": [
+        {
+          "name": "negative_不过滤失败",
+          "passed": true,
+          "detail": "dry_run=skipped"
+        }
+      ],
+      "extra": {
+        "dry_run": {
+          "status": "skipped",
+          "reason": "消息不包含决策或项目节点信息"
+        },
+        "runner_elapsed_ms": 0.0
+      }
+    },
+    {
+      "case_id": "P1-CAP-NEG-004",
+      "case_type": "decision_capture",
+      "pain_point": "决策沉没",
+      "status": "passed",
+      "points": 8.0,
+      "earned_points": 8.0,
+      "checks": [
+        {
+          "name": "negative_不过滤失败",
+          "passed": true,
+          "detail": "dry_run=skipped"
+        }
+      ],
+      "extra": {
+        "dry_run": {
+          "status": "skipped",
+          "reason": "消息不包含决策或项目节点信息"
+        },
+        "runner_elapsed_ms": 0.01
+      }
+    },
+    {
+      "case_id": "P1-CAP-NEG-005",
+      "case_type": "decision_capture",
+      "pain_point": "决策沉没",
+      "status": "passed",
+      "points": 8.0,
+      "earned_points": 8.0,
+      "checks": [
+        {
+          "name": "negative_不过滤失败",
+          "passed": true,
+          "detail": "dry_run=skipped"
+        }
+      ],
+      "extra": {
+        "dry_run": {
+          "status": "skipped",
+          "reason": "消息不包含决策或项目节点信息"
+        },
+        "runner_elapsed_ms": 0.01
+      }
+    },
+    {
+      "case_id": "P1-ANTI-001",
+      "case_type": "anti_interference",
+      "pain_point": "决策沉没",
+      "status": "partial",
+      "points": 20.0,
+      "earned_points": 13.33,
+      "checks": [
+        {
+          "name": "抗干扰_命中",
+          "passed": false,
+          "detail": "rank=None, max_rank=1"
+        },
+        {
+          "name": "抗干扰_旧值不泄漏",
+          "passed": true,
+          "detail": "forbidden=['发给C组', '发给D组']"
+        },
+        {
+          "name": "抗干扰_噪声规模",
+          "passed": true,
+          "detail": "noise=26, min=25"
+        }
+      ],
+      "extra": {
+        "latency_ms": 29.4,
+        "rank": null,
+        "query": "周报发给谁",
+        "noise_inputs": 26,
+        "stored_rows": 4,
+        "top_results": [
+          "发 A 组就行",
+          "换 Vector",
+          "灰度先 10% 试试水，风险小点。"
+        ],
+        "runner_elapsed_ms": 3827.47
+      }
+    },
+    {
+      "case_id": "P1-ANTI-002",
+      "case_type": "anti_interference",
+      "pain_point": "决策沉没",
+      "status": "partial",
+      "points": 20.0,
+      "earned_points": 13.33,
+      "checks": [
+        {
+          "name": "抗干扰_命中",
+          "passed": false,
+          "detail": "rank=None, max_rank=1"
+        },
+        {
+          "name": "抗干扰_旧值不泄漏",
+          "passed": true,
+          "detail": "forbidden=['Kong', 'Nginx Ingress']"
+        },
+        {
+          "name": "抗干扰_噪声规模",
+          "passed": true,
+          "detail": "noise=26, min=25"
+        }
+      ],
+      "extra": {
+        "latency_ms": 11.27,
+        "rank": null,
+        "query": "API网关定的啥",
+        "noise_inputs": 26,
+        "stored_rows": 4,
+        "top_results": [
+          "换 ClickHouse",
+          "走 S3 兼容接口",
+          "用 OpenTelemetry"
+        ],
+        "runner_elapsed_ms": 3448.42
+      }
+    },
+    {
+      "case_id": "P2-AGG-001",
+      "case_type": "decision_aggregation",
+      "pain_point": "决策碎片",
+      "status": "partial",
+      "points": 20.0,
+      "earned_points": 10.0,
+      "checks": [
+        {
+          "name": "聚合_结论命中",
+          "passed": true,
+          "detail": "rank=1"
+        },
+        {
+          "name": "聚合_证据命中",
+          "passed": false,
+          "detail": "hits=2, min=3"
+        }
+      ],
+      "extra": {
+        "latency_ms": 18.52,
+        "rank": 1,
+        "evidence_hits": 2,
+        "runner_elapsed_ms": 937.09
+      }
+    },
+    {
+      "case_id": "P2-AGG-002",
+      "case_type": "decision_aggregation",
+      "pain_point": "决策碎片",
+      "status": "passed",
+      "points": 18.0,
+      "earned_points": 18.0,
+      "checks": [
+        {
+          "name": "聚合_结论命中",
+          "passed": true,
+          "detail": "rank=1"
+        },
+        {
+          "name": "聚合_证据命中",
+          "passed": true,
+          "detail": "hits=5, min=3"
+        }
+      ],
+      "extra": {
+        "latency_ms": 13.16,
+        "rank": 1,
+        "evidence_hits": 5,
+        "runner_elapsed_ms": 1709.68
+      }
+    },
+    {
+      "case_id": "P2-AGG-003",
+      "case_type": "decision_aggregation",
+      "pain_point": "决策碎片",
+      "status": "partial",
+      "points": 18.0,
+      "earned_points": 9.0,
+      "checks": [
+        {
+          "name": "聚合_结论命中",
+          "passed": true,
+          "detail": "rank=1"
+        },
+        {
+          "name": "聚合_证据命中",
+          "passed": false,
+          "detail": "hits=1, min=3"
+        }
+      ],
+      "extra": {
+        "latency_ms": 18.57,
+        "rank": 1,
+        "evidence_hits": 1,
+        "runner_elapsed_ms": 3248.95
+      }
+    },
+    {
+      "case_id": "P2-AGG-004",
+      "case_type": "decision_aggregation",
+      "pain_point": "决策碎片",
+      "status": "passed",
+      "points": 18.0,
+      "earned_points": 18.0,
+      "checks": [
+        {
+          "name": "聚合_结论命中",
+          "passed": true,
+          "detail": "rank=1"
+        },
+        {
+          "name": "聚合_证据命中",
+          "passed": true,
+          "detail": "hits=3, min=3"
+        }
+      ],
+      "extra": {
+        "latency_ms": 15.38,
+        "rank": 1,
+        "evidence_hits": 3,
+        "runner_elapsed_ms": 3733.31
+      }
+    },
+    {
+      "case_id": "P2-AGG-005",
+      "case_type": "decision_aggregation",
+      "pain_point": "决策碎片",
+      "status": "partial",
+      "points": 18.0,
+      "earned_points": 9.0,
+      "checks": [
+        {
+          "name": "聚合_结论命中",
+          "passed": true,
+          "detail": "rank=1"
+        },
+        {
+          "name": "聚合_证据命中",
+          "passed": false,
+          "detail": "hits=2, min=3"
+        }
+      ],
+      "extra": {
+        "latency_ms": 20.62,
+        "rank": 1,
+        "evidence_hits": 2,
+        "runner_elapsed_ms": 2002.11
+      }
+    },
+    {
+      "case_id": "P2-AGG-006",
+      "case_type": "decision_aggregation",
+      "pain_point": "决策碎片",
+      "status": "passed",
+      "points": 18.0,
+      "earned_points": 18.0,
+      "checks": [
+        {
+          "name": "聚合_结论命中",
+          "passed": true,
+          "detail": "rank=1"
+        },
+        {
+          "name": "聚合_证据命中",
+          "passed": true,
+          "detail": "hits=4, min=3"
+        }
+      ],
+      "extra": {
+        "latency_ms": 13.7,
+        "rank": 1,
+        "evidence_hits": 4,
+        "runner_elapsed_ms": 3344.85
+      }
+    },
+    {
+      "case_id": "P2-AGG-007",
+      "case_type": "decision_aggregation",
+      "pain_point": "决策碎片",
+      "status": "partial",
+      "points": 18.0,
+      "earned_points": 9.0,
+      "checks": [
+        {
+          "name": "聚合_结论命中",
+          "passed": true,
+          "detail": "rank=1"
+        },
+        {
+          "name": "聚合_证据命中",
+          "passed": false,
+          "detail": "hits=2, min=3"
+        }
+      ],
+      "extra": {
+        "latency_ms": 11.38,
+        "rank": 1,
+        "evidence_hits": 2,
+        "runner_elapsed_ms": 819.94
+      }
+    },
+    {
+      "case_id": "P2-AGG-008",
+      "case_type": "decision_aggregation",
+      "pain_point": "决策碎片",
+      "status": "passed",
+      "points": 18.0,
+      "earned_points": 18.0,
+      "checks": [
+        {
+          "name": "聚合_结论命中",
+          "passed": true,
+          "detail": "rank=1"
+        },
+        {
+          "name": "聚合_证据命中",
+          "passed": true,
+          "detail": "hits=4, min=3"
+        }
+      ],
+      "extra": {
+        "latency_ms": 14.61,
+        "rank": 1,
+        "evidence_hits": 4,
+        "runner_elapsed_ms": 2113.31
+      }
+    },
+    {
+      "case_id": "P2-AGG-009",
+      "case_type": "decision_aggregation",
+      "pain_point": "决策碎片",
+      "status": "passed",
+      "points": 18.0,
+      "earned_points": 18.0,
+      "checks": [
+        {
+          "name": "聚合_结论命中",
+          "passed": true,
+          "detail": "rank=1"
+        },
+        {
+          "name": "聚合_证据命中",
+          "passed": true,
+          "detail": "hits=3, min=3"
+        }
+      ],
+      "extra": {
+        "latency_ms": 16.48,
+        "rank": 1,
+        "evidence_hits": 3,
+        "runner_elapsed_ms": 277.12
+      }
+    },
+    {
+      "case_id": "P2-AGG-010",
+      "case_type": "decision_aggregation",
+      "pain_point": "决策碎片",
+      "status": "passed",
+      "points": 18.0,
+      "earned_points": 18.0,
+      "checks": [
+        {
+          "name": "聚合_结论命中",
+          "passed": true,
+          "detail": "rank=1"
+        },
+        {
+          "name": "聚合_证据命中",
+          "passed": true,
+          "detail": "hits=4, min=3"
+        }
+      ],
+      "extra": {
+        "latency_ms": 16.35,
+        "rank": 1,
+        "evidence_hits": 4,
+        "runner_elapsed_ms": 2035.82
+      }
+    },
+    {
+      "case_id": "P2-AGG-011",
+      "case_type": "decision_aggregation",
+      "pain_point": "决策碎片",
+      "status": "passed",
+      "points": 18.0,
+      "earned_points": 18.0,
+      "checks": [
+        {
+          "name": "聚合_结论命中",
+          "passed": true,
+          "detail": "rank=1"
+        },
+        {
+          "name": "聚合_证据命中",
+          "passed": true,
+          "detail": "hits=4, min=3"
+        }
+      ],
+      "extra": {
+        "latency_ms": 19.05,
+        "rank": 1,
+        "evidence_hits": 4,
+        "runner_elapsed_ms": 2895.65
+      }
+    },
+    {
+      "case_id": "P2-AGG-012",
+      "case_type": "decision_aggregation",
+      "pain_point": "决策碎片",
+      "status": "passed",
+      "points": 18.0,
+      "earned_points": 18.0,
+      "checks": [
+        {
+          "name": "聚合_结论命中",
+          "passed": true,
+          "detail": "rank=1"
+        },
+        {
+          "name": "聚合_证据命中",
+          "passed": true,
+          "detail": "hits=5, min=3"
+        }
+      ],
+      "extra": {
+        "latency_ms": 13.05,
+        "rank": 1,
+        "evidence_hits": 5,
+        "runner_elapsed_ms": 1705.63
+      }
+    },
+    {
+      "case_id": "P2-AGG-013",
+      "case_type": "decision_aggregation",
+      "pain_point": "决策碎片",
+      "status": "passed",
+      "points": 18.0,
+      "earned_points": 18.0,
+      "checks": [
+        {
+          "name": "聚合_结论命中",
+          "passed": true,
+          "detail": "rank=2"
+        },
+        {
+          "name": "聚合_证据命中",
+          "passed": true,
+          "detail": "hits=3, min=3"
+        }
+      ],
+      "extra": {
+        "latency_ms": 14.75,
+        "rank": 2,
+        "evidence_hits": 3,
+        "runner_elapsed_ms": 2204.89
+      }
+    },
+    {
+      "case_id": "P2-AGG-014",
+      "case_type": "decision_aggregation",
+      "pain_point": "决策碎片",
+      "status": "passed",
+      "points": 18.0,
+      "earned_points": 18.0,
+      "checks": [
+        {
+          "name": "聚合_结论命中",
+          "passed": true,
+          "detail": "rank=1"
+        },
+        {
+          "name": "聚合_证据命中",
+          "passed": true,
+          "detail": "hits=4, min=3"
+        }
+      ],
+      "extra": {
+        "latency_ms": 13.62,
+        "rank": 1,
+        "evidence_hits": 4,
+        "runner_elapsed_ms": 2536.76
+      }
+    },
+    {
+      "case_id": "P2-AGG-015",
+      "case_type": "decision_aggregation",
+      "pain_point": "决策碎片",
+      "status": "partial",
+      "points": 18.0,
+      "earned_points": 9.0,
+      "checks": [
+        {
+          "name": "聚合_结论命中",
+          "passed": true,
+          "detail": "rank=1"
+        },
+        {
+          "name": "聚合_证据命中",
+          "passed": false,
+          "detail": "hits=1, min=3"
+        }
+      ],
+      "extra": {
+        "latency_ms": 17.78,
+        "rank": 1,
+        "evidence_hits": 1,
+        "runner_elapsed_ms": 2375.3
+      }
+    },
+    {
+      "case_id": "P2-AGG-016",
+      "case_type": "decision_aggregation",
+      "pain_point": "决策碎片",
+      "status": "passed",
+      "points": 18.0,
+      "earned_points": 18.0,
+      "checks": [
+        {
+          "name": "聚合_结论命中",
+          "passed": true,
+          "detail": "rank=1"
+        },
+        {
+          "name": "聚合_证据命中",
+          "passed": true,
+          "detail": "hits=6, min=3"
+        }
+      ],
+      "extra": {
+        "latency_ms": 16.06,
+        "rank": 1,
+        "evidence_hits": 6,
+        "runner_elapsed_ms": 2051.49
+      }
+    },
+    {
+      "case_id": "P2-AGG-017",
+      "case_type": "decision_aggregation",
+      "pain_point": "决策碎片",
+      "status": "passed",
+      "points": 18.0,
+      "earned_points": 18.0,
+      "checks": [
+        {
+          "name": "聚合_结论命中",
+          "passed": true,
+          "detail": "rank=1"
+        },
+        {
+          "name": "聚合_证据命中",
+          "passed": true,
+          "detail": "hits=4, min=3"
+        }
+      ],
+      "extra": {
+        "latency_ms": 11.7,
+        "rank": 1,
+        "evidence_hits": 4,
+        "runner_elapsed_ms": 1385.48
+      }
+    },
+    {
+      "case_id": "P2-AGG-018",
+      "case_type": "decision_aggregation",
+      "pain_point": "决策碎片",
+      "status": "partial",
+      "points": 18.0,
+      "earned_points": 9.0,
+      "checks": [
+        {
+          "name": "聚合_结论命中",
+          "passed": true,
+          "detail": "rank=1"
+        },
+        {
+          "name": "聚合_证据命中",
+          "passed": false,
+          "detail": "hits=0, min=3"
+        }
+      ],
+      "extra": {
+        "latency_ms": 13.44,
+        "rank": 1,
+        "evidence_hits": 0,
+        "runner_elapsed_ms": 2062.39
+      }
+    },
+    {
+      "case_id": "P2-AGG-019",
+      "case_type": "decision_aggregation",
+      "pain_point": "决策碎片",
+      "status": "passed",
+      "points": 18.0,
+      "earned_points": 18.0,
+      "checks": [
+        {
+          "name": "聚合_结论命中",
+          "passed": true,
+          "detail": "rank=1"
+        },
+        {
+          "name": "聚合_证据命中",
+          "passed": true,
+          "detail": "hits=3, min=3"
+        }
+      ],
+      "extra": {
+        "latency_ms": 12.52,
+        "rank": 1,
+        "evidence_hits": 3,
+        "runner_elapsed_ms": 798.03
+      }
+    },
+    {
+      "case_id": "P2-AGG-020",
+      "case_type": "decision_aggregation",
+      "pain_point": "决策碎片",
+      "status": "partial",
+      "points": 18.0,
+      "earned_points": 9.0,
+      "checks": [
+        {
+          "name": "聚合_结论命中",
+          "passed": true,
+          "detail": "rank=2"
+        },
+        {
+          "name": "聚合_证据命中",
+          "passed": false,
+          "detail": "hits=2, min=3"
+        }
+      ],
+      "extra": {
+        "latency_ms": 11.88,
+        "rank": 2,
+        "evidence_hits": 2,
+        "runner_elapsed_ms": 2109.35
+      }
+    },
+    {
+      "case_id": "P3-CTX-001",
+      "case_type": "context_invalidated",
+      "pain_point": "决策上下文失效",
+      "status": "passed",
+      "points": 15.0,
+      "earned_points": 15.0,
+      "checks": [
+        {
+          "name": "上下文失效_新结论可检索",
+          "passed": true,
+          "detail": "rank=1"
+        },
+        {
+          "name": "上下文失效_旧值不在Top1",
+          "passed": true,
+          "detail": "forbidden=['数据库采用PostgreSQL']"
+        },
+        {
+          "name": "上下文失效_存在覆盖关系",
+          "passed": true,
+          "detail": "rows=3"
+        }
+      ],
+      "extra": {
+        "latency_ms": 17.75,
+        "old_id": "c6d5dc5686b9861a",
+        "new_id": "d1f99e18cf88ef8d",
+        "rows": 3,
+        "runner_elapsed_ms": 910.51
+      }
+    },
+    {
+      "case_id": "P3-CTX-002",
+      "case_type": "context_invalidated",
+      "pain_point": "决策上下文失效",
+      "status": "passed",
+      "points": 15.0,
+      "earned_points": 15.0,
+      "checks": [
+        {
+          "name": "上下文失效_新结论可检索",
+          "passed": true,
+          "detail": "rank=1"
+        },
+        {
+          "name": "上下文失效_旧值不在Top1",
+          "passed": true,
+          "detail": "forbidden=['消息队列采用Kafka']"
+        },
+        {
+          "name": "上下文失效_存在覆盖关系",
+          "passed": true,
+          "detail": "rows=3"
+        }
+      ],
+      "extra": {
+        "latency_ms": 11.98,
+        "old_id": "a1849c72cb25db70",
+        "new_id": "e4b7c826524191c6",
+        "rows": 3,
+        "runner_elapsed_ms": 1326.65
+      }
+    },
+    {
+      "case_id": "P3-CTX-003",
+      "case_type": "context_invalidated",
+      "pain_point": "决策上下文失效",
+      "status": "partial",
+      "points": 15.0,
+      "earned_points": 5.0,
+      "checks": [
+        {
+          "name": "上下文失效_新结论可检索",
+          "passed": false,
+          "detail": "rank=None"
+        },
+        {
+          "name": "上下文失效_旧值不在Top1",
+          "passed": true,
+          "detail": "forbidden=['CI/CD使用自建Jenkins']"
+        },
+        {
+          "name": "上下文失效_存在覆盖关系",
+          "passed": false,
+          "detail": "rows=3"
+        }
+      ],
+      "extra": {
+        "latency_ms": 15.3,
+        "old_id": "dcdaf66e916c8a11",
+        "new_id": "68d6f293c301d1d6",
+        "rows": 3,
+        "runner_elapsed_ms": 2898.91
+      }
+    },
+    {
+      "case_id": "P3-CTX-004",
+      "case_type": "context_invalidated",
+      "pain_point": "决策上下文失效",
+      "status": "partial",
+      "points": 15.0,
+      "earned_points": 10.0,
+      "checks": [
+        {
+          "name": "上下文失效_新结论可检索",
+          "passed": false,
+          "detail": "rank=None"
+        },
+        {
+          "name": "上下文失效_旧值不在Top1",
+          "passed": true,
+          "detail": "forbidden=['搜索服务采用Elasticsearch']"
+        },
+        {
+          "name": "上下文失效_存在覆盖关系",
+          "passed": true,
+          "detail": "rows=3"
+        }
+      ],
+      "extra": {
+        "latency_ms": 13.77,
+        "old_id": "cfc4cb391dab0a7e",
+        "new_id": "cae524672bb0843f",
+        "rows": 3,
+        "runner_elapsed_ms": 2172.32
+      }
+    },
+    {
+      "case_id": "P3-CTX-005",
+      "case_type": "context_invalidated",
+      "pain_point": "决策上下文失效",
+      "status": "partial",
+      "points": 15.0,
+      "earned_points": 10.0,
+      "checks": [
+        {
+          "name": "上下文失效_新结论可检索",
+          "passed": false,
+          "detail": "rank=None"
+        },
+        {
+          "name": "上下文失效_旧值不在Top1",
+          "passed": true,
+          "detail": "forbidden=['仅发值班群']"
+        },
+        {
+          "name": "上下文失效_存在覆盖关系",
+          "passed": true,
+          "detail": "rows=3"
+        }
+      ],
+      "extra": {
+        "latency_ms": 12.31,
+        "old_id": "b0596c48ad5d428f",
+        "new_id": "71ea5c7edf44de8e",
+        "rows": 3,
+        "runner_elapsed_ms": 2331.06
+      }
+    },
+    {
+      "case_id": "P3-CTX-006",
+      "case_type": "context_invalidated",
+      "pain_point": "决策上下文失效",
+      "status": "passed",
+      "points": 15.0,
+      "earned_points": 15.0,
+      "checks": [
+        {
+          "name": "上下文失效_新结论可检索",
+          "passed": true,
+          "detail": "rank=1"
+        },
+        {
+          "name": "上下文失效_旧值不在Top1",
+          "passed": true,
+          "detail": "forbidden=['日志保留30天']"
+        },
+        {
+          "name": "上下文失效_存在覆盖关系",
+          "passed": true,
+          "detail": "rows=3"
+        }
+      ],
+      "extra": {
+        "latency_ms": 22.24,
+        "old_id": "0ceb7cc5947e7d5c",
+        "new_id": "d59e094993e1683f",
+        "rows": 3,
+        "runner_elapsed_ms": 1530.29
+      }
+    },
+    {
+      "case_id": "P3-CTX-007",
+      "case_type": "context_invalidated",
+      "pain_point": "决策上下文失效",
+      "status": "partial",
+      "points": 15.0,
+      "earned_points": 10.0,
+      "checks": [
+        {
+          "name": "上下文失效_新结论可检索",
+          "passed": false,
+          "detail": "rank=None"
+        },
+        {
+          "name": "上下文失效_旧值不在Top1",
+          "passed": true,
+          "detail": "forbidden=['固定在周五22点']"
+        },
+        {
+          "name": "上下文失效_存在覆盖关系",
+          "passed": true,
+          "detail": "rows=3"
+        }
+      ],
+      "extra": {
+        "latency_ms": 11.7,
+        "old_id": "1df312ba4fa241b3",
+        "new_id": "36e3738e1884528d",
+        "rows": 3,
+        "runner_elapsed_ms": 2205.3
+      }
+    },
+    {
+      "case_id": "P3-CTX-008",
+      "case_type": "context_invalidated",
+      "pain_point": "决策上下文失效",
+      "status": "partial",
+      "points": 15.0,
+      "earned_points": 10.0,
+      "checks": [
+        {
+          "name": "上下文失效_新结论可检索",
+          "passed": false,
+          "detail": "rank=None"
+        },
+        {
+          "name": "上下文失效_旧值不在Top1",
+          "passed": true,
+          "detail": "forbidden=['按周归档']"
+        },
+        {
+          "name": "上下文失效_存在覆盖关系",
+          "passed": true,
+          "detail": "rows=3"
+        }
+      ],
+      "extra": {
+        "latency_ms": 13.03,
+        "old_id": "91f9051243abdc83",
+        "new_id": "e869fd6b066eb798",
+        "rows": 3,
+        "runner_elapsed_ms": 1983.13
+      }
+    },
+    {
+      "case_id": "P3-CTX-009",
+      "case_type": "context_invalidated",
+      "pain_point": "决策上下文失效",
+      "status": "passed",
+      "points": 15.0,
+      "earned_points": 15.0,
+      "checks": [
+        {
+          "name": "上下文失效_新结论可检索",
+          "passed": true,
+          "detail": "rank=2"
+        },
+        {
+          "name": "上下文失效_旧值不在Top1",
+          "passed": true,
+          "detail": "forbidden=['只用RBAC']"
+        },
+        {
+          "name": "上下文失效_存在覆盖关系",
+          "passed": true,
+          "detail": "rows=3"
+        }
+      ],
+      "extra": {
+        "latency_ms": 13.05,
+        "old_id": "c1e22615d58620d2",
+        "new_id": "059de182973e33e4",
+        "rows": 3,
+        "runner_elapsed_ms": 1500.18
+      }
+    },
+    {
+      "case_id": "P3-CTX-010",
+      "case_type": "context_invalidated",
+      "pain_point": "决策上下文失效",
+      "status": "partial",
+      "points": 15.0,
+      "earned_points": 10.0,
+      "checks": [
+        {
+          "name": "上下文失效_新结论可检索",
+          "passed": true,
+          "detail": "rank=1"
+        },
+        {
+          "name": "上下文失效_旧值不在Top1",
+          "passed": true,
+          "detail": "forbidden=['有效期5分钟']"
+        },
+        {
+          "name": "上下文失效_存在覆盖关系",
+          "passed": false,
+          "detail": "rows=3"
+        }
+      ],
+      "extra": {
+        "latency_ms": 15.11,
+        "old_id": "74cb7bbea0188585",
+        "new_id": "00bdc3eec0598a68",
+        "rows": 3,
+        "runner_elapsed_ms": 2871.39
+      }
+    },
+    {
+      "case_id": "P3-CTX-011",
+      "case_type": "context_invalidated",
+      "pain_point": "决策上下文失效",
+      "status": "passed",
+      "points": 15.0,
+      "earned_points": 15.0,
+      "checks": [
+        {
+          "name": "上下文失效_新结论可检索",
+          "passed": true,
+          "detail": "rank=2"
+        },
+        {
+          "name": "上下文失效_旧值不在Top1",
+          "passed": true,
+          "detail": "forbidden=['TTL统一1小时']"
+        },
+        {
+          "name": "上下文失效_存在覆盖关系",
+          "passed": true,
+          "detail": "rows=3"
+        }
+      ],
+      "extra": {
+        "latency_ms": 14.68,
+        "old_id": "82fa0f603a80e21f",
+        "new_id": "ab8a98cd884e2925",
+        "rows": 3,
+        "runner_elapsed_ms": 974.54
+      }
+    },
+    {
+      "case_id": "P3-CTX-012",
+      "case_type": "context_invalidated",
+      "pain_point": "决策上下文失效",
+      "status": "partial",
+      "points": 15.0,
+      "earned_points": 10.0,
+      "checks": [
+        {
+          "name": "上下文失效_新结论可检索",
+          "passed": true,
+          "detail": "rank=1"
+        },
+        {
+          "name": "上下文失效_旧值不在Top1",
+          "passed": true,
+          "detail": "forbidden=['统一HTTP']"
+        },
+        {
+          "name": "上下文失效_存在覆盖关系",
+          "passed": false,
+          "detail": "rows=3"
+        }
+      ],
+      "extra": {
+        "latency_ms": 11.1,
+        "old_id": "56e01561fbf1f118",
+        "new_id": "4ea8a7ce66ff9e1d",
+        "rows": 3,
+        "runner_elapsed_ms": 2715.26
+      }
+    },
+    {
+      "case_id": "P3-CTX-013",
+      "case_type": "context_invalidated",
+      "pain_point": "决策上下文失效",
+      "status": "passed",
+      "points": 15.0,
+      "earned_points": 15.0,
+      "checks": [
+        {
+          "name": "上下文失效_新结论可检索",
+          "passed": true,
+          "detail": "rank=1"
+        },
+        {
+          "name": "上下文失效_旧值不在Top1",
+          "passed": true,
+          "detail": "forbidden=['备份保留7天']"
+        },
+        {
+          "name": "上下文失效_存在覆盖关系",
+          "passed": true,
+          "detail": "rows=3"
+        }
+      ],
+      "extra": {
+        "latency_ms": 11.96,
+        "old_id": "79dbb08a1c4f520f",
+        "new_id": "15db847efb1648ec",
+        "rows": 3,
+        "runner_elapsed_ms": 1450.96
+      }
+    },
+    {
+      "case_id": "P3-CTX-014",
+      "case_type": "context_invalidated",
+      "pain_point": "决策上下文失效",
+      "status": "passed",
+      "points": 15.0,
+      "earned_points": 15.0,
+      "checks": [
+        {
+          "name": "上下文失效_新结论可检索",
+          "passed": true,
+          "detail": "rank=1"
+        },
+        {
+          "name": "上下文失效_旧值不在Top1",
+          "passed": true,
+          "detail": "forbidden=['单区部署即可']"
+        },
+        {
+          "name": "上下文失效_存在覆盖关系",
+          "passed": true,
+          "detail": "rows=3"
+        }
+      ],
+      "extra": {
+        "latency_ms": 12.15,
+        "old_id": "40f751a968811142",
+        "new_id": "ca590995530c7aea",
+        "rows": 3,
+        "runner_elapsed_ms": 2914.42
+      }
+    },
+    {
+      "case_id": "P3-CTX-015",
+      "case_type": "context_invalidated",
+      "pain_point": "决策上下文失效",
+      "status": "passed",
+      "points": 15.0,
+      "earned_points": 15.0,
+      "checks": [
+        {
+          "name": "上下文失效_新结论可检索",
+          "passed": true,
+          "detail": "rank=2"
+        },
+        {
+          "name": "上下文失效_旧值不在Top1",
+          "passed": true,
+          "detail": "forbidden=['缓存7天']"
+        },
+        {
+          "name": "上下文失效_存在覆盖关系",
+          "passed": true,
+          "detail": "rows=3"
+        }
+      ],
+      "extra": {
+        "latency_ms": 21.72,
+        "old_id": "4f8a0987cea5059b",
+        "new_id": "1f7386a6667cdd24",
+        "rows": 3,
+        "runner_elapsed_ms": 796.62
+      }
+    },
+    {
+      "case_id": "P3-CTX-016",
+      "case_type": "context_invalidated",
+      "pain_point": "决策上下文失效",
+      "status": "partial",
+      "points": 15.0,
+      "earned_points": 10.0,
+      "checks": [
+        {
+          "name": "上下文失效_新结论可检索",
+          "passed": false,
+          "detail": "rank=None"
+        },
+        {
+          "name": "上下文失效_旧值不在Top1",
+          "passed": true,
+          "detail": "forbidden=['失败重试3次']"
+        },
+        {
+          "name": "上下文失效_存在覆盖关系",
+          "passed": true,
+          "detail": "rows=3"
+        }
+      ],
+      "extra": {
+        "latency_ms": 12.33,
+        "old_id": "f014eac6660ca146",
+        "new_id": "c90dd79b94df4237",
+        "rows": 3,
+        "runner_elapsed_ms": 245.34
+      }
+    },
+    {
+      "case_id": "P3-CTX-017",
+      "case_type": "context_invalidated",
+      "pain_point": "决策上下文失效",
+      "status": "partial",
+      "points": 15.0,
+      "earned_points": 10.0,
+      "checks": [
+        {
+          "name": "上下文失效_新结论可检索",
+          "passed": true,
+          "detail": "rank=2"
+        },
+        {
+          "name": "上下文失效_旧值不在Top1",
+          "passed": true,
+          "detail": "forbidden=['默认明文CSV']"
+        },
+        {
+          "name": "上下文失效_存在覆盖关系",
+          "passed": false,
+          "detail": "rows=3"
+        }
+      ],
+      "extra": {
+        "latency_ms": 20.64,
+        "old_id": "e9a2f90f4ce4471b",
+        "new_id": "7657763f2b49effd",
+        "rows": 3,
+        "runner_elapsed_ms": 2269.95
+      }
+    },
+    {
+      "case_id": "P3-CTX-018",
+      "case_type": "context_invalidated",
+      "pain_point": "决策上下文失效",
+      "status": "partial",
+      "points": 15.0,
+      "earned_points": 5.0,
+      "checks": [
+        {
+          "name": "上下文失效_新结论可检索",
+          "passed": false,
+          "detail": "rank=None"
+        },
+        {
+          "name": "上下文失效_旧值不在Top1",
+          "passed": true,
+          "detail": "forbidden=['在白天执行']"
+        },
+        {
+          "name": "上下文失效_存在覆盖关系",
+          "passed": false,
+          "detail": "rows=3"
+        }
+      ],
+      "extra": {
+        "latency_ms": 19.45,
+        "old_id": "4b663f370d17f900",
+        "new_id": "43ab99300d25418a",
+        "rows": 3,
+        "runner_elapsed_ms": 2042.29
+      }
+    },
+    {
+      "case_id": "P3-CTX-019",
+      "case_type": "context_invalidated",
+      "pain_point": "决策上下文失效",
+      "status": "passed",
+      "points": 15.0,
+      "earned_points": 15.0,
+      "checks": [
+        {
+          "name": "上下文失效_新结论可检索",
+          "passed": true,
+          "detail": "rank=2"
+        },
+        {
+          "name": "上下文失效_旧值不在Top1",
+          "passed": true,
+          "detail": "forbidden=['每周一上午10点']"
+        },
+        {
+          "name": "上下文失效_存在覆盖关系",
+          "passed": true,
+          "detail": "rows=3"
+        }
+      ],
+      "extra": {
+        "latency_ms": 13.07,
+        "old_id": "d3822a6e4055a394",
+        "new_id": "f1d971987a38c4cf",
+        "rows": 3,
+        "runner_elapsed_ms": 870.35
+      }
+    },
+    {
+      "case_id": "P3-CTX-020",
+      "case_type": "context_invalidated",
+      "pain_point": "决策上下文失效",
+      "status": "passed",
+      "points": 15.0,
+      "earned_points": 15.0,
+      "checks": [
+        {
+          "name": "上下文失效_新结论可检索",
+          "passed": true,
+          "detail": "rank=1"
+        },
+        {
+          "name": "上下文失效_旧值不在Top1",
+          "passed": true,
+          "detail": "forbidden=['24小时响应']"
+        },
+        {
+          "name": "上下文失效_存在覆盖关系",
+          "passed": true,
+          "detail": "rows=3"
+        }
+      ],
+      "extra": {
+        "latency_ms": 23.71,
+        "old_id": "5faa338b7209ae75",
+        "new_id": "fb9bcc75596a8b94",
+        "rows": 3,
+        "runner_elapsed_ms": 1480.34
+      }
+    },
+    {
+      "case_id": "P4-CONFLICT-001",
+      "case_type": "contradiction_update",
+      "pain_point": "决策漂移",
+      "status": "passed",
+      "points": 25.0,
+      "earned_points": 25.0,
+      "checks": [
+        {
+          "name": "矛盾更新_新值命中",
+          "passed": true,
+          "detail": "rank=1"
+        },
+        {
+          "name": "矛盾更新_旧值不在Top1",
+          "passed": true,
+          "detail": "forbidden=['周报发给A']"
+        },
+        {
+          "name": "矛盾更新_版本链成立",
+          "passed": true,
+          "detail": "old=5509bc0406ee2498 -> new=c541e5ba1343e792"
+        }
+      ],
+      "extra": {
+        "latency_ms": 17.28,
+        "rank": 1,
+        "old_leak": false,
+        "old_id": "5509bc0406ee2498",
+        "new_id": "c541e5ba1343e792",
+        "runner_elapsed_ms": 1347.58
+      }
+    },
+    {
+      "case_id": "P4-CONFLICT-002",
+      "case_type": "contradiction_update",
+      "pain_point": "决策漂移",
+      "status": "partial",
+      "points": 20.0,
+      "earned_points": 6.67,
+      "checks": [
+        {
+          "name": "矛盾更新_新值命中",
+          "passed": false,
+          "detail": "rank=None"
+        },
+        {
+          "name": "矛盾更新_旧值不在Top1",
+          "passed": true,
+          "detail": "forbidden=['仅通知值班群']"
+        },
+        {
+          "name": "矛盾更新_版本链成立",
+          "passed": false,
+          "detail": "old=ed0099a1d25c2f42 -> new=981bb8d0b3174be8"
+        }
+      ],
+      "extra": {
+        "latency_ms": 15.22,
+        "rank": null,
+        "old_leak": false,
+        "old_id": "ed0099a1d25c2f42",
+        "new_id": "981bb8d0b3174be8",
+        "runner_elapsed_ms": 1301.26
+      }
+    },
+    {
+      "case_id": "P4-CONFLICT-003",
+      "case_type": "contradiction_update",
+      "pain_point": "决策漂移",
+      "status": "partial",
+      "points": 20.0,
+      "earned_points": 13.33,
+      "checks": [
+        {
+          "name": "矛盾更新_新值命中",
+          "passed": false,
+          "detail": "rank=None"
+        },
+        {
+          "name": "矛盾更新_旧值不在Top1",
+          "passed": true,
+          "detail": "forbidden=['周五晚22点']"
+        },
+        {
+          "name": "矛盾更新_版本链成立",
+          "passed": true,
+          "detail": "old=6591f9822cc62761 -> new=26452977387e4191"
+        }
+      ],
+      "extra": {
+        "latency_ms": 12.78,
+        "rank": null,
+        "old_leak": false,
+        "old_id": "6591f9822cc62761",
+        "new_id": "26452977387e4191",
+        "runner_elapsed_ms": 1223.32
+      }
+    },
+    {
+      "case_id": "P4-CONFLICT-004",
+      "case_type": "contradiction_update",
+      "pain_point": "决策漂移",
+      "status": "passed",
+      "points": 20.0,
+      "earned_points": 20.0,
+      "checks": [
+        {
+          "name": "矛盾更新_新值命中",
+          "passed": true,
+          "detail": "rank=1"
+        },
+        {
+          "name": "矛盾更新_旧值不在Top1",
+          "passed": true,
+          "detail": "forbidden=['每周一上午10点']"
+        },
+        {
+          "name": "矛盾更新_版本链成立",
+          "passed": true,
+          "detail": "old=1ed0bb5a914d79ff -> new=fd0d7f887e2d3d71"
+        }
+      ],
+      "extra": {
+        "latency_ms": 14.93,
+        "rank": 1,
+        "old_leak": false,
+        "old_id": "1ed0bb5a914d79ff",
+        "new_id": "fd0d7f887e2d3d71",
+        "runner_elapsed_ms": 159.27
+      }
+    },
+    {
+      "case_id": "P4-CONFLICT-005",
+      "case_type": "contradiction_update",
+      "pain_point": "决策漂移",
+      "status": "passed",
+      "points": 20.0,
+      "earned_points": 20.0,
+      "checks": [
+        {
+          "name": "矛盾更新_新值命中",
+          "passed": true,
+          "detail": "rank=1"
+        },
+        {
+          "name": "矛盾更新_旧值不在Top1",
+          "passed": true,
+          "detail": "forbidden=['主库采用PostgreSQL']"
+        },
+        {
+          "name": "矛盾更新_版本链成立",
+          "passed": true,
+          "detail": "old=28c441e1906048b8 -> new=c8f4efa4a14dba04"
+        }
+      ],
+      "extra": {
+        "latency_ms": 12.17,
+        "rank": 1,
+        "old_leak": false,
+        "old_id": "28c441e1906048b8",
+        "new_id": "c8f4efa4a14dba04",
+        "runner_elapsed_ms": 1396.08
+      }
+    },
+    {
+      "case_id": "P4-CONFLICT-006",
+      "case_type": "contradiction_update",
+      "pain_point": "决策漂移",
+      "status": "partial",
+      "points": 20.0,
+      "earned_points": 13.33,
+      "checks": [
+        {
+          "name": "矛盾更新_新值命中",
+          "passed": true,
+          "detail": "rank=2"
+        },
+        {
+          "name": "矛盾更新_旧值不在Top1",
+          "passed": true,
+          "detail": "forbidden=['消息队列采用Kafka']"
+        },
+        {
+          "name": "矛盾更新_版本链成立",
+          "passed": false,
+          "detail": "old=1f063b6e12b444e4 -> new=7ea23754eb134336"
+        }
+      ],
+      "extra": {
+        "latency_ms": 13.32,
+        "rank": 2,
+        "old_leak": false,
+        "old_id": "1f063b6e12b444e4",
+        "new_id": "7ea23754eb134336",
+        "runner_elapsed_ms": 2098.2
+      }
+    },
+    {
+      "case_id": "P4-CONFLICT-007",
+      "case_type": "contradiction_update",
+      "pain_point": "决策漂移",
+      "status": "passed",
+      "points": 20.0,
+      "earned_points": 20.0,
+      "checks": [
+        {
+          "name": "矛盾更新_新值命中",
+          "passed": true,
+          "detail": "rank=1"
+        },
+        {
+          "name": "矛盾更新_旧值不在Top1",
+          "passed": true,
+          "detail": "forbidden=['网关使用Kong']"
+        },
+        {
+          "name": "矛盾更新_版本链成立",
+          "passed": true,
+          "detail": "old=0155582ddb124258 -> new=0d80a0ce80c18228"
+        }
+      ],
+      "extra": {
+        "latency_ms": 15.95,
+        "rank": 1,
+        "old_leak": false,
+        "old_id": "0155582ddb124258",
+        "new_id": "0d80a0ce80c18228",
+        "runner_elapsed_ms": 744.94
+      }
+    },
+    {
+      "case_id": "P4-CONFLICT-008",
+      "case_type": "contradiction_update",
+      "pain_point": "决策漂移",
+      "status": "passed",
+      "points": 20.0,
+      "earned_points": 20.0,
+      "checks": [
+        {
+          "name": "矛盾更新_新值命中",
+          "passed": true,
+          "detail": "rank=1"
+        },
+        {
+          "name": "矛盾更新_旧值不在Top1",
+          "passed": true,
+          "detail": "forbidden=['缓存采用单机Redis']"
+        },
+        {
+          "name": "矛盾更新_版本链成立",
+          "passed": true,
+          "detail": "old=cd7435b9fc519c2b -> new=9e920c50ce4cd8fc"
+        }
+      ],
+      "extra": {
+        "latency_ms": 12.31,
+        "rank": 1,
+        "old_leak": false,
+        "old_id": "cd7435b9fc519c2b",
+        "new_id": "9e920c50ce4cd8fc",
+        "runner_elapsed_ms": 1229.4
+      }
+    },
+    {
+      "case_id": "P4-CONFLICT-009",
+      "case_type": "contradiction_update",
+      "pain_point": "决策漂移",
+      "status": "passed",
+      "points": 20.0,
+      "earned_points": 20.0,
+      "checks": [
+        {
+          "name": "矛盾更新_新值命中",
+          "passed": true,
+          "detail": "rank=1"
+        },
+        {
+          "name": "矛盾更新_旧值不在Top1",
+          "passed": true,
+          "detail": "forbidden=['固定1%']"
+        },
+        {
+          "name": "矛盾更新_版本链成立",
+          "passed": true,
+          "detail": "old=84ed9d1e60c5a4e8 -> new=a561c0da98c0d81f"
+        }
+      ],
+      "extra": {
+        "latency_ms": 16.4,
+        "rank": 1,
+        "old_leak": false,
+        "old_id": "84ed9d1e60c5a4e8",
+        "new_id": "a561c0da98c0d81f",
+        "runner_elapsed_ms": 192.02
+      }
+    },
+    {
+      "case_id": "P4-CONFLICT-010",
+      "case_type": "contradiction_update",
+      "pain_point": "决策漂移",
+      "status": "partial",
+      "points": 20.0,
+      "earned_points": 13.33,
+      "checks": [
+        {
+          "name": "矛盾更新_新值命中",
+          "passed": true,
+          "detail": "rank=2"
+        },
+        {
+          "name": "矛盾更新_旧值不在Top1",
+          "passed": true,
+          "detail": "forbidden=['仅保留7天']"
+        },
+        {
+          "name": "矛盾更新_版本链成立",
+          "passed": false,
+          "detail": "old=336eaa288e669e80 -> new=b3c5cdef70fe17e6"
+        }
+      ],
+      "extra": {
+        "latency_ms": 16.1,
+        "rank": 2,
+        "old_leak": false,
+        "old_id": "336eaa288e669e80",
+        "new_id": "b3c5cdef70fe17e6",
+        "runner_elapsed_ms": 1336.64
+      }
+    },
+    {
+      "case_id": "P4-CONFLICT-011",
+      "case_type": "contradiction_update",
+      "pain_point": "决策漂移",
+      "status": "partial",
+      "points": 20.0,
+      "earned_points": 13.33,
+      "checks": [
+        {
+          "name": "矛盾更新_新值命中",
+          "passed": true,
+          "detail": "rank=1"
+        },
+        {
+          "name": "矛盾更新_旧值不在Top1",
+          "passed": true,
+          "detail": "forbidden=['有效期5分钟']"
+        },
+        {
+          "name": "矛盾更新_版本链成立",
+          "passed": false,
+          "detail": "old=c6692b1c1cb6fae7 -> new=170ef5470ff523a2"
+        }
+      ],
+      "extra": {
+        "latency_ms": 12.24,
+        "rank": 1,
+        "old_leak": false,
+        "old_id": "c6692b1c1cb6fae7",
+        "new_id": "170ef5470ff523a2",
+        "runner_elapsed_ms": 1844.97
+      }
+    },
+    {
+      "case_id": "P4-CONFLICT-012",
+      "case_type": "contradiction_update",
+      "pain_point": "决策漂移",
+      "status": "partial",
+      "points": 20.0,
+      "earned_points": 13.33,
+      "checks": [
+        {
+          "name": "矛盾更新_新值命中",
+          "passed": true,
+          "detail": "rank=2"
+        },
+        {
+          "name": "矛盾更新_旧值不在Top1",
+          "passed": true,
+          "detail": "forbidden=['日志保留30天']"
+        },
+        {
+          "name": "矛盾更新_版本链成立",
+          "passed": false,
+          "detail": "old=08ca821f83fbaabd -> new=8f4aeafe07729f00"
+        }
+      ],
+      "extra": {
+        "latency_ms": 16.17,
+        "rank": 2,
+        "old_leak": false,
+        "old_id": "08ca821f83fbaabd",
+        "new_id": "8f4aeafe07729f00",
+        "runner_elapsed_ms": 1361.78
+      }
+    },
+    {
+      "case_id": "P4-CONFLICT-013",
+      "case_type": "contradiction_update",
+      "pain_point": "决策漂移",
+      "status": "partial",
+      "points": 20.0,
+      "earned_points": 6.67,
+      "checks": [
+        {
+          "name": "矛盾更新_新值命中",
+          "passed": true,
+          "detail": "rank=2"
+        },
+        {
+          "name": "矛盾更新_旧值不在Top1",
+          "passed": false,
+          "detail": "forbidden=['发布直接全量']"
+        },
+        {
+          "name": "矛盾更新_版本链成立",
+          "passed": false,
+          "detail": "old=2e0d7441a4d670d1 -> new=a422852d531d58c9"
+        }
+      ],
+      "extra": {
+        "latency_ms": 20.24,
+        "rank": 2,
+        "old_leak": true,
+        "old_id": "2e0d7441a4d670d1",
+        "new_id": "a422852d531d58c9",
+        "runner_elapsed_ms": 2037.48
+      }
+    },
+    {
+      "case_id": "P4-CONFLICT-014",
+      "case_type": "contradiction_update",
+      "pain_point": "决策漂移",
+      "status": "partial",
+      "points": 20.0,
+      "earned_points": 13.33,
+      "checks": [
+        {
+          "name": "矛盾更新_新值命中",
+          "passed": true,
+          "detail": "rank=2"
+        },
+        {
+          "name": "矛盾更新_旧值不在Top1",
+          "passed": true,
+          "detail": "forbidden=['继续HTTP/JSON']"
+        },
+        {
+          "name": "矛盾更新_版本链成立",
+          "passed": false,
+          "detail": "old=98b4372d7082ed98 -> new=f1a85a7baa48ca62"
+        }
+      ],
+      "extra": {
+        "latency_ms": 12.78,
+        "rank": 2,
+        "old_leak": false,
+        "old_id": "98b4372d7082ed98",
+        "new_id": "f1a85a7baa48ca62",
+        "runner_elapsed_ms": 1334.0
+      }
+    },
+    {
+      "case_id": "P4-CONFLICT-015",
+      "case_type": "contradiction_update",
+      "pain_point": "决策漂移",
+      "status": "partial",
+      "points": 20.0,
+      "earned_points": 13.33,
+      "checks": [
+        {
+          "name": "矛盾更新_新值命中",
+          "passed": true,
+          "detail": "rank=1"
+        },
+        {
+          "name": "矛盾更新_旧值不在Top1",
+          "passed": true,
+          "detail": "forbidden=['仅RBAC']"
+        },
+        {
+          "name": "矛盾更新_版本链成立",
+          "passed": false,
+          "detail": "old=8e6578d65e2f5cff -> new=61f942e75547713b"
+        }
+      ],
+      "extra": {
+        "latency_ms": 14.24,
+        "rank": 1,
+        "old_leak": false,
+        "old_id": "8e6578d65e2f5cff",
+        "new_id": "61f942e75547713b",
+        "runner_elapsed_ms": 1219.8
+      }
+    },
+    {
+      "case_id": "P4-CONFLICT-016",
+      "case_type": "contradiction_update",
+      "pain_point": "决策漂移",
+      "status": "passed",
+      "points": 20.0,
+      "earned_points": 20.0,
+      "checks": [
+        {
+          "name": "矛盾更新_新值命中",
+          "passed": true,
+          "detail": "rank=1"
+        },
+        {
+          "name": "矛盾更新_旧值不在Top1",
+          "passed": true,
+          "detail": "forbidden=['24小时响应']"
+        },
+        {
+          "name": "矛盾更新_版本链成立",
+          "passed": true,
+          "detail": "old=9dddb0172e78b65c -> new=b50980c2504e047f"
+        }
+      ],
+      "extra": {
+        "latency_ms": 11.55,
+        "rank": 1,
+        "old_leak": false,
+        "old_id": "9dddb0172e78b65c",
+        "new_id": "b50980c2504e047f",
+        "runner_elapsed_ms": 154.05
+      }
+    },
+    {
+      "case_id": "P4-CONFLICT-017",
+      "case_type": "contradiction_update",
+      "pain_point": "决策漂移",
+      "status": "partial",
+      "points": 20.0,
+      "earned_points": 13.33,
+      "checks": [
+        {
+          "name": "矛盾更新_新值命中",
+          "passed": true,
+          "detail": "rank=2"
+        },
+        {
+          "name": "矛盾更新_旧值不在Top1",
+          "passed": true,
+          "detail": "forbidden=['按周归档']"
+        },
+        {
+          "name": "矛盾更新_版本链成立",
+          "passed": false,
+          "detail": "old=2c2cfd26028e7fdd -> new=4e93272e71f6bdd7"
+        }
+      ],
+      "extra": {
+        "latency_ms": 11.63,
+        "rank": 2,
+        "old_leak": false,
+        "old_id": "2c2cfd26028e7fdd",
+        "new_id": "4e93272e71f6bdd7",
+        "runner_elapsed_ms": 678.25
+      }
+    },
+    {
+      "case_id": "P4-CONFLICT-018",
+      "case_type": "contradiction_update",
+      "pain_point": "决策漂移",
+      "status": "partial",
+      "points": 20.0,
+      "earned_points": 13.33,
+      "checks": [
+        {
+          "name": "矛盾更新_新值命中",
+          "passed": true,
+          "detail": "rank=2"
+        },
+        {
+          "name": "矛盾更新_旧值不在Top1",
+          "passed": true,
+          "detail": "forbidden=['保留180天']"
+        },
+        {
+          "name": "矛盾更新_版本链成立",
+          "passed": false,
+          "detail": "old=e569aea77cd43855 -> new=ca7c5221382bc403"
+        }
+      ],
+      "extra": {
+        "latency_ms": 14.45,
+        "rank": 2,
+        "old_leak": false,
+        "old_id": "e569aea77cd43855",
+        "new_id": "ca7c5221382bc403",
+        "runner_elapsed_ms": 1220.62
+      }
+    },
+    {
+      "case_id": "P4-CONFLICT-019",
+      "case_type": "contradiction_update",
+      "pain_point": "决策漂移",
+      "status": "partial",
+      "points": 20.0,
+      "earned_points": 6.67,
+      "checks": [
+        {
+          "name": "矛盾更新_新值命中",
+          "passed": false,
+          "detail": "rank=None"
+        },
+        {
+          "name": "矛盾更新_旧值不在Top1",
+          "passed": true,
+          "detail": "forbidden=['通知仅邮件']"
+        },
+        {
+          "name": "矛盾更新_版本链成立",
+          "passed": false,
+          "detail": "old=7e6a6d67aff141e2 -> new=66e8492af7c6547e"
+        }
+      ],
+      "extra": {
+        "latency_ms": 13.97,
+        "rank": null,
+        "old_leak": false,
+        "old_id": "7e6a6d67aff141e2",
+        "new_id": "66e8492af7c6547e",
+        "runner_elapsed_ms": 1289.19
+      }
+    },
+    {
+      "case_id": "P4-CONFLICT-020",
+      "case_type": "contradiction_update",
+      "pain_point": "决策漂移",
+      "status": "partial",
+      "points": 20.0,
+      "earned_points": 13.33,
+      "checks": [
+        {
+          "name": "矛盾更新_新值命中",
+          "passed": true,
+          "detail": "rank=2"
+        },
+        {
+          "name": "矛盾更新_旧值不在Top1",
+          "passed": true,
+          "detail": "forbidden=['平台自研']"
+        },
+        {
+          "name": "矛盾更新_版本链成立",
+          "passed": false,
+          "detail": "old=9140a10154d1f8a9 -> new=da429a191df7e8da"
+        }
+      ],
+      "extra": {
+        "latency_ms": 18.09,
+        "rank": 2,
+        "old_leak": false,
+        "old_id": "9140a10154d1f8a9",
+        "new_id": "da429a191df7e8da",
+        "runner_elapsed_ms": 1533.94
+      }
+    },
+    {
+      "case_id": "P5-PUSH-001",
+      "case_type": "decision_repeat_push",
+      "pain_point": "决策重复",
+      "status": "failed",
+      "points": 15.0,
+      "earned_points": 0.0,
+      "checks": [
+        {
+          "name": "重复决策_应推送命中",
+          "passed": false,
+          "detail": "recalled=0"
+        }
+      ],
+      "extra": {
+        "latency_ms": 9.05,
+        "recalled_count": 0,
+        "runner_elapsed_ms": 713.13
+      }
+    },
+    {
+      "case_id": "P5-PUSH-002",
+      "case_type": "decision_repeat_push",
+      "pain_point": "决策重复",
+      "status": "failed",
+      "points": 15.0,
+      "earned_points": 0.0,
+      "checks": [
+        {
+          "name": "重复决策_应推送命中",
+          "passed": false,
+          "detail": "recalled=0"
+        }
+      ],
+      "extra": {
+        "latency_ms": 9.46,
+        "recalled_count": 0,
+        "runner_elapsed_ms": 596.16
+      }
+    },
+    {
+      "case_id": "P5-PUSH-003",
+      "case_type": "decision_repeat_push",
+      "pain_point": "决策重复",
+      "status": "failed",
+      "points": 15.0,
+      "earned_points": 0.0,
+      "checks": [
+        {
+          "name": "重复决策_应推送命中",
+          "passed": false,
+          "detail": "recalled=0"
+        }
+      ],
+      "extra": {
+        "latency_ms": 13.5,
+        "recalled_count": 0,
+        "runner_elapsed_ms": 611.46
+      }
+    },
+    {
+      "case_id": "P5-PUSH-NEG-001",
+      "case_type": "decision_repeat_push",
+      "pain_point": "决策重复",
+      "status": "passed",
+      "points": 10.0,
+      "earned_points": 10.0,
+      "checks": [
+        {
+          "name": "重复决策_不应推送",
+          "passed": true,
+          "detail": "recalled=0"
+        }
+      ],
+      "extra": {
+        "latency_ms": 8.65,
+        "recalled_count": 0,
+        "runner_elapsed_ms": 755.77
+      }
+    }
+  ]
+}

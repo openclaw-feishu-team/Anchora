@@ -1,0 +1,329 @@
+# Benchmark Report（benchmark_sry）
+
+- 生成时间：2026-05-05T13:03:45
+- 用例文件：`D:\OpenClawData\.openclaw\skills\feishu-memory\benchmark_sry\cases_new`
+
+## 总体结果
+
+- 总用例数：81
+- 通过率：0.5926
+- 部分通过率：0.4074
+- 平均耗时（ms）：18.1
+
+## 核心指标
+
+- 抗干扰 Recall@1：0.0
+- 抗干扰 Recall@3：0.0
+- 矛盾覆盖成功率：0.35
+- 旧值泄漏率：0.05
+- 重复决策召回命中占比：1.0
+
+## memory.db 变化可视化（清理前）
+
+- 采集窗口：2026-05-05T13:03:24 -> 2026-05-05T13:03:45
+- project 前缀：_benchmark_sry_
+
+- 表行数变化（after - before）：
+  - access_log: 3
+  - audit_log: 202
+  - decision_contexts: 0
+  - decisions: 202
+  - embed_cache: 2
+  - knowledge_triples: 263
+  - memory_edges: 48
+  - push_log: 0
+
+- 测试前缀决策总数（清理前）：202
+- 测试前缀状态分布（清理前）：
+  - active: 154
+  - candidate: 48
+- 测试前缀项目 Top（清理前）：
+  - _benchmark_sry_p1_anti_gateway: 4
+  - _benchmark_sry_p1_anti_weekly: 4
+  - _benchmark_sry_p2_audit: 4
+  - _benchmark_sry_p2_auth: 4
+  - _benchmark_sry_p2_authz: 4
+  - _benchmark_sry_p2_backup: 4
+  - _benchmark_sry_p2_billing: 4
+  - _benchmark_sry_p2_cache: 4
+  - _benchmark_sry_p2_cicd: 4
+  - _benchmark_sry_p2_db: 4
+
+## 分用例结果
+
+- `P1-CAP-001` | decision_capture | status=passed | score=10.0/10.0
+  - [PASS] candidate_触发: dry_run=dry_run
+  - [PASS] reason_keyword_命中: 期望=etcd 实际=etcd 我们也有了，不然还得新搭
+- `P1-CAP-002` | decision_capture | status=passed | score=10.0/10.0
+  - [PASS] candidate_触发: dry_run=dry_run
+  - [PASS] reason_keyword_命中: 期望=资源 实际=资源也省
+- `P1-CAP-003` | decision_capture | status=passed | score=10.0/10.0
+  - [PASS] candidate_触发: dry_run=dry_run
+  - [PASS] reason_keyword_命中: 期望=成本 实际=服务注册本来就在上面，迁过来成本最低
+- `P1-CAP-004` | decision_capture | status=passed | score=10.0/10.0
+  - [PASS] candidate_触发: dry_run=dry_run
+  - [PASS] reason_keyword_命中: 期望=Trace 实际=后面和后端 Trace 也能串起来
+- `P1-CAP-005` | decision_capture | status=passed | score=10.0/10.0
+  - [PASS] candidate_触发: dry_run=dry_run
+  - [PASS] reason_keyword_命中: 期望=换云 实际=换云的时候改动最小
+- `P1-CAP-006` | decision_capture | status=passed | score=10.0/10.0
+  - [PASS] candidate_触发: dry_run=dry_run
+  - [PASS] reason_keyword_命中: 期望=观察 实际=灰度先放 10% 观察一下
+- `P1-CAP-007` | decision_capture | status=passed | score=10.0/10.0
+  - [PASS] candidate_触发: dry_run=dry_run
+  - [PASS] reason_keyword_命中: 期望=人工 实际=不用人工刷群了，漏接也少了
+- `P1-CAP-008` | decision_capture | status=passed | score=10.0/10.0
+  - [PASS] candidate_触发: dry_run=dry_run
+  - [PASS] reason_keyword_命中: 期望=移动端 实际=移动端现在安全要求高
+- `P1-CAP-009` | decision_capture | status=passed | score=10.0/10.0
+  - [PASS] candidate_触发: dry_run=dry_run
+  - [PASS] reason_keyword_命中: 期望=密钥 实际=密钥托管和审计都比现在规范
+- `P1-CAP-010` | decision_capture | status=passed | score=10.0/10.0
+  - [PASS] candidate_触发: dry_run=dry_run
+  - [PASS] reason_keyword_命中: 期望=维护 实际=我们这边没人维护 ES 集群
+- `P1-CAP-NEG-001` | decision_capture | status=passed | score=8.0/8.0
+  - [PASS] negative_不过滤失败: dry_run=skipped
+- `P1-CAP-NEG-002` | decision_capture | status=passed | score=8.0/8.0
+  - [PASS] negative_不过滤失败: dry_run=skipped
+- `P1-CAP-NEG-003` | decision_capture | status=passed | score=8.0/8.0
+  - [PASS] negative_不过滤失败: dry_run=skipped
+- `P1-CAP-NEG-004` | decision_capture | status=passed | score=8.0/8.0
+  - [PASS] negative_不过滤失败: dry_run=skipped
+- `P1-CAP-NEG-005` | decision_capture | status=passed | score=8.0/8.0
+  - [PASS] negative_不过滤失败: dry_run=skipped
+- `P1-ANTI-001` | anti_interference | status=partial | score=13.33/20.0
+  - [FAIL] 抗干扰_命中: rank=None, max_rank=1
+  - [PASS] 抗干扰_旧值不泄漏: forbidden=['发给C组', '发给D组']
+  - [PASS] 抗干扰_噪声规模: noise=26, min=25
+- `P1-ANTI-002` | anti_interference | status=partial | score=13.33/20.0
+  - [FAIL] 抗干扰_命中: rank=None, max_rank=1
+  - [PASS] 抗干扰_旧值不泄漏: forbidden=['Kong', 'Nginx Ingress']
+  - [PASS] 抗干扰_噪声规模: noise=26, min=25
+- `P2-AGG-001` | decision_aggregation | status=partial | score=10.0/20.0
+  - [PASS] 聚合_结论命中: rank=1
+  - [FAIL] 聚合_证据命中: hits=2, min=3
+- `P2-AGG-002` | decision_aggregation | status=passed | score=18.0/18.0
+  - [PASS] 聚合_结论命中: rank=1
+  - [PASS] 聚合_证据命中: hits=5, min=3
+- `P2-AGG-003` | decision_aggregation | status=partial | score=9.0/18.0
+  - [PASS] 聚合_结论命中: rank=1
+  - [FAIL] 聚合_证据命中: hits=1, min=3
+- `P2-AGG-004` | decision_aggregation | status=passed | score=18.0/18.0
+  - [PASS] 聚合_结论命中: rank=1
+  - [PASS] 聚合_证据命中: hits=3, min=3
+- `P2-AGG-005` | decision_aggregation | status=partial | score=9.0/18.0
+  - [PASS] 聚合_结论命中: rank=1
+  - [FAIL] 聚合_证据命中: hits=2, min=3
+- `P2-AGG-006` | decision_aggregation | status=passed | score=18.0/18.0
+  - [PASS] 聚合_结论命中: rank=1
+  - [PASS] 聚合_证据命中: hits=4, min=3
+- `P2-AGG-007` | decision_aggregation | status=partial | score=9.0/18.0
+  - [PASS] 聚合_结论命中: rank=1
+  - [FAIL] 聚合_证据命中: hits=2, min=3
+- `P2-AGG-008` | decision_aggregation | status=passed | score=18.0/18.0
+  - [PASS] 聚合_结论命中: rank=1
+  - [PASS] 聚合_证据命中: hits=4, min=3
+- `P2-AGG-009` | decision_aggregation | status=passed | score=18.0/18.0
+  - [PASS] 聚合_结论命中: rank=1
+  - [PASS] 聚合_证据命中: hits=3, min=3
+- `P2-AGG-010` | decision_aggregation | status=passed | score=18.0/18.0
+  - [PASS] 聚合_结论命中: rank=1
+  - [PASS] 聚合_证据命中: hits=4, min=3
+- `P2-AGG-011` | decision_aggregation | status=passed | score=18.0/18.0
+  - [PASS] 聚合_结论命中: rank=1
+  - [PASS] 聚合_证据命中: hits=4, min=3
+- `P2-AGG-012` | decision_aggregation | status=passed | score=18.0/18.0
+  - [PASS] 聚合_结论命中: rank=1
+  - [PASS] 聚合_证据命中: hits=5, min=3
+- `P2-AGG-013` | decision_aggregation | status=passed | score=18.0/18.0
+  - [PASS] 聚合_结论命中: rank=3
+  - [PASS] 聚合_证据命中: hits=3, min=3
+- `P2-AGG-014` | decision_aggregation | status=passed | score=18.0/18.0
+  - [PASS] 聚合_结论命中: rank=1
+  - [PASS] 聚合_证据命中: hits=4, min=3
+- `P2-AGG-015` | decision_aggregation | status=partial | score=9.0/18.0
+  - [PASS] 聚合_结论命中: rank=1
+  - [FAIL] 聚合_证据命中: hits=1, min=3
+- `P2-AGG-016` | decision_aggregation | status=passed | score=18.0/18.0
+  - [PASS] 聚合_结论命中: rank=1
+  - [PASS] 聚合_证据命中: hits=6, min=3
+- `P2-AGG-017` | decision_aggregation | status=passed | score=18.0/18.0
+  - [PASS] 聚合_结论命中: rank=1
+  - [PASS] 聚合_证据命中: hits=4, min=3
+- `P2-AGG-018` | decision_aggregation | status=partial | score=9.0/18.0
+  - [PASS] 聚合_结论命中: rank=1
+  - [FAIL] 聚合_证据命中: hits=0, min=3
+- `P2-AGG-019` | decision_aggregation | status=passed | score=18.0/18.0
+  - [PASS] 聚合_结论命中: rank=1
+  - [PASS] 聚合_证据命中: hits=3, min=3
+- `P2-AGG-020` | decision_aggregation | status=partial | score=9.0/18.0
+  - [PASS] 聚合_结论命中: rank=3
+  - [FAIL] 聚合_证据命中: hits=2, min=3
+- `P3-CTX-001` | context_invalidated | status=passed | score=15.0/15.0
+  - [PASS] 上下文失效_新结论可检索: rank=1
+  - [PASS] 上下文失效_旧值不在Top1: forbidden=['数据库采用PostgreSQL']
+  - [PASS] 上下文失效_存在覆盖关系: rows=3
+- `P3-CTX-002` | context_invalidated | status=passed | score=15.0/15.0
+  - [PASS] 上下文失效_新结论可检索: rank=1
+  - [PASS] 上下文失效_旧值不在Top1: forbidden=['消息队列采用Kafka']
+  - [PASS] 上下文失效_存在覆盖关系: rows=3
+- `P3-CTX-003` | context_invalidated | status=partial | score=5.0/15.0
+  - [FAIL] 上下文失效_新结论可检索: rank=None
+  - [PASS] 上下文失效_旧值不在Top1: forbidden=['CI/CD使用自建Jenkins']
+  - [FAIL] 上下文失效_存在覆盖关系: rows=3
+- `P3-CTX-004` | context_invalidated | status=partial | score=10.0/15.0
+  - [FAIL] 上下文失效_新结论可检索: rank=None
+  - [PASS] 上下文失效_旧值不在Top1: forbidden=['搜索服务采用Elasticsearch']
+  - [PASS] 上下文失效_存在覆盖关系: rows=3
+- `P3-CTX-005` | context_invalidated | status=partial | score=10.0/15.0
+  - [FAIL] 上下文失效_新结论可检索: rank=None
+  - [PASS] 上下文失效_旧值不在Top1: forbidden=['仅发值班群']
+  - [PASS] 上下文失效_存在覆盖关系: rows=3
+- `P3-CTX-006` | context_invalidated | status=passed | score=15.0/15.0
+  - [PASS] 上下文失效_新结论可检索: rank=1
+  - [PASS] 上下文失效_旧值不在Top1: forbidden=['日志保留30天']
+  - [PASS] 上下文失效_存在覆盖关系: rows=3
+- `P3-CTX-007` | context_invalidated | status=partial | score=10.0/15.0
+  - [FAIL] 上下文失效_新结论可检索: rank=None
+  - [PASS] 上下文失效_旧值不在Top1: forbidden=['固定在周五22点']
+  - [PASS] 上下文失效_存在覆盖关系: rows=3
+- `P3-CTX-008` | context_invalidated | status=partial | score=10.0/15.0
+  - [FAIL] 上下文失效_新结论可检索: rank=None
+  - [PASS] 上下文失效_旧值不在Top1: forbidden=['按周归档']
+  - [PASS] 上下文失效_存在覆盖关系: rows=3
+- `P3-CTX-009` | context_invalidated | status=passed | score=15.0/15.0
+  - [PASS] 上下文失效_新结论可检索: rank=1
+  - [PASS] 上下文失效_旧值不在Top1: forbidden=['只用RBAC']
+  - [PASS] 上下文失效_存在覆盖关系: rows=3
+- `P3-CTX-010` | context_invalidated | status=partial | score=10.0/15.0
+  - [PASS] 上下文失效_新结论可检索: rank=1
+  - [PASS] 上下文失效_旧值不在Top1: forbidden=['有效期5分钟']
+  - [FAIL] 上下文失效_存在覆盖关系: rows=3
+- `P3-CTX-011` | context_invalidated | status=passed | score=15.0/15.0
+  - [PASS] 上下文失效_新结论可检索: rank=2
+  - [PASS] 上下文失效_旧值不在Top1: forbidden=['TTL统一1小时']
+  - [PASS] 上下文失效_存在覆盖关系: rows=3
+- `P3-CTX-012` | context_invalidated | status=partial | score=10.0/15.0
+  - [PASS] 上下文失效_新结论可检索: rank=3
+  - [PASS] 上下文失效_旧值不在Top1: forbidden=['统一HTTP']
+  - [FAIL] 上下文失效_存在覆盖关系: rows=3
+- `P3-CTX-013` | context_invalidated | status=passed | score=15.0/15.0
+  - [PASS] 上下文失效_新结论可检索: rank=1
+  - [PASS] 上下文失效_旧值不在Top1: forbidden=['备份保留7天']
+  - [PASS] 上下文失效_存在覆盖关系: rows=3
+- `P3-CTX-014` | context_invalidated | status=partial | score=10.0/15.0
+  - [PASS] 上下文失效_新结论可检索: rank=2
+  - [PASS] 上下文失效_旧值不在Top1: forbidden=['单区部署即可']
+  - [FAIL] 上下文失效_存在覆盖关系: rows=3
+- `P3-CTX-015` | context_invalidated | status=passed | score=15.0/15.0
+  - [PASS] 上下文失效_新结论可检索: rank=2
+  - [PASS] 上下文失效_旧值不在Top1: forbidden=['缓存7天']
+  - [PASS] 上下文失效_存在覆盖关系: rows=3
+- `P3-CTX-016` | context_invalidated | status=partial | score=10.0/15.0
+  - [FAIL] 上下文失效_新结论可检索: rank=None
+  - [PASS] 上下文失效_旧值不在Top1: forbidden=['失败重试3次']
+  - [PASS] 上下文失效_存在覆盖关系: rows=3
+- `P3-CTX-017` | context_invalidated | status=partial | score=10.0/15.0
+  - [PASS] 上下文失效_新结论可检索: rank=3
+  - [PASS] 上下文失效_旧值不在Top1: forbidden=['默认明文CSV']
+  - [FAIL] 上下文失效_存在覆盖关系: rows=3
+- `P3-CTX-018` | context_invalidated | status=partial | score=5.0/15.0
+  - [FAIL] 上下文失效_新结论可检索: rank=None
+  - [PASS] 上下文失效_旧值不在Top1: forbidden=['在白天执行']
+  - [FAIL] 上下文失效_存在覆盖关系: rows=3
+- `P3-CTX-019` | context_invalidated | status=passed | score=15.0/15.0
+  - [PASS] 上下文失效_新结论可检索: rank=2
+  - [PASS] 上下文失效_旧值不在Top1: forbidden=['每周一上午10点']
+  - [PASS] 上下文失效_存在覆盖关系: rows=3
+- `P3-CTX-020` | context_invalidated | status=passed | score=15.0/15.0
+  - [PASS] 上下文失效_新结论可检索: rank=1
+  - [PASS] 上下文失效_旧值不在Top1: forbidden=['24小时响应']
+  - [PASS] 上下文失效_存在覆盖关系: rows=3
+- `P4-CONFLICT-001` | contradiction_update | status=passed | score=25.0/25.0
+  - [PASS] 矛盾更新_新值命中: rank=1
+  - [PASS] 矛盾更新_旧值不在Top1: forbidden=['周报发给A']
+  - [PASS] 矛盾更新_版本链成立: old=a3f83a392c9700fa -> new=0739cca96a642cc9
+- `P4-CONFLICT-002` | contradiction_update | status=partial | score=6.67/20.0
+  - [FAIL] 矛盾更新_新值命中: rank=None
+  - [PASS] 矛盾更新_旧值不在Top1: forbidden=['仅通知值班群']
+  - [FAIL] 矛盾更新_版本链成立: old=e6c8fb4abb836fad -> new=9d00949367a5b39b
+- `P4-CONFLICT-003` | contradiction_update | status=partial | score=13.33/20.0
+  - [FAIL] 矛盾更新_新值命中: rank=None
+  - [PASS] 矛盾更新_旧值不在Top1: forbidden=['周五晚22点']
+  - [PASS] 矛盾更新_版本链成立: old=7e9d9866c8b7c447 -> new=d5a7bd437bf84bb2
+- `P4-CONFLICT-004` | contradiction_update | status=passed | score=20.0/20.0
+  - [PASS] 矛盾更新_新值命中: rank=1
+  - [PASS] 矛盾更新_旧值不在Top1: forbidden=['每周一上午10点']
+  - [PASS] 矛盾更新_版本链成立: old=536964361fcb8754 -> new=c6619e065fea24c6
+- `P4-CONFLICT-005` | contradiction_update | status=passed | score=20.0/20.0
+  - [PASS] 矛盾更新_新值命中: rank=1
+  - [PASS] 矛盾更新_旧值不在Top1: forbidden=['主库采用PostgreSQL']
+  - [PASS] 矛盾更新_版本链成立: old=066fa5e3837a339c -> new=06621c0bad4e1f37
+- `P4-CONFLICT-006` | contradiction_update | status=partial | score=13.33/20.0
+  - [PASS] 矛盾更新_新值命中: rank=2
+  - [PASS] 矛盾更新_旧值不在Top1: forbidden=['消息队列采用Kafka']
+  - [FAIL] 矛盾更新_版本链成立: old=0a2ee2c76c25a414 -> new=6fc41277144fe5d4
+- `P4-CONFLICT-007` | contradiction_update | status=passed | score=20.0/20.0
+  - [PASS] 矛盾更新_新值命中: rank=1
+  - [PASS] 矛盾更新_旧值不在Top1: forbidden=['网关使用Kong']
+  - [PASS] 矛盾更新_版本链成立: old=a5cfc3373c674ad6 -> new=2a259c925ad03535
+- `P4-CONFLICT-008` | contradiction_update | status=passed | score=20.0/20.0
+  - [PASS] 矛盾更新_新值命中: rank=1
+  - [PASS] 矛盾更新_旧值不在Top1: forbidden=['缓存采用单机Redis']
+  - [PASS] 矛盾更新_版本链成立: old=ce75522b0e855bfd -> new=b014d1d7d6551956
+- `P4-CONFLICT-009` | contradiction_update | status=passed | score=20.0/20.0
+  - [PASS] 矛盾更新_新值命中: rank=1
+  - [PASS] 矛盾更新_旧值不在Top1: forbidden=['固定1%']
+  - [PASS] 矛盾更新_版本链成立: old=acf4c7a87e57ad7f -> new=218436c8d9d3cfec
+- `P4-CONFLICT-010` | contradiction_update | status=partial | score=13.33/20.0
+  - [PASS] 矛盾更新_新值命中: rank=2
+  - [PASS] 矛盾更新_旧值不在Top1: forbidden=['仅保留7天']
+  - [FAIL] 矛盾更新_版本链成立: old=a2845aef17d5b77c -> new=813c58326fa4ae91
+- `P4-CONFLICT-011` | contradiction_update | status=partial | score=13.33/20.0
+  - [PASS] 矛盾更新_新值命中: rank=1
+  - [PASS] 矛盾更新_旧值不在Top1: forbidden=['有效期5分钟']
+  - [FAIL] 矛盾更新_版本链成立: old=33ff72d991a3f85f -> new=907984cbfd61b339
+- `P4-CONFLICT-012` | contradiction_update | status=partial | score=13.33/20.0
+  - [PASS] 矛盾更新_新值命中: rank=2
+  - [PASS] 矛盾更新_旧值不在Top1: forbidden=['日志保留30天']
+  - [FAIL] 矛盾更新_版本链成立: old=d312ea9bc3946296 -> new=9d7fe3d294314ec8
+- `P4-CONFLICT-013` | contradiction_update | status=partial | score=6.67/20.0
+  - [PASS] 矛盾更新_新值命中: rank=2
+  - [FAIL] 矛盾更新_旧值不在Top1: forbidden=['发布直接全量']
+  - [FAIL] 矛盾更新_版本链成立: old=6f78b527142baa08 -> new=4955f436c61f3989
+- `P4-CONFLICT-014` | contradiction_update | status=partial | score=13.33/20.0
+  - [PASS] 矛盾更新_新值命中: rank=2
+  - [PASS] 矛盾更新_旧值不在Top1: forbidden=['继续HTTP/JSON']
+  - [FAIL] 矛盾更新_版本链成立: old=345cd23266dae155 -> new=ba5f625095a7ae5c
+- `P4-CONFLICT-015` | contradiction_update | status=partial | score=13.33/20.0
+  - [PASS] 矛盾更新_新值命中: rank=1
+  - [PASS] 矛盾更新_旧值不在Top1: forbidden=['仅RBAC']
+  - [FAIL] 矛盾更新_版本链成立: old=5eb13cb1d7b8349f -> new=cbe47cc8b2346c30
+- `P4-CONFLICT-016` | contradiction_update | status=passed | score=20.0/20.0
+  - [PASS] 矛盾更新_新值命中: rank=1
+  - [PASS] 矛盾更新_旧值不在Top1: forbidden=['24小时响应']
+  - [PASS] 矛盾更新_版本链成立: old=efd2d0122ff4d641 -> new=8f3b8a64527b653b
+- `P4-CONFLICT-017` | contradiction_update | status=partial | score=13.33/20.0
+  - [PASS] 矛盾更新_新值命中: rank=2
+  - [PASS] 矛盾更新_旧值不在Top1: forbidden=['按周归档']
+  - [FAIL] 矛盾更新_版本链成立: old=1a2bcaff46b7a344 -> new=20f2ab5355524bab
+- `P4-CONFLICT-018` | contradiction_update | status=partial | score=13.33/20.0
+  - [PASS] 矛盾更新_新值命中: rank=1
+  - [PASS] 矛盾更新_旧值不在Top1: forbidden=['保留180天']
+  - [FAIL] 矛盾更新_版本链成立: old=3989cf4f23c890a2 -> new=95a4bb81d09fefb9
+- `P4-CONFLICT-019` | contradiction_update | status=partial | score=6.67/20.0
+  - [FAIL] 矛盾更新_新值命中: rank=None
+  - [PASS] 矛盾更新_旧值不在Top1: forbidden=['通知仅邮件']
+  - [FAIL] 矛盾更新_版本链成立: old=731fa2c16af5c310 -> new=ca2b5cb1ffcd229e
+- `P4-CONFLICT-020` | contradiction_update | status=partial | score=13.33/20.0
+  - [PASS] 矛盾更新_新值命中: rank=2
+  - [PASS] 矛盾更新_旧值不在Top1: forbidden=['平台自研']
+  - [FAIL] 矛盾更新_版本链成立: old=86ba1b10d3cce7ec -> new=c9e31b96ba2cc660
+- `P5-PUSH-001` | decision_repeat_push | status=passed | score=15.0/15.0
+  - [PASS] 重复决策_应推送命中: recalled=1
+- `P5-PUSH-002` | decision_repeat_push | status=passed | score=15.0/15.0
+  - [PASS] 重复决策_应推送命中: recalled=1
+- `P5-PUSH-003` | decision_repeat_push | status=passed | score=15.0/15.0
+  - [PASS] 重复决策_应推送命中: recalled=1
+- `P5-PUSH-NEG-001` | decision_repeat_push | status=passed | score=10.0/10.0
+  - [PASS] 重复决策_不应推送: recalled=0

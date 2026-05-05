@@ -104,11 +104,102 @@ def _audit():
     return body + "</table>"
 
 
+def _send_json(handler, data, status=200):
+    payload = json.dumps(data, ensure_ascii=False, default=str).encode("utf-8")
+    handler.send_response(status)
+    handler.send_header("Content-Type", "application/json; charset=utf-8")
+    handler.send_header("Content-Length", str(len(payload)))
+    handler.send_header("Access-Control-Allow-Origin", "*")
+    handler.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+    handler.send_header("Access-Control-Allow-Headers", "Content-Type")
+    handler.end_headers()
+    handler.wfile.write(payload)
+
+
+def _api_overview():
+    conn = db_conn(); c = conn.cursor()
+    c.execute("SELECT COUNT(*) FROM decisions"); total = c.fetchone()[0]
+    c.execute("SELECT COUNT(*) FROM decisions WHERE status='active'"); active = c.fetchone()[0]
+    c.execute("SELECT COUNT(*) FROM decisions WHERE status='candidate'"); candidate = c.fetchone()[0]
+    today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    c.execute("SELECT COUNT(*) FROM decisions WHERE created_at LIKE ?", (f"{today}%",)); today_count = c.fetchone()[0]
+    future = (datetime.now(timezone.utc) + timedelta(days=14)).strftime("%Y-%m-%d")
+    c.execute("SELECT project, decision, deadline FROM decisions WHERE deadline IS NOT NULL AND deadline!='' AND deadline<=? AND deadline>=? ORDER BY deadline LIMIT 10", (future, today))
+    upcoming = [{"project": r[0], "decision": r[1], "deadline": r[2]} for r in c.fetchall()]
+    conn.close()
+    return {"total": total, "active": active, "candidate": candidate, "today": today_count, "upcoming": upcoming}
+
+
+def _api_decisions(qs):
+    project = qs.get("project", ""); status = qs.get("status", ""); keyword = qs.get("keyword", "")
+    conditions = []; params = []
+    if project: conditions.append("project=?"); params.append(project)
+    if status: conditions.append("status=?"); params.append(status)
+    if keyword:
+        conditions.append("(decision LIKE ? OR reasoning LIKE ? OR evidence LIKE ?)"); params.extend([f"%{keyword}%"]*3)
+    where = " WHERE " + " AND ".join(conditions) if conditions else ""
+    conn = db_conn(); c = conn.cursor()
+    c.execute(f"SELECT id, project, decision, status, deadline, created_at FROM decisions{where} ORDER BY created_at DESC LIMIT 200", tuple(params))
+    rows = [{"id": r[0], "project": r[1], "decision": r[2], "status": r[3], "deadline": r[4], "created_at": r[5]} for r in c.fetchall()]
+    conn.close()
+    return {"rows": rows}
+
+
+def _api_decision_detail(mem_id):
+    conn = db_conn(); c = conn.cursor()
+    c.execute("SELECT * FROM decisions WHERE id=?", (mem_id,)); row = c.fetchone(); cols = [d[0] for d in c.description] if c.description else []
+    c.execute("SELECT action, actor, details, created_at FROM audit_log WHERE memory_id=? ORDER BY created_at DESC", (mem_id,)); audits = [{"action": a[0], "actor": a[1], "details": a[2], "created_at": a[3]} for a in c.fetchall()]
+    c.execute("SELECT subject, predicate, object FROM knowledge_triples WHERE memory_id=?", (mem_id,)); triples = [{"subject": t[0], "predicate": t[1], "object": t[2]} for t in c.fetchall()]
+    conn.close()
+    if not row: return {"error": "not found"}
+    rec = {cols[i]: row[i] for i in range(len(cols))}
+    return {"record": rec, "audits": audits, "triples": triples}
+
+
+def _api_review():
+    conn = db_conn(); c = conn.cursor(); c.execute("SELECT id, project, decision, evidence, created_at FROM decisions WHERE status='candidate' ORDER BY created_at DESC"); rows = [{"id": r[0], "project": r[1], "decision": r[2], "evidence": r[3], "created_at": r[4]} for r in c.fetchall()]; conn.close(); return {"rows": rows}
+
+
+def _api_audit():
+    conn = db_conn(); c = conn.cursor(); c.execute("SELECT memory_id, action, actor, details, created_at FROM audit_log ORDER BY created_at DESC LIMIT 200"); rows = [{"memory_id": r[0], "action": r[1], "actor": r[2], "details": r[3], "created_at": r[4]} for r in c.fetchall()]; conn.close(); return {"rows": rows}
+
+
+def _api_action(qs):
+    mem_id = qs.get("id", ""); op = qs.get("op", "")
+    if not mem_id or op not in ("confirm", "reject"): return {"error": "invalid params"}
+    result = confirm_candidate(mem_id, "dashboard") if op == "confirm" else reject_candidate(mem_id, "dashboard")
+    return {"result": result}
+
+
 class DashboardHandler(BaseHTTPRequestHandler):
+    def _cors_headers(self):
+        self.send_header("Access-Control-Allow-Origin", "*")
+        self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+        self.send_header("Access-Control-Allow-Headers", "Content-Type")
+
+    def do_OPTIONS(self):
+        self.send_response(204)
+        self._cors_headers()
+        self.end_headers()
+
     def do_GET(self):
         try:
             path = urlparse(self.path).path
             qs = _query_dict(self)
+            # JSON API routes
+            if path == "/api/overview":
+                _send_json(self, _api_overview()); return
+            elif path == "/api/decisions":
+                _send_json(self, _api_decisions(qs)); return
+            elif path.startswith("/api/decisions/"):
+                _send_json(self, _api_decision_detail(path.rsplit("/",1)[-1])); return
+            elif path == "/api/review":
+                _send_json(self, _api_review()); return
+            elif path == "/api/audit":
+                _send_json(self, _api_audit()); return
+            elif path == "/api/action":
+                _send_json(self, _api_action(qs)); return
+            # HTML routes
             if path == "/": body = _overview(); title = "feishu-memory 概览"
             elif path == "/decisions": body = _decisions(qs); title = "决策列表"
             elif path.startswith("/decisions/"): body = _decision_detail(path.rsplit("/",1)[-1]); title = "决策详情"
@@ -120,10 +211,22 @@ class DashboardHandler(BaseHTTPRequestHandler):
                 body = f"<div class='card'><pre>{html.escape(json.dumps(result, ensure_ascii=False, indent=2))}</pre><a href='/review'>返回审核</a></div>"; title = "操作结果"
             else: body = "<div class='card'>404</div>"; title = "404"
             data = _html_page(title, body)
-            self.send_response(200); self.send_header("Content-Type", "text/html; charset=utf-8"); self.send_header("Content-Length", str(len(data))); self.end_headers(); self.wfile.write(data)
+            self.send_response(200); self.send_header("Content-Type", "text/html; charset=utf-8"); self.send_header("Content-Length", str(len(data))); self._cors_headers(); self.end_headers(); self.wfile.write(data)
         except Exception as exc:
             print(f"dashboard 请求失败: {exc}", file=sys.stderr)
-            self.send_response(500); self.end_headers()
+            _send_json(self, {"error": str(exc)}, status=500)
+
+    def do_POST(self):
+        try:
+            path = urlparse(self.path).path
+            qs = _query_dict(self)
+            if path == "/api/action":
+                _send_json(self, _api_action(qs)); return
+            _send_json(self, {"error": "not found"}, status=404)
+        except Exception as exc:
+            print(f"dashboard POST 失败: {exc}", file=sys.stderr)
+            _send_json(self, {"error": str(exc)}, status=500)
+
     def log_message(self, *_args): return
 
 

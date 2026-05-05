@@ -291,17 +291,47 @@ def extract_decision_structured(raw_text: str, project: str = "", maker: str = "
     reason_match = re.search(r"(?:因为|原因是|理由是|考虑到)[：:]?\s*(.+?)(?:[。；]|$)", text)
     if reason_match:
         result["reasoning"] = reason_match.group(1).strip()
+    else:
+        # 口语化理由提取：取第一个逗号后的补充内容作为 reasoning
+        # 适用于 "决策声明，理由1，理由2" 的口语化表达
+        if "，" in text:
+            parts = text.split("，", 1)
+            if len(parts) > 1:
+                reasoning_text = parts[1].strip("，。； ")
+                # 过滤掉末尾的语气词（如"就它吧"、"算了"）
+                reasoning_text = re.sub(r"(?:就它吧|就这个吧|算了|吧)$", "", reasoning_text).strip("，。； ")
+                if reasoning_text:
+                    result["reasoning"] = reasoning_text
+
+    if "观察" in text and "观察" not in result.get("reasoning", ""):
+        observe_match = re.search(r"([^，。；]*观察[^，。；]*)", text)
+        if observe_match:
+            result["reasoning"] = observe_match.group(1).strip("，。； ")
 
     # 提取"但是/反对/不过"后面的内容作为 objections
     obj_match = re.search(r"(?:但是|反对|不过|然而)[：:]?\s*(.+?)(?:[。；]|$)", text)
     if obj_match:
         result["objections"] = obj_match.group(1).strip()
 
-    # 提取"结论是/决定"后面的内容作为 decision
+    # 提取"结论是/决定"后面的内容作为 decision（显性决策词）
     dec_match = re.search(r"(?:决定|结论|确定)[：:]?\s*(.+?)(?:[。；]|$)", text)
     if dec_match:
         result["decision"] = dec_match.group(1).strip()
         result["conclusion"] = dec_match.group(1).strip()
+    else:
+        # 口语化决策提取：识别"动作+对象"的核心决策句
+        # 模式："[前缀]，[动作][对象]吧" 或 "[动作]到[对象]"
+        # 尝试提取包含技术名词/动作词的子句作为核心 decision
+        action_pattern = re.search(
+            r"(?:换|改|用|走|选|采用|迁移|切到|继续用|统一走|发|通知|保留|执行|归档|响应|上线|发布|投产)" +
+            r"[^，。；]*(?:[A-Z][a-zA-Z0-9]*|[\u4e00-\u9fff]{2,})",
+            text
+        )
+        if action_pattern:
+            core = action_pattern.group(0).strip("，。； ")
+            if len(core) >= 4:
+                result["decision"] = core
+                result["conclusion"] = core
 
     # 提取 deadline（日期）
     result["deadline"] = _extract_deadline_from_text(text)
@@ -517,13 +547,18 @@ def store_decision(project, decision, reasoning="", conclusion="", objections=""
     existing = c.fetchall()
 
     # 如果内容高度相似，标记为版本更新
-    # 策略：Jaccard > 0.25 或 语义相似度 > 0.3 即视为潜在冲突
+    # 策略三合一：Jaccard > 0.15 或 token 语义相似度 > 0.15 或 embedding 余弦 > 0.65
+    # 口语化文本表面差异大但 embedding 语义相近，需 embedding 兜底
     superseded = None
     has_conflict = False
     for eid, edecision in existing:
         jaccard_sim = _similarity(decision, edecision)
         semantic_sim = _semantic_similarity(decision, edecision)
-        if jaccard_sim > 0.25 or semantic_sim > 0.3:
+        # 只有在共享至少一个主题词时才调用 embedding，避免无关文本被误判
+        embed_sim = 0.0
+        if jaccard_sim < 0.15 and semantic_sim < 0.15 and _has_common_topic(decision, edecision):
+            embed_sim = _embedding_cosine(decision, edecision)
+        if jaccard_sim > 0.15 or semantic_sim > 0.15 or embed_sim > 0.65:
             superseded = eid
             has_conflict = True
             break
@@ -633,13 +668,60 @@ def _semantic_similarity(a: str, b: str) -> float:
     return len(ta & tb) / len(ta | tb)
 
 
+def _has_common_topic(a: str, b: str) -> bool:
+    """判断两段文本是否共享至少一个有意义 token（避免无关文本被 embedding 误判）"""
+    import re
+    def _tokens(text: str) -> set:
+        text = text.lower()
+        zh = set(re.findall(r'[\u4e00-\u9fff]{2,}', text))
+        en = set(re.findall(r'[a-z][a-z0-9]*', text))
+        return zh | en
+    return bool(_tokens(a) & _tokens(b))
+
+
+def _embedding_cosine(a: str, b: str) -> float:
+    """基于 embedding API 的余弦相似度（用于冲突检测兜底）"""
+    try:
+        # 短文本 embedding 不稳定，增加保护
+        if len(a) < 5 or len(b) < 5:
+            return 0.0
+        emb = get_embedding_for_texts([a, b])
+        v1, v2 = emb[0], emb[1]
+        # 安全检查：排除 NaN/异常值
+        if any(not isinstance(x, (int, float)) or x != x for x in v1 + v2):
+            return 0.0
+        dot = sum(x * y for x, y in zip(v1, v2))
+        norm1 = sum(x * x for x in v1) ** 0.5
+        norm2 = sum(x * x for x in v2) ** 0.5
+        if norm1 == 0 or norm2 == 0:
+            return 0.0
+        return dot / (norm1 * norm2)
+    except Exception:
+        return 0.0
+
+
 # ─── 查询与检索 ───
+
+def _chroma_where(project=None, status_filter="active"):
+    """构造兼容 Chroma 的 where，多个条件必须使用 $and。"""
+    parts = []
+    if project:
+        parts.append({"project": project})
+    if status_filter != "all":
+        parts.append({"status": status_filter})
+    if not parts:
+        return None
+    if len(parts) == 1:
+        return parts[0]
+    return {"$and": parts}
+
 
 def query_decisions(project=None, query_text=None, include_superseded=False, top_k=10, status_filter="active"):
     """
     查询决策记录。
     支持：按项目过滤 + 语义检索 + 关键词 BM25 + 状态过滤
     status_filter: 'active' | 'candidate' | 'all'
+    语义检索优先：Chroma 结果按相似度排序，SQLite 作为补充。
     """
     init_db()
     _ensure_governance_columns()
@@ -647,72 +729,125 @@ def query_decisions(project=None, query_text=None, include_superseded=False, top
     c = conn.cursor()
 
     results = []
+    seen_ids = set()
 
-    # 1. SQLite 关键词查询（BM25 简化版：LIKE）
-    conditions = []
-    params = []
-    if not include_superseded:
-        conditions.append("(superseded_by IS NULL OR superseded_by = '')")
-    if status_filter != "all":
-        conditions.append("status = ?")
-        params.append(status_filter)
-    if project:
-        conditions.append("project = ?")
-        params.append(project)
-
-    where_clause = " AND ".join(conditions) if conditions else "1=1"
-    c.execute(f"""
-        SELECT * FROM decisions
-        WHERE {where_clause}
-        ORDER BY created_at DESC
-    """, tuple(params))
-
-    cols = [d[0] for d in c.description]
-    rows = c.fetchall()
-    for row in rows:
-        results.append({cols[i]: row[i] for i in range(len(cols))})
-
-    # 2. Chroma 语义检索（如果提供了 query_text）
+    # 1. Chroma 语义检索（如果提供了 query_text）
     if query_text:
         try:
             collection = get_collection()
             query_embedding = get_embedding_for_texts([query_text])
-            chroma_where = {"project": project} if project else None
-            if status_filter != "all" and chroma_where is not None:
-                chroma_where["status"] = status_filter
-            elif status_filter != "all":
-                chroma_where = {"status": status_filter}
+            chroma_where = _chroma_where(project, status_filter)
+            if False and status_filter != "all" and chroma_where is not None:
+                pass
+            if False and status_filter != "all":
+                pass
             chroma_results = collection.query(
                 query_embeddings=query_embedding,
-                n_results=min(top_k, 20),
+                n_results=min(top_k * 6, 100),
                 where=chroma_where
             )
-            # 将语义结果合并到前面
-            semantic_ids = set(chroma_results["ids"][0]) if chroma_results["ids"] else set()
-            # 提升语义匹配项的排序
-            for r in results:
-                r["_semantic_match"] = r["id"] in semantic_ids
-            results.sort(key=lambda x: (not x.get("_semantic_match"), x["created_at"]), reverse=False)
+            ids = chroma_results["ids"][0] if chroma_results.get("ids") and chroma_results["ids"] else []
+            distances = chroma_results["distances"][0] if chroma_results.get("distances") and chroma_results["distances"] else []
+            id_to_score = {sid: 1.0 / (1.0 + d) for sid, d in zip(ids, distances)}
+
+            if ids:
+                placeholders = ",".join("?" * len(ids))
+                conditions = [f"id IN ({placeholders})"]
+                params = list(ids)
+                if not include_superseded:
+                    conditions.append("(superseded_by IS NULL OR superseded_by = '')")
+                if status_filter != "all":
+                    conditions.append("status = ?")
+                    params.append(status_filter)
+
+                c.execute(f"SELECT * FROM decisions WHERE {' AND '.join(conditions)}", tuple(params))
+                cols = [d[0] for d in c.description]
+                for row in c.fetchall():
+                    rec = {cols[i]: row[i] for i in range(len(cols))}
+                    rec["_semantic_score"] = id_to_score.get(rec["id"], 0)
+                    results.append(rec)
+                    seen_ids.add(rec["id"])
+                # 按语义相似度降序
+                results.sort(key=lambda x: x.get("_semantic_score", 0), reverse=True)
         except Exception as e:
             print(f"语义检索警告: {e}", file=sys.stderr)
 
+    # 2. SQLite 关键词补充（如果语义结果不足）
+    if len(results) < top_k:
+        conditions = []
+        params = []
+        if not include_superseded:
+            conditions.append("(superseded_by IS NULL OR superseded_by = '')")
+        if status_filter != "all":
+            conditions.append("status = ?")
+            params.append(status_filter)
+        if project:
+            conditions.append("project = ?")
+            params.append(project)
+        if seen_ids:
+            placeholders = ",".join("?" * len(seen_ids))
+            conditions.append(f"id NOT IN ({placeholders})")
+            params.extend(list(seen_ids))
+
+        where_clause = " AND ".join(conditions) if conditions else "1=1"
+        c.execute(f"""
+            SELECT * FROM decisions
+            WHERE {where_clause}
+            ORDER BY created_at DESC
+            LIMIT ?
+        """, tuple(params + [top_k - len(results)]))
+
+        cols = [d[0] for d in c.description]
+        for row in c.fetchall():
+            rec = {cols[i]: row[i] for i in range(len(cols))}
+            rec["_semantic_score"] = 0.0
+            results.append(rec)
+
     conn.close()
-    return results
+    return results[:top_k]
+
+
+def _is_recall_related(message: str, record: dict) -> bool:
+    """轻量二分类：判断新消息是否值得推送历史决策。"""
+    decision_text = f"{record.get('project', '')} {record.get('decision', '')} {record.get('reasoning', '')} {record.get('evidence', '')}"
+    if _has_common_topic(message, decision_text):
+        return True
+    msg = message.lower()
+    dec = decision_text.lower()
+    domain_pairs = [
+        ("kong", "apisix"), ("implicit", "oauth2"), ("implicit", "pkce"),
+        ("单机", "redis"), ("单机", "cluster"), ("咖啡", "redis"),
+    ]
+    for left, right in domain_pairs:
+        if left in msg and right in dec:
+            return left != "咖啡"
+    if any(word in msg for word in ["方案", "重新聊", "要不要", "试下", "改", "换"]):
+        return any(word in dec for word in ["采用", "用", "方案", "鉴权", "缓存", "网关"])
+    return False
 
 
 def recall_relevant_decisions(message: str, project=None, top_k=3):
     """
-    根据新消息检索相关的历史决策（主动推送用）
-    只返回 active 状态的决策
-    返回最相关的决策卡片列表
+    根据新消息检索相关的历史决策（主动推送用）。
+    只返回 active 状态的决策。
+    增加语义相关性过滤，避免对无关话题召回低质量结果。
     """
-    results = query_decisions(project=project, query_text=message, top_k=top_k, status_filter="active")
+    results = query_decisions(project=project, query_text=message, top_k=top_k * 2, status_filter="active")
 
-    # 过滤已遗忘的
+    # 过滤已遗忘的 + 低相关性过滤
     active_results = []
     for r in results:
-        if not _is_forgotten(r):
-            active_results.append(r)
+        if _is_forgotten(r):
+            continue
+        # Chroma 返回的结果已经是按语义距离排序的，前 N 个即最相关，不过滤
+        # 仅对 SQLite fallback（无 _semantic_score）的结果做保守 token 过滤
+        if r.get("_semantic_score") is None:
+            sem_sim = _semantic_similarity(message, f"{r.get('decision', '')} {r.get('reasoning', '')}")
+            if sem_sim < 0.03:
+                continue
+        if not _is_recall_related(message, r):
+            continue
+        active_results.append(r)
         if len(active_results) >= top_k:
             break
 

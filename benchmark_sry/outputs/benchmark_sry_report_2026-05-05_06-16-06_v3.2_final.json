@@ -1,0 +1,82 @@
+{
+  "status": "ok",
+  "generated_at": "2026-05-05T06:16:06",
+  "tag": "v3.2_final",
+  "cases_file": "cases",
+  "summary": {
+    "total_cases": 0,
+    "total_points": 0.0,
+    "earned_points": 0.0,
+    "score_percent": 0.0
+  },
+  "metrics": {
+    "case_count": 0,
+    "case_pass_rate": 0.0,
+    "case_partial_rate": 0.0,
+    "avg_latency_ms": null,
+    "anti_interference_recall_at_1": null,
+    "anti_interference_recall_at_3": null,
+    "contradiction_overwrite_success_rate": null,
+    "stale_leakage_rate": null,
+    "repeat_push_hit_rate": null
+  },
+  "db_change_preview": {
+    "before": {
+      "captured_at": "2026-05-05T06:16:06",
+      "table_counts": {
+        "decisions": 27,
+        "access_log": 17,
+        "audit_log": 36,
+        "memory_edges": 5,
+        "embed_cache": 568,
+        "push_log": 0,
+        "decision_contexts": 22,
+        "knowledge_triples": 1661
+      },
+      "benchmark_scope": {
+        "project_prefix": "_benchmark_sry_",
+        "decisions_count": 0,
+        "status_distribution": {},
+        "top_projects": []
+      }
+    },
+    "after": {
+      "captured_at": "2026-05-05T06:16:06",
+      "table_counts": {
+        "decisions": 27,
+        "access_log": 17,
+        "audit_log": 36,
+        "memory_edges": 5,
+        "embed_cache": 568,
+        "push_log": 0,
+        "decision_contexts": 22,
+        "knowledge_triples": 1661
+      },
+      "benchmark_scope": {
+        "project_prefix": "_benchmark_sry_",
+        "decisions_count": 0,
+        "status_distribution": {},
+        "top_projects": []
+      }
+    },
+    "delta": {
+      "table_counts_delta": {
+        "access_log": 0,
+        "audit_log": 0,
+        "decision_contexts": 0,
+        "decisions": 0,
+        "embed_cache": 0,
+        "knowledge_triples": 0,
+        "memory_edges": 0,
+        "push_log": 0
+      },
+      "benchmark_scope_delta": {
+        "project_prefix": "_benchmark_sry_",
+        "decisions_count_delta": 0,
+        "status_distribution_delta": {}
+      }
+    },
+    "note": "该区块在 benchmark 结束且清理前采集，用于可视化 memory.db 的测试写入变化。"
+  },
+  "results": []
+}

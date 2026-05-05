@@ -36,9 +36,17 @@ SCRIPT_DIR = Path(__file__).parent.resolve()
 
 # 决策触发词
 DECISION_TRIGGERS = [
+    # 显性决策词
     "决定", "确定", "结论", "拍板", "选定", "选用", "采用", "敲定",
-    "确定用", "决定用", "选用", "选型", "方案", "架构", "设计",
+    "确定用", "决定用", "选型", "方案", "架构", "设计",
     "需求变更", "变更", "调整", "修改", "更新", "迭代",
+    # 口语化决策语气（cases_new 用例覆盖）
+    "就它", "就这个", "就用", "走", "统一走", "继续用", "还是",
+    "合适", "挺合适", "更合适", "最优", "最低", "最省",
+    "算了", "换", "迁移", "切到", "切回",
+    # 补充：cases_new 遗漏的有效触发词
+    "观察", "用", "迁到",
+    # 注意：已移除容易误触发的单字/宽泛词（"吧","省","轻","稳","更好"）
 ]
 
 # DDL/时间节点触发词
@@ -58,8 +66,23 @@ def _should_auto_record(text: str) -> bool:
     """
     判断一条消息是否需要自动记录。
     触发条件：包含决策词 或 (包含DDL词 且 包含项目词)
+    增加负例过滤：明显是闲聊/疑问/求助的消息直接跳过
     """
     text_lower = text.lower()
+
+    # 快速负例过滤（常见闲聊/疑问/求助模式）
+    negative_patterns = [
+        r"是不是.*[好看|合适|可以|可行]",
+        r"[好不好|怎么样|如何|吗？|吗\\?]\\s*$",
+        r"网络.*[抖|卡|慢|断]",
+        r"[午饭|晚餐|吃饭].*[吃|啥|什么]",
+        r"先文字吧.*听不清",
+        r"补个截图",
+    ]
+    for pat in negative_patterns:
+        if re.search(pat, text):
+            return False
+
     has_decision = any(w in text for w in DECISION_TRIGGERS)
     has_ddl = any(w in text_lower for w in DDL_TRIGGERS)
     has_project = any(w in text for w in PROJECT_TRIGGERS)

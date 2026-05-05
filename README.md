@@ -482,7 +482,6 @@ skills/feishu-memory/
 ├── README.md                          # 本文档
 ├── SKILL.md                           # OpenClaw Agent 调用规范
 ├── memory.md                          # Agent 长期记忆层
-├── CLAUDE_PROMPT.md                   # Claude 高级功能补齐 Prompt
 │
 ├── memory.py                          # 核心：SQLite + Chroma + Governance
 ├── context_engineer.py                # 上下文构建（解决遗忘）
@@ -497,6 +496,12 @@ skills/feishu-memory/
 │
 ├── scripts/
 │   └── feishu_memory_cli.py           # Agent 统一 CLI 入口
+├── benchmark_sry/
+│   └── cases/                         # 测试数据
+│   └── cases_new/                     # 测试数据
+│   └── docs/                          # 测试数据
+│   └── output/                        # 测试报告
+│   └── run_benchmark_sry.py           # 测试程序
 ├── benchmark_cases/
 │   └── cases.json                     # 自动化测试用例
 ├── benchmarks/                        # 评估报告输出

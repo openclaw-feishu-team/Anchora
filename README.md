@@ -32,7 +32,7 @@
 <tr>
 <td width="50%">
 
-**📹 GIF 演示占位**
+
 
 ![](image/demo1.gif)
 
@@ -41,7 +41,7 @@
 </td>
 <td width="50%">
 
-**📸 截图占位**
+
 
 
 ![](image/demo1(2).png)

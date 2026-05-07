@@ -65,7 +65,7 @@
 <tr>
 <td width="50%">
 
-**📹 GIF 演示占位**
+
 
 ![](image/demo2.gif)
 
@@ -74,7 +74,7 @@
 </td>
 <td width="50%">
 
-**📸 截图占位**
+
 
 ![](image/demo3.png)
 
@@ -98,7 +98,6 @@
 <tr>
 <td width="50%">
 
-**📹 GIF 演示占位**
 
 ![](image/demo3.gif)
 
@@ -107,7 +106,6 @@
 </td>
 <td width="50%">
 
-**📸 截图占位**
 
 ![](image/demo5.png)
 
@@ -130,7 +128,7 @@
 <tr>
 <td width="50%">
 
-**📹 GIF 演示占位**
+
 
 ![](image/demo5.gif)
 
@@ -139,7 +137,6 @@
 </td>
 <td width="50%">
 
-**📸 截图占位**
 
 ![](image/demo6.png)
 
